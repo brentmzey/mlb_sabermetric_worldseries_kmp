@@ -43,25 +43,108 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 ---
 
-## 🧠 Econometric Theory & Sabermetric Reasoning Behind the Predictions
+## 🔄 End-to-End System Architecture & Data Flow
 
-Our World Series prediction model is built on **5 Core Theoretical Foundations** combining econometric causal inference and advanced sabermetrics:
+```mermaid
+flowchart TD
+    subgraph Data Ingestion & Cleaning
+        A[Raw MLB Season Data] --> B[Sabermetric Cleaning Engine]
+        B --> C[Compute wOBA, wRC+, FIP, xFIP]
+        B --> D[Compute Bill James Pythagorean Expectancy]
+        B --> E[Compute BaseRuns BSR Component Score]
+    end
 
-### 1. **Pythagorean Expectancy & Run Differential (Bill James Theory)**
-   - **Theory**: A team's actual win-loss record is subject to high-variance noise (1-run games, extra innings, bullpen sequencing luck). Run differential ($RD = R - RA$) is a far more robust, unbiased predictor of latent team quality.
-   - **Formula**: $\text{Pythagorean Win \%} = \frac{\text{Runs Scored}^{1.83}}{\text{Runs Scored}^{1.83} + \text{Runs Allowed}^{1.83}}$
+    subgraph Causal Econometric Quality Model
+        D --> F[Stage 1 2SLS IV: Instrument Wins with Pyth% & SOS]
+        E --> F
+        F --> G[Stage 2 2SLS IV: Structural Latent Quality Estimation]
+        H[Top 3 Ace Rotation ERA & Bullpen WPA] --> G
+        I[Thumbs Down Fan Hype Index] --> G
+    end
 
-### 2. **BaseRuns (BSR) Context-Neutral Component Model**
-   - **Theory**: BaseRuns evaluates a team's offensive capability by calculating expected runs based on raw baserunner creation ($A$), advancing runners ($B$), and outs made ($C$). This eliminates sequence-dependent variance (e.g., getting hits clustered in a single inning vs. spread across 9 innings).
+    subgraph Postseason Monte Carlo Engine
+        G --> J[Bradley-Terry Logit Game-Level Probability Engine]
+        J --> K[10,000-Iteration Postseason Playoff Simulation]
+        K --> L[Wild Card Series Best-of-3]
+        L --> M[Division Series Best-of-5]
+        M --> N[League Championship Series Best-of-7]
+        N --> O[World Series Best-of-7]
+    end
 
-### 3. **Two-Stage Least Squares (2SLS) Instrumental Variable (IV) Causal Model**
-   - **Theory**: Standard OLS regression of postseason success on regular season wins suffers from endogeneity (unobserved strength of schedule and luck residuals). We instrument team win totals using Pythagorean expectation and opponent strength of schedule ($Z$) in Stage 1 to isolate true structural team quality ($\hat{D}$) in Stage 2.
+    subgraph Open-Source Outputs
+        O --> P[Live World Series Win Probability Leaderboard]
+        O --> Q[Cleaned CSV Dataset Export]
+        O --> R[Automated Weekly GitHub Actions Updates]
+    end
+```
 
-### 4. **Postseason Non-Linearity & Top-Rotation Dominance**
-   - **Theory**: Playoff baseball differs fundamentally from 162-game regular season baseball. In short 5-game or 7-game series, off-days allow managers to compress their pitching rotations to their **Top 3 Aces** and leverage high-WPA bullpen arms. Our model applies a **30% weighting bonus** to teams with elite Ace ERAs ($ERA \le 3.30$) and top-tier bullpen Win Probability Added.
+---
 
-### 5. **Clubhouse Chemistry & "Thumbs Down" Fan Rally Index**
-   - **Theory**: Inspired by Brian, Patrick, and Matthew's reference to the legendary **2017 Yankees Thumbs-Down Rally**, non-quantifiable factors like fan momentum, trade-deadline WAR additions, and clubhouse morale create a positive feedback loop during October play.
+## 🧮 Formal Mathematical Models & Structural Equations
+
+Our predictions bridge raw sabermetrics and causal econometrics through 4 formal mathematical models:
+
+### 1. **Bill James Pythagorean Expectancy Model**
+Eliminates 1-run game noise and bullpen sequencing variance by modeling win expectation strictly as a function of runs scored ($R$) and runs allowed ($RA$):
+
+$$\text{Pythagorean Win \%}_i = \frac{R_i^{1.83}}{R_i^{1.83} + RA_i^{1.83}}$$
+
+$$\text{Expected Wins}_i = 162 \times \text{Pythagorean Win \%}_i$$
+
+---
+
+### 2. **BaseRuns (BSR) Context-Neutral Scoring Model**
+Evaluates offensive capability independent of hit clustering by isolating baserunner creation ($A$), runner advancement ($B$), outs ($C$), and home runs ($D$):
+
+$$BSR_i = \frac{A_i \cdot B_i}{B_i + C_i} + D_i$$
+
+where:
+- $A_i = H + BB + HBP - HR$ (Baserunners created)
+- $B_i = 0.78 \cdot TB - 0.58 \cdot HR + 0.04 \cdot (BB + HBP)$ (Run advancement)
+- $C_i = AB - H + SF$ (Outs made)
+- $D_i = HR$ (Guaranteed runs)
+
+---
+
+### 3. **Two-Stage Least Squares (2SLS / IV) Causal Structural Model**
+Standard OLS regression of postseason success on regular season wins suffers from endogeneity (unobserved luck residuals). We instrument team win totals ($Win_i$) with Pythagorean expectation ($\text{Pythagorean Win \%}_i$) and Strength of Schedule ($SOS_i$) in Stage 1 to isolate true structural team quality ($\hat{Quality}_i$) in Stage 2:
+
+$$\text{\bf Stage 1 (First Stage)}: \quad Win_i = \gamma_0 + \gamma_1 \text{Pythagorean Win \%}_i + \gamma_2 SOS_i + v_i$$
+
+$$\text{\bf Stage 2 (Second Stage)}: \quad \hat{Quality}_i = \beta_0 + \beta_1 \hat{Win}_i + \beta_2 \left(\frac{3.80}{ERA_{Top3,i}}\right) + \beta_3 WPA_{Bullpen,i} + \beta_4 Hype_i + \varepsilon_i$$
+
+---
+
+### 4. **Bradley-Terry Logit Postseason Matchup Model**
+In any individual playoff game between Team $A$ and Team $B$, the probability of Team $A$ winning is modeled via a Bradley-Terry logistic response function driven by their relative latent quality scores ($\hat{Quality}_A, \hat{Quality}_B$):
+
+$$P(\text{Team } A \text{ beats Team } B) = \frac{1}{1 + e^{-\lambda (\hat{Quality}_A - \hat{Quality}_B)}}$$
+
+where $\lambda = 3.5$ represents the postseason intensity scaling factor.
+
+---
+
+## 🔗 Linking the Equations to the Predictions
+
+Here is how the equations connect directly to the predictions displayed in the table above:
+
+```
+[Raw Runs & Offense]   --> Equation (1) & (2)  --> [Luck-Filtered Run Differential]
+                                                        |
+                                                        v
+[Strength of Schedule] --> Equation (3) 2SLS   --> [Causal Latent Team Quality Score]
+                                                        |
+                                                        v
+[Playoff Compression]  --> Equation (4) Logit  --> [10,000 Playoff Bracket Simulations]
+                                                        |
+                                                        v
+                                                   [FINAL WORLD SERIES WIN PROBABILITIES]
+```
+
+1. **Raw Data Ingestion**: Clean team statistics ($R, RA, wOBA, FIP$) enter **Equations (1) & (2)** to strip out luck-based game sequencing.
+2. **Causal Filtering**: **Equation (3)** applies 2SLS IV estimation to eliminate schedule bias and endogeneity, calculating each team's structural latent quality score ($\hat{Quality}_i$).
+3. **Playoff Matchups**: For all 10,000 Monte Carlo bracket simulations, **Equation (4)** evaluates head-to-head game probabilities using shortened 3-ace rotation depth and high-leverage bullpen WPA.
+4. **Final Leaderboard**: The percentage of 10,000 simulations won by each team yields the exact **World Series Win Probabilities** shown on the front page.
 
 ---
 
