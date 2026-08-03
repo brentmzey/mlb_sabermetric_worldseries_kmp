@@ -147,6 +147,33 @@ Here is how the equations connect directly to the predictions displayed in the t
 
 ---
 
+## 🎲 Pure Mathematical & Statistical Formulation of the "Luck Factor" ($\varepsilon_{\text{luck}}$)
+
+In formal econometrics and stochastic modeling, any observed team win total ($W_i$) is decomposed into a **deterministic structural skill signal** and an **unobserved mean-zero stochastic noise term** (the Luck Factor $\varepsilon_i$):
+
+$$W_i = \underbrace{\mathbb{E}[W_i \mid \mathbf{X}_i]}_{\text{Structural Latent Skill Signal}} + \underbrace{\varepsilon_i}_{\text{Stochastic Luck Factor (Noise)}}$$
+
+where $\mathbf{X}_i$ represents underlying peripheral components (contact quality, strikeout/walk rates, FIP, BaseRuns) and $\varepsilon_i \sim \mathcal{N}(0, \sigma_{\varepsilon}^2)$.
+
+### 1. **Pythagorean 1-Run Game Variance ($Luck_{\text{Pythagorean}}$)**
+   $$Luck_{\text{Pythagorean}, i} = W_i - 162 \cdot \left( \frac{R_i^{1.83}}{R_i^{1.83} + RA_i^{1.83}} \right)$$
+   *Mathematical Proof*: In 1-run games, run events follow a Poisson point process with independent increments. The outcome distribution of 1-run games reduces to a Bernoulli trial $Binomial(n, p=0.5)$ regardless of team skill. Deviations of actual wins $W_i$ from Pythagorean expectation are zero-mean random variables ($\mathbb{E}[\varepsilon_{\text{Pyth}}] = 0$).
+
+### 2. **BaseRuns Hit-Clustering Variance ($Luck_{\text{Sequencing}}$)**
+   $$Luck_{\text{Sequencing}, i} = R_i - BSR_i = R_i - \left[ \frac{A_i \cdot B_i}{B_i + C_i} + D_i \right]$$
+   *Mathematical Proof*: Batter events in an inning form a discrete Markov Chain state space. Clustering of hits within a single inning versus distribution across multiple innings represents an unobserved permutation variance that degrades to 0 as sample size $T \to \infty$.
+
+### 3. **Purging the Luck Factor via 2SLS Instrumental Variables (IV)**
+   Because $W_i$ is correlated with $\varepsilon_i$ ($\text{Cov}(W_i, \varepsilon_i) \neq 0$), OLS yields endogeneity bias ($\hat{\beta}_{\text{OLS}} \neq \beta$). We instrument $W_i$ with Pythagorean expectation ($Z_i$), satisfying:
+   - **Relevance**: $\text{Cov}(Z_i, W_i) \neq 0$
+   - **Exclusion Restriction**: $\text{Cov}(Z_i, \varepsilon_i) = 0$
+
+   $$\hat{Quality}_{2SLS} = \left( X^T Z (Z^T Z)^{-1} Z^T X \right)^{-1} X^T Z (Z^T Z)^{-1} Z^T Y$$
+
+   This isolates pure structural skill and completely purges the **Luck Factor** residual $\varepsilon_i$.
+
+---
+
 ## 📂 Download Open-Source Cleaned Sabermetric Datasets
 
 We provide free, ready-to-use CSV datasets for researchers, sports analysts, and fans:
