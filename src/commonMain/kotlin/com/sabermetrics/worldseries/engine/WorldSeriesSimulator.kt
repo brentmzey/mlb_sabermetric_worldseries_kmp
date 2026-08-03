@@ -35,7 +35,7 @@ object WorldSeriesSimulator {
     fun predictGameWinProb(teamA: MlbTeam, teamB: MlbTeam): Double {
         val qA = computeLatentTeamQuality(teamA)
         val qB = computeLatentTeamQuality(teamB)
-        val delta = (qA - qB) * 3.5
+        val delta = (qA - qB) * 1.2
         return 1.0 / (1.0 + exp(-delta))
     }
 
