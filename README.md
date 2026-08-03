@@ -154,6 +154,90 @@ We provide free, ready-to-use CSV datasets for researchers, sports analysts, and
 
 * 📥 **[Download Clean MLB Sabermetric CSV Dataset](output_datasets/mlb_sabermetric_clean_dataset.csv)** (Includes wOBA, wRC+, FIP, xFIP, Pythagorean Win %, BaseRuns, Bullpen WPA, & Ace ERA).
 
+## 💻 Universal Guide: How to Run Models & Simulations on ANY Device
+
+This project is built using **Kotlin Multiplatform (KMP)**. You can run the models, regressions, sabermetrics, and simulations on **any device or operating system**:
+
+### 🍏 1. macOS (Apple Silicon M1/M2/M3 & Intel)
+```bash
+# Step A: Install dependencies via Homebrew
+brew update && brew install openjdk@17 gradle
+
+# Step B: Clone & run 10,000-iteration Monte Carlo simulation
+git clone https://github.com/brentmzey/mlb_sabermetric_worldseries_kmp.git
+cd mlb_sabermetric_worldseries_kmp
+./gradlew run
+```
+
+---
+
+### 🐧 2. Linux (Ubuntu, Debian, Fedora, Arch)
+```bash
+# Step A: Install Java 17 & Git via APT (Ubuntu/Debian)
+sudo apt update && sudo apt install -y openjdk-17-jdk git
+
+# Step B: Clone & run simulation
+git clone https://github.com/brentmzey/mlb_sabermetric_worldseries_kmp.git
+cd mlb_sabermetric_worldseries_kmp
+./gradlew run
+```
+
+---
+
+### 🪟 3. Windows 10 / 11 (Command Prompt, PowerShell, WSL)
+```cmd
+:: Step A: Install Java 17 via Chocolatey (run as Administrator)
+choco install openjdk17 gradle
+
+:: Step B: Clone & run simulation
+git clone https://github.com/brentmzey/mlb_sabermetric_worldseries_kmp.git
+cd mlb_sabermetric_worldseries_kmp
+.\gradlew.bat run
+```
+
+---
+
+### 📱 4. iOS (iPhone, iPad, & Xcode Integration)
+```bash
+# Step A: Build static iOS Framework for Xcode
+./gradlew linkReleaseFrameworkIosArm64
+
+# Step B: Import into your iOS Swift project
+# In Swift: import EconometricEngineKMP
+# let simulator = WorldSeriesSimulator()
+```
+
+---
+
+### 🤖 5. Android (Phones, Tablets, & Android Studio)
+```bash
+# Step A: Build Android library bundle
+./gradlew assemble
+
+# Step B: Include as Gradle dependency in your Android project:
+# implementation(project(":mlb_sabermetric_worldseries_kmp"))
+```
+
+---
+
+### 🌐 6. Web Browser (Chrome, Safari, Firefox, Edge - JS/Wasm)
+```bash
+# Step A: Run web development server
+./gradlew jsBrowserDevelopmentRun
+
+# Step B: Build production web bundle
+./gradlew jsBrowserProductionWebpack
+```
+
+---
+
+### 🖥️ 7. Server, Docker, & Cloud (Linux VPS / Ktor)
+```bash
+# Build standalone Fat JAR & run headless server process
+./gradlew fatJar
+java -jar build/libs/mlb_sabermetric_worldseries_kmp-1.0.0-all.jar
+```
+
 ---
 
 ## 🛠️ Engineers & Developers: How to Pull, Build, & Contribute
