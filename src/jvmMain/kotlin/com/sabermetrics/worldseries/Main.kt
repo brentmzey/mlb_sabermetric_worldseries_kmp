@@ -10,6 +10,13 @@ fun main() {
     println("    Dedicated to Brian, Patrick, and Matthew (Inspired by Yankees Thumbs-Down Rally)")
     println("=================================================================================================================\n")
 
+    println("🧠 ECONOMETRIC THEORY & SABERMETRIC REASONING BEHIND PREDICTIONS:")
+    println("   1. Pythagorean Run Differential: Filters 1-run game noise; true quality is driven by R vs RA exponent (1.83).")
+    println("   2. BaseRuns (BSR) Component Model: Eliminates sequence-dependent luck by isolating raw baserunner creation.")
+    println("   3. 2SLS IV Causal Model: Instruments win totals with Pythagorean expectation & SOS to remove endogeneity.")
+    println("   4. Postseason Compression: Short series leverage Top-3 Ace ERAs and high-leverage bullpen WPA over roster depth.")
+    println("   5. Thumbs-Down Hype Index: Clubhouse momentum & trade additions boost non-linear October performance.\n")
+
     println("⏳ Running 10,000-iteration Monte Carlo playoff simulation...")
     val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 10000, seed = 20260803L)
 
