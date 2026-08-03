@@ -14,7 +14,7 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 ## 📈 Visual World Series Win Probability Chart
 
-![World Series Win Probabilities Chart](docs/charts/world_series_win_probabilities.png)
+![World Series Win Probabilities Chart](https://raw.githubusercontent.com/brentmzey/mlb_sabermetric_worldseries_kmp/main/docs/charts/world_series_win_probabilities.png)
 
 ---
 
