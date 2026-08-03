@@ -1,0 +1,53 @@
+name: Weekly MLB Sabermetric Predictions Update
+
+on:
+  schedule:
+    # Runs every Monday at 00:00 UTC (Sunday night 7-8pm EST / 4-5pm PST)
+    - cron: '0 0 * * 1'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub UI
+
+jobs:
+  update-mlb-predictions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if within MLB Season (April - October)
+        id: season_check
+        run: |
+          MONTH=$(date +%m)
+          if [ "$MONTH" -ge "04" ] && [ "$MONTH" -le "10" ]; then
+            echo "in_season=true" >> $GITHUB_OUTPUT
+            echo "⚾ Current date is within MLB Season (April-October). Proceeding with prediction update."
+          else
+            echo "in_season=false" >> $GITHUB_OUTPUT
+            echo "💤 Current date is outside MLB Season. Skipping prediction update."
+          fi
+
+      - name: Set up Java 17 (Temurin)
+        if: steps.season_check.outputs.in_season == 'true' || github.event_name == 'workflow_dispatch'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant Execute Permissions for Gradlew
+        if: steps.season_check.outputs.in_season == 'true' || github.event_name == 'workflow_dispatch'
+        run: chmod +x gradlew
+
+      - name: Run 10,000-Iteration World Series Monte Carlo Simulation
+        if: steps.season_check.outputs.in_season == 'true' || github.event_name == 'workflow_dispatch'
+        run: ./gradlew run
+
+      - name: Commit and Push Updated Predictions & Datasets
+        if: steps.season_check.outputs.in_season == 'true' || github.event_name == 'workflow_dispatch'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(automation): update weekly MLB World Series predictions & clean datasets [skip ci]"
+          file_pattern: "output_datasets/* README.md"
