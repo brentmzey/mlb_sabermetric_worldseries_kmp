@@ -38,6 +38,28 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 ---
 
+## 🧠 Econometric Theory & Sabermetric Reasoning Behind the Predictions
+
+Our World Series prediction model is built on **5 Core Theoretical Foundations** combining econometric causal inference and advanced sabermetrics:
+
+### 1. **Pythagorean Expectancy & Run Differential (Bill James Theory)**
+   - **Theory**: A team's actual win-loss record is subject to high-variance noise (1-run games, extra innings, bullpen sequencing luck). Run differential ($RD = R - RA$) is a far more robust, unbiased predictor of latent team quality.
+   - **Formula**: $\text{Pythagorean Win \%} = \frac{\text{Runs Scored}^{1.83}}{\text{Runs Scored}^{1.83} + \text{Runs Allowed}^{1.83}}$
+
+### 2. **BaseRuns (BSR) Context-Neutral Component Model**
+   - **Theory**: BaseRuns evaluates a team's offensive capability by calculating expected runs based on raw baserunner creation ($A$), advancing runners ($B$), and outs made ($C$). This eliminates sequence-dependent variance (e.g., getting hits clustered in a single inning vs. spread across 9 innings).
+
+### 3. **Two-Stage Least Squares (2SLS) Instrumental Variable (IV) Causal Model**
+   - **Theory**: Standard OLS regression of postseason success on regular season wins suffers from endogeneity (unobserved strength of schedule and luck residuals). We instrument team win totals using Pythagorean expectation and opponent strength of schedule ($Z$) in Stage 1 to isolate true structural team quality ($\hat{D}$) in Stage 2.
+
+### 4. **Postseason Non-Linearity & Top-Rotation Dominance**
+   - **Theory**: Playoff baseball differs fundamentally from 162-game regular season baseball. In short 5-game or 7-game series, off-days allow managers to compress their pitching rotations to their **Top 3 Aces** and leverage high-WPA bullpen arms. Our model applies a **30% weighting bonus** to teams with elite Ace ERAs ($ERA \le 3.30$) and top-tier bullpen Win Probability Added.
+
+### 5. **Clubhouse Chemistry & "Thumbs Down" Fan Rally Index**
+   - **Theory**: Inspired by Brian, Patrick, and Matthew's reference to the legendary **2017 Yankees Thumbs-Down Rally**, non-quantifiable factors like fan momentum, trade-deadline WAR additions, and clubhouse morale create a positive feedback loop during October play.
+
+---
+
 ## 📂 Download Open-Source Cleaned Sabermetric Datasets
 
 We provide free, ready-to-use CSV datasets for researchers, sports analysts, and fans:
