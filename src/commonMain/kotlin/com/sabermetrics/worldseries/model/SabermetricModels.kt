@@ -107,7 +107,7 @@ data class MlbTeam(
     val bullpenWpa: Double,
     val top3AceEra: Double,
     val tradeDeadlineWarAdded: Double = 0.0,
-    val thumbsDownHypeIndex: Double = 1.0 // Fan Hype / Rally Index (0.5 to 2.0)
+    val clubhouseHypeIndex: Double = 1.0 // Team Chemistry / Hype Index (0.5 to 2.0)
 ) {
     val id: String get() = teamId.code
     val name: String get() = teamId.fullName
@@ -134,7 +134,7 @@ data class MlbTeam(
         bullpenWpa: Double,
         top3AceEra: Double,
         tradeDeadlineWarAdded: Double = 0.0,
-        thumbsDownHypeIndex: Double = 1.0
+        clubhouseHypeIndex: Double = 1.0
     ) : this(
         teamId = MlbTeamId.fromCode(id),
         wins = wins,
@@ -149,7 +149,7 @@ data class MlbTeam(
         bullpenWpa = bullpenWpa,
         top3AceEra = top3AceEra,
         tradeDeadlineWarAdded = tradeDeadlineWarAdded,
-        thumbsDownHypeIndex = thumbsDownHypeIndex
+        clubhouseHypeIndex = clubhouseHypeIndex
     )
 
     val gamesPlayed: Int get() = wins + losses

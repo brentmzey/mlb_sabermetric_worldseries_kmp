@@ -24,8 +24,8 @@ object WorldSeriesSimulator {
                         0.15 * (3.80 / team.top3AceEra).coerceIn(0.5, 1.5) +
                         0.10 * (team.wRCPlus / 100.0)
 
-        // Trade deadline boost & Thumbs Down hype multiplier
-        val hypeMultiplier = team.thumbsDownHypeIndex
+        // Trade deadline boost & clubhouse hype multiplier
+        val hypeMultiplier = team.clubhouseHypeIndex
         val tradeBoost = team.tradeDeadlineWarAdded * 0.02
         return (baseScore + tradeBoost) * hypeMultiplier
     }
@@ -152,7 +152,7 @@ object WorldSeriesSimulator {
             "Total_Simulations" to iterations.toString(),
             "Top_World_Series_Favorite" to "${leaderboard.first().team.name} (${(leaderboard.first().worldSeriesWinProb * 100).formatDecimals(2)}%)",
             "Causal_2SLS_IV_Engine" to "Active",
-            "ThumbsDown_Hype_Multiplier" to "Applied (Inspired by Brian, Patrick, & Matthew)"
+            "Clubhouse_Momentum_Multiplier" to "Applied"
         )
 
         return WorldSeriesSimulationResult(iterations, leaderboard, diagnostics, csvData)

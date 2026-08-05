@@ -14,7 +14,7 @@ fun main() {
     println("=================================================================================================================")
     println(" ⚾ MLB SABERMETRIC WORLD SERIES PREDICTION & CAUSAL ESTIMATION SUITE (KMP Multiplatform)")
     println("    Clean Open-Source Datasets + 10,000-Iteration Postseason Monte Carlo Simulator")
-    println("    Dedicated to Brian, Patrick, and Matthew (Inspired by Yankees Thumbs-Down Rally)")
+    println("    Dedicated to Brian, Patrick, and Matthew")
     println("=================================================================================================================\n")
 
     println("🧠 ECONOMETRIC THEORY & SABERMETRIC REASONING BEHIND PREDICTIONS:")
@@ -22,7 +22,7 @@ fun main() {
     println("   2. BaseRuns (BSR) Component Model: Eliminates sequence-dependent luck by isolating raw baserunner creation.")
     println("   3. 2SLS IV Causal Model: Instruments win totals with Pythagorean expectation & SOS to remove endogeneity.")
     println("   4. Postseason Compression: Short series leverage Top-3 Ace ERAs and high-leverage bullpen WPA over roster depth.")
-    println("   5. Thumbs-Down Hype Index: Clubhouse momentum & trade additions boost non-linear October performance.\n")
+    println("   5. Clubhouse Momentum Index: Team chemistry & trade additions boost non-linear October performance.\n")
 
     println("⏳ Running 10,000-iteration Monte Carlo playoff simulation...")
     val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 10000, seed = 20260803L)
@@ -42,9 +42,8 @@ fun main() {
         val pennantStr = "%.1f%%".format(tp.pennantProb * 100)
         val wsStr = "%.2f%%".format(tp.worldSeriesWinProb * 100)
 
-        val star = if (t.teamId == MlbTeamId.NYY) " 👎 (Thumbs Down Rally)" else ""
-        println("%-4d | %-9s | %-24s | %-6s | %-8s | %-12.1f | %-12s | %-14s | %-12s%s".format(
-            tp.simRank, tp.movementSymbol, t.name, lgDiv, wl, tp.expectedSeasonWins, playoffStr, pennantStr, wsStr, star
+        println("%-4d | %-9s | %-24s | %-6s | %-8s | %-12.1f | %-12s | %-14s | %-12s".format(
+            tp.simRank, tp.movementSymbol, t.name, lgDiv, wl, tp.expectedSeasonWins, playoffStr, pennantStr, wsStr
         ))
     }
     println("---------------------------------------------------------------------------------------------------------------------------------")
@@ -155,10 +154,10 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
         g.color = barColors[idx % barColors.size]
         g.fillRoundRect(395, yPos, barW, 30, 12, 12)
 
-        // 4. Percentage & Hype Annotations
+        // 4. Percentage Annotations
         g.color = Color(255, 255, 255)
         g.font = Font("SansSerif", Font.BOLD, 18)
-        val pctStr = "%.2f%%".format(pct) + if (t.teamId == MlbTeamId.NYY) " 👎" else ""
+        val pctStr = "%.2f%%".format(pct)
         g.drawString(pctStr, 410 + barW, yPos + 22)
 
         yPos += 58
@@ -167,7 +166,7 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
     // Footer Watermark
     g.color = Color(100, 116, 139)
     g.font = Font("SansSerif", Font.ITALIC, 15)
-    g.drawString("Dedicated to Brian, Patrick, & Matthew | Inspired by Yankees Thumbs-Down Rally 👎 | Open Source KMP Engine", 70, height - 65)
+    g.drawString("Dedicated to Brian, Patrick, & Matthew | Open Source KMP Engine", 70, height - 65)
 
     g.dispose()
 
@@ -298,7 +297,7 @@ fun generateLineChartImage(topTeams: List<TeamProbability>) {
     // Footer Watermark
     g.color = Color(100, 116, 139)
     g.font = Font("SansSerif", Font.ITALIC, 15)
-    g.drawString("Dedicated to Brian, Patrick, & Matthew | Inspired by Yankees Thumbs-Down Rally 👎 | Open Source KMP Engine", 70, height - 65)
+    g.drawString("Dedicated to Brian, Patrick, & Matthew | Open Source KMP Engine", 70, height - 65)
 
     g.dispose()
 
