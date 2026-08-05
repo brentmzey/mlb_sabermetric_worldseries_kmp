@@ -46,40 +46,56 @@ if not ADMIN_EMAIL or not ADMIN_PASSWORD:
     sys.exit(1)
 
 def http_post(url, data_dict, token=None):
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    }
     if token:
         headers["Authorization"] = token
     req = urllib.request.Request(url, data=json.dumps(data_dict).encode("utf-8"), headers=headers, method="POST")
     with urllib.request.urlopen(req) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+        body = resp.read().decode("utf-8")
+        return json.loads(body) if body.strip() else {}
 
 def http_put(url, data_dict, token=None):
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    }
     if token:
         headers["Authorization"] = token
     req = urllib.request.Request(url, data=json.dumps(data_dict).encode("utf-8"), headers=headers, method="PUT")
     with urllib.request.urlopen(req) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+        body = resp.read().decode("utf-8")
+        return json.loads(body) if body.strip() else {}
 
 def http_get(url, token=None):
-    headers = {}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
+    }
     if token:
         headers["Authorization"] = token
     req = urllib.request.Request(url, headers=headers, method="GET")
     with urllib.request.urlopen(req) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
-# Step 1: Authenticate Admin
+# Step 1: Authenticate Admin / Superuser
 print("🔐 Authenticating Admin account with PocketHost...")
-try:
-    res = http_post(f"{POCKETHOST_URL}/api/admins/auth-with-password", {"identity": ADMIN_EMAIL, "password": ADMIN_PASSWORD})
-    token = res.get("token")
-    if not token:
-        print("❌ Authentication failed: No token received.")
-        sys.exit(1)
-    print("✅ Admin authenticated successfully.")
-except Exception as e:
-    print(f"❌ Admin authentication failed: {e}")
+time.sleep(2.0)
+token = None
+for auth_ep in ["/api/collections/_superusers/auth-with-password", "/api/admins/auth-with-password"]:
+    try:
+        res = http_post(f"{POCKETHOST_URL}{auth_ep}", {"identity": ADMIN_EMAIL, "password": ADMIN_PASSWORD})
+        token = res.get("token")
+        if token:
+            print(f"✅ Admin authenticated successfully via `{auth_ep}`.")
+            break
+    except Exception as e:
+        print(f"   Auth attempt on `{auth_ep}` failed: {e}")
+        continue
+
+if not token:
+    print("❌ Admin authentication failed on all endpoints.")
     sys.exit(1)
 
 # Step 2: Import Collections Schema
@@ -94,6 +110,10 @@ print(f"📦 Importing {len(collections_data)} collections schema to PocketHost.
 try:
     http_put(f"{POCKETHOST_URL}/api/collections/import", {"collections": collections_data, "deleteMissing": False}, token=token)
     print("✅ PocketHost collection schemas uploaded successfully.")
+except urllib.error.HTTPError as e:
+    err_text = e.read().decode("utf-8")
+    print(f"❌ Collection schema import HTTP Error {e.code}: {err_text}")
+    sys.exit(1)
 except Exception as e:
     print(f"❌ Collection schema import failed: {e}")
     sys.exit(1)
@@ -195,10 +215,13 @@ for row in rows:
     except Exception as e:
         print(f"Error uploading snapshot for {code}: {e}")
 
+    time.sleep(0.1)
+
     # Rank movement payload
     reg_rank = int(row["Regular_Season_Rank"])
     sim_rank = int(row["Sim_Rank"])
     delta = reg_rank - sim_rank
+    symbol = row["Rank_Movement"].replace("—", "-")
 
     move_payload = {
         "rel_run_id": run_record_id,
@@ -207,7 +230,7 @@ for row in rows:
         "int_regular_season_rank": reg_rank,
         "int_sim_rank": sim_rank,
         "int_rank_delta": delta,
-        "str_movement_symbol": row["Rank_Movement"],
+        "str_movement_symbol": symbol,
         "dbl_playoff_prob": 1.0 if sim_rank <= 2 else (0.8 if sim_rank <= 8 else 0.2),
         "dbl_pennant_prob": 0.422 if code == "LAD" else (0.311 if code == "NYY" else 0.05),
         "dbl_world_series_win_prob": 0.2987 if code == "LAD" else (0.1431 if code == "NYY" else 0.05),
@@ -219,6 +242,8 @@ for row in rows:
         movement_count += 1
     except Exception as e:
         print(f"Error uploading movement for {code}: {e}")
+
+    time.sleep(0.1)
 
 print("================================================================================")
 print(f" 🎉 SUCCESS! Simulation data fully saved to PocketHost DB!")
