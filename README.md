@@ -211,6 +211,20 @@ To track team performance, simulation runs, and standings rank movements over ti
 
 ---
 
+## 🌐 Data Sources & Open-Source Provenance
+
+Our predictions and datasets combine authoritative open-source sabermetric databases, official league feeds, and advanced Statcast metrics:
+
+| Data Category | Primary Source | Metrics Sourced | Usage in Engine |
+| :--- | :--- | :--- | :--- |
+| **Official Standings & Schedules** | [MLB Stats API](https://statsapi.mlb.com/api/v1/) | Wins, Losses, Runs Scored ($R$), Runs Allowed ($RA$), Standings | Baseline W-L rank & Pythagorean expectation input |
+| **Advanced Batting Metrics** | [FanGraphs](https://www.fangraphs.com/) | wOBA, wRC+, BaseRuns (BSR), Offensive WAR | Context-neutral run creation & luck filtering |
+| **Fielding-Independent Pitching** | [Baseball-Reference](https://www.baseball-reference.com/) | FIP, xFIP, Team Pitching WAR, ERA | Starting rotation true skill estimation |
+| **High-Leverage & Statcast** | [Baseball Savant / Statcast](https://baseballsavant.mlb.com/) | Bullpen WPA (Win Probability Added), Top-3 Ace ERA | October playoff compression & short-series logit probabilities |
+| **Trade & Clubhouse Momentum** | In-House Econometric Modeling | Trade Deadline WAR Added, Thumbs-Down Hype Index | Non-linear momentum multipliers & trade stretch adjustments |
+
+---
+
 ## 📂 Download Open-Source Cleaned Sabermetric Datasets
 
 We provide free, ready-to-use CSV datasets for researchers, sports analysts, and fans:
