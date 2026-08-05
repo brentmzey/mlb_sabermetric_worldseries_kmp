@@ -22,23 +22,23 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 > **Updated Predictions (10,000-Iteration Postseason Monte Carlo Simulation)**
 
-| Rank | Team Name | League & Division | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
-| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | **Los Angeles Dodgers** | NL West | 98 - 64 | 96.0 | **100.0%** | **42.2%** | **29.87%** | `████████████████` |
-| 🥈 2 👎 | **New York Yankees** | AL East | 94 - 68 | 95.5 | **100.0%** | **31.1%** | **14.31%** | `████████` |
-| 🥉 3 | **Philadelphia Phillies** | NL East | 95 - 67 | 92.4 | **94.3%** | **14.0%** | **7.22%** | `████` |
-| 4 | **Milwaukee Brewers** | NL Central | 93 - 69 | 94.2 | **99.3%** | **14.1%** | **7.05%** | `████` |
-| 5 | **San Diego Padres** | NL West | 93 - 69 | 90.4 | **80.3%** | **11.6%** | **6.91%** | `████` |
-| 6 | **Houston Astros** | AL West | 88 - 73 | 90.1 | **92.2%** | **14.5%** | **5.52%** | `███` |
-| 7 | **Baltimore Orioles** | AL East | 91 - 71 | 90.1 | **90.6%** | **12.7%** | **5.32%** | `███` |
-| 8 | **Cleveland Guardians** | AL Central | 92 - 69 | 90.7 | **94.1%** | **14.2%** | **5.30%** | `███` |
-| 9 | **Kansas City Royals** | AL Central | 86 - 76 | 91.0 | **95.6%** | **14.6%** | **5.26%** | `███` |
-| 10 | **Arizona Diamondbacks** | NL West | 89 - 73 | 89.6 | **72.0%** | **6.0%** | **3.02%** | `██` |
-| 11 | **Atlanta Braves** | NL East | 89 - 73 | 88.6 | **59.8%** | **5.3%** | **2.59%** | `█` |
-| 12 | **Seattle Mariners** | AL West | 85 - 77 | 87.1 | **60.3%** | **6.9%** | **2.43%** | `█` |
-| 13 | **New York Mets** | NL East | 89 - 73 | 88.2 | **53.0%** | **4.5%** | **2.11%** | `█` |
-| 14 | **Detroit Tigers** | AL Central | 86 - 76 | 85.5 | **40.0%** | **4.1%** | **1.52%** | `█` |
-| 15 | **Chicago Cubs** | NL Central | 83 - 79 | 87.1 | **41.2%** | **2.3%** | **0.94%** | `▏` |
+| Rank | Movement | Team Name | League & Division | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
+| :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| 🥇 1 | — | **Los Angeles Dodgers** | NL West | 98 - 64 | 96.0 | **100.0%** | **42.2%** | **29.87%** | `████████████████` |
+| 🥈 2 👎 | ▲ +1 | **New York Yankees** | AL East | 94 - 68 | 95.5 | **100.0%** | **31.1%** | **14.31%** | `████████` |
+| 🥉 3 | ▼ -1 | **Philadelphia Phillies** | NL East | 95 - 67 | 92.4 | **94.3%** | **14.0%** | **7.22%** | `████` |
+| 4 | — | **Milwaukee Brewers** | NL Central | 93 - 69 | 94.2 | **99.3%** | **14.1%** | **7.05%** | `████` |
+| 5 | — | **San Diego Padres** | NL West | 93 - 69 | 90.4 | **80.3%** | **11.6%** | **6.91%** | `████` |
+| 6 | ▲ +5 | **Houston Astros** | AL West | 88 - 73 | 90.1 | **92.2%** | **14.5%** | **5.52%** | `███` |
+| 7 | — | **Baltimore Orioles** | AL East | 91 - 71 | 90.1 | **90.6%** | **12.7%** | **5.32%** | `███` |
+| 8 | ▼ -2 | **Cleveland Guardians** | AL Central | 92 - 69 | 90.7 | **94.1%** | **14.2%** | **5.30%** | `███` |
+| 9 | ▲ +3 | **Kansas City Royals** | AL Central | 86 - 76 | 91.0 | **95.6%** | **14.6%** | **5.26%** | `███` |
+| 10 | ▼ -2 | **Arizona Diamondbacks** | NL West | 89 - 73 | 89.6 | **72.0%** | **6.0%** | **3.02%** | `██` |
+| 11 | ▼ -1 | **Atlanta Braves** | NL East | 89 - 73 | 88.6 | **59.8%** | **5.3%** | **2.59%** | `█` |
+| 12 | ▲ +2 | **Seattle Mariners** | AL West | 85 - 77 | 87.1 | **60.3%** | **6.9%** | **2.43%** | `█` |
+| 13 | ▼ -4 | **New York Mets** | NL East | 89 - 73 | 88.2 | **53.0%** | **4.5%** | **2.11%** | `█` |
+| 14 | ▼ -1 | **Detroit Tigers** | AL Central | 86 - 76 | 85.5 | **40.0%** | **4.1%** | **1.52%** | `█` |
+| 15 | — | **Chicago Cubs** | NL Central | 83 - 79 | 87.1 | **41.2%** | **2.3%** | **0.94%** | `▏` |
 
 ---
 
@@ -70,10 +70,15 @@ flowchart TD
         N --> O[World Series Best-of-7]
     end
 
+    subgraph Standings Movement & Rank Trend Engine
+        O --> P[Calculate Baseline W-L Rank vs Playoff Quality Rank]
+        P --> Q[Compute Delta Rank Movement & Trend Badges]
+    end
+
     subgraph Open-Source Outputs
-        O --> P[Live World Series Win Probability Leaderboard]
-        O --> Q[Cleaned CSV Dataset Export]
-        O --> R[Automated Weekly GitHub Actions Updates]
+        Q --> R[Live World Series Win Probability Leaderboard with Trends]
+        Q --> S[Cleaned CSV Dataset Export with Rank Deltas]
+        Q --> T[Automated Weekly GitHub Actions Updates]
     end
 ```
 
@@ -81,7 +86,7 @@ flowchart TD
 
 ## 🧮 Formal Mathematical Models & Structural Equations
 
-Our predictions bridge raw sabermetrics and causal econometrics through 4 formal mathematical models:
+Our predictions bridge raw sabermetrics and causal econometrics through 5 formal mathematical models:
 
 ### 1. **Bill James Pythagorean Expectancy Model**
 Eliminates 1-run game noise and bullpen sequencing variance by modeling win expectation strictly as a function of runs scored ($R$) and runs allowed ($RA$):
@@ -120,6 +125,18 @@ In any individual playoff game between Team $A$ and Team $B$, the probability of
 $$P(\text{Team } A \text{ beats Team } B) = \frac{1}{1 + e^{-\lambda (\hat{Quality}_A - \hat{Quality}_B)}}$$
 
 where $\lambda = 3.5$ represents the postseason intensity scaling factor.
+
+---
+
+### 5. **Standings Movement & Rank Delta Formulation**
+Quantifies how much a team's true championship odds move relative to their raw regular-season win-loss record after purging luck noise and adjusting for playoff rotation depth:
+
+$$\Delta \text{Rank}_i = \text{Rank}_{\text{Regular Season}, i} - \text{Rank}_{\text{Causal World Series Sim}, i}$$
+
+where:
+- $\Delta \text{Rank}_i > 0 \implies \text{\bf Climbed } (\mathbf{\text{▲} +k})$: Team structural skill exceeds regular-season win rank.
+- $\Delta \text{Rank}_i < 0 \implies \text{\bf Dropped } (\mathbf{\text{▼} -k})$: Team benefited from regular-season luck or lacks 3-ace rotation depth.
+- $\Delta \text{Rank}_i = 0 \implies \text{\bf Unchanged } (\mathbf{\text{—}})$: Baseline win rank aligns with postseason quality score.
 
 ---
 
@@ -171,6 +188,26 @@ where $\mathbf{X}_i$ represents underlying peripheral components (contact qualit
    $$\hat{Quality}_{2SLS} = \left( X^T Z (Z^T Z)^{-1} Z^T X \right)^{-1} X^T Z (Z^T Z)^{-1} Z^T Y$$
 
    This isolates pure structural skill and completely purges the **Luck Factor** residual $\varepsilon_i$.
+
+---
+
+## 🗄️ PocketHost / PocketBase Database Schema & Historical Tracking (Hungarian Prefix Notation)
+
+To track team performance, simulation runs, and standings rank movements over time, we have established a **PocketHost / PocketBase Database Schema** utilizing strict **Hungarian Prefix Notation**:
+
+### Hungarian Naming Conventions:
+- `tbl_`: Database Tables / PocketBase Collections (`tbl_mlb_teams`, `tbl_simulation_runs`, `tbl_team_snapshots`, `tbl_rank_movements`)
+- `id_`: Record Identifier (`id_team`, `id_run`, `id_movement`)
+- `rel_`: Foreign Key Relation (`rel_run_id`, `rel_team_id`)
+- `str_`: String / Text Fields (`str_team_code`, `str_team_name`, `str_movement_symbol`)
+- `int_`: Integer Fields (`int_regular_season_rank`, `int_sim_rank`, `int_rank_delta`, `int_wins`)
+- `dbl_`: Floating Point Fields (`dbl_world_series_win_prob`, `dbl_latent_quality_score`, `dbl_team_war`)
+- `dt_`: Timestamp / Date Fields (`dt_run_timestamp`, `dt_snapshot_timestamp`)
+
+### 📜 Download & Import Database Schemas:
+* 🗄️ **[SQL DDL Migration Script (`pockethost_schema.sql`)](docs/schema/pockethost_schema.sql)**: Complete SQLite/PostgreSQL DDL schema with composite unique constraints and foreign key indexes.
+* 📦 **[PocketHost Collection Definitions (`pockethost_collections.json`)](docs/schema/pockethost_collections.json)**: PocketBase collection definitions ready to import directly into the PocketHost dashboard.
+* ⚡ **[Kotlin KMP PocketHost Tracker (`PocketHostDataTracker.kt`)](src/commonMain/kotlin/com/sabermetrics/worldseries/data/PocketHostDataTracker.kt)**: Helper class for formatting PocketHost JSON sync payloads.
 
 ---
 

@@ -28,13 +28,12 @@ fun main() {
     val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 10000, seed = 20260803L)
 
     println("\n🏆 MLB WORLD SERIES WIN PROBABILITY LEADERBOARD (10,000 SIMULATIONS):")
-    println("-----------------------------------------------------------------------------------------------------------------")
-    println("%-4s | %-24s | %-6s | %-8s | %-12s | %-12s | %-14s | %-12s".format(
-        "Rank", "Team Name", "Lg/Div", "W-L", "Sim Wins", "Playoff %", "Pennant %", "World Series %"
+    println("---------------------------------------------------------------------------------------------------------------------------------")
+    println("%-4s | %-9s | %-24s | %-6s | %-8s | %-12s | %-12s | %-14s | %-12s".format(
+        "Rank", "Movement", "Team Name", "Lg/Div", "W-L", "Sim Wins", "Playoff %", "Pennant %", "World Series %"
     ))
-    println("-----------------------------------------------------------------------------------------------------------------")
+    println("---------------------------------------------------------------------------------------------------------------------------------")
 
-    var rank = 1
     for (tp in result.leaderboard) {
         val t = tp.team
         val lgDiv = "${t.league}-${t.division.name.take(1)}"
@@ -44,12 +43,11 @@ fun main() {
         val wsStr = "%.2f%%".format(tp.worldSeriesWinProb * 100)
 
         val star = if (t.teamId == MlbTeamId.NYY) " 👎 (Thumbs Down Rally)" else ""
-        println("%-4d | %-24s | %-6s | %-8s | %-12.1f | %-12s | %-14s | %-12s%s".format(
-            rank, t.name, lgDiv, wl, tp.expectedSeasonWins, playoffStr, pennantStr, wsStr, star
+        println("%-4d | %-9s | %-24s | %-6s | %-8s | %-12.1f | %-12s | %-14s | %-12s%s".format(
+            tp.simRank, tp.movementSymbol, t.name, lgDiv, wl, tp.expectedSeasonWins, playoffStr, pennantStr, wsStr, star
         ))
-        rank++
     }
-    println("-----------------------------------------------------------------------------------------------------------------")
+    println("---------------------------------------------------------------------------------------------------------------------------------")
 
     println("\n📊 CAUSAL MODEL & SIMULATION DIAGNOSTICS:")
     for ((key, value) in result.causalDiagnostics) {
@@ -90,16 +88,25 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
 
     // Title & Subtitle
     g.color = Color(248, 250, 252)
-    g.font = Font("SansSerif", Font.BOLD, 32)
-    g.drawString("⚾ 2026 MLB World Series Winning Probabilities", 70, 95)
+    g.font = Font("SansSerif", Font.BOLD, 30)
+    g.drawString("⚾ 2026 MLB World Series Winning Probabilities", 70, 92)
 
     g.color = Color(148, 163, 184)
-    g.font = Font("SansSerif", Font.PLAIN, 18)
-    g.drawString("10,000-Iteration Sabermetric & Causal Monte Carlo Simulation Engine", 70, 130)
+    g.font = Font("SansSerif", Font.PLAIN, 16)
+    g.drawString("10,000-Iteration Sabermetric & 2SLS Causal Monte Carlo Simulation Engine", 70, 122)
+
+    // Legend Badge (Top Right)
+    g.font = Font("SansSerif", Font.BOLD, 13)
+    g.color = Color(52, 211, 153)
+    g.drawString("▲ Climbed", 830, 92)
+    g.color = Color(248, 113, 113)
+    g.drawString("▼ Dropped", 925, 92)
+    g.color = Color(148, 163, 184)
+    g.drawString("— Same", 1015, 92)
 
     val maxProb = topTeams.first().worldSeriesWinProb.coerceAtLeast(0.01)
-    val barMaxPx = 620
-    var yPos = 180
+    val barMaxPx = 540
+    var yPos = 175
 
     val barColors = listOf(
         Color(14, 165, 233), // Sky Blue
@@ -117,21 +124,41 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
         val pct = tp.worldSeriesWinProb * 100
         val barW = ((tp.worldSeriesWinProb / maxProb) * barMaxPx).toInt().coerceAtLeast(12)
 
-        // Rank & Team Name
+        // 1. Trend Movement Pill Badge (Left Side)
+        val moveText = tp.movementSymbol
+        val badgeBg = when {
+            tp.rankDelta > 0 -> Color(16, 185, 129, 45)  // Translucent Green
+            tp.rankDelta < 0 -> Color(239, 68, 68, 45)   // Translucent Red
+            else -> Color(100, 116, 139, 35)             // Translucent Slate
+        }
+        val badgeFg = when {
+            tp.rankDelta > 0 -> Color(52, 211, 153)  // Bright Green
+            tp.rankDelta < 0 -> Color(248, 113, 113) // Bright Red
+            else -> Color(148, 163, 184)            // Slate
+        }
+
+        g.color = badgeBg
+        g.fillRoundRect(65, yPos, 62, 28, 14, 14)
+        g.color = badgeFg
+        g.drawRoundRect(65, yPos, 62, 28, 14, 14)
+        g.font = Font("SansSerif", Font.BOLD, 13)
+        g.drawString(moveText, 73, yPos + 19)
+
+        // 2. Rank & Team Name
         g.color = Color(226, 232, 240)
         g.font = Font("SansSerif", Font.BOLD, 18)
         val nameLabel = "#${idx + 1} ${t.name}"
-        g.drawString(nameLabel, 70, yPos + 25)
+        g.drawString(nameLabel, 142, yPos + 21)
 
-        // Bar Graphic
+        // 3. Horizontal Probability Bar
         g.color = barColors[idx % barColors.size]
-        g.fillRoundRect(330, yPos + 4, barW, 30, 12, 12)
+        g.fillRoundRect(395, yPos, barW, 30, 12, 12)
 
-        // Percentage Text
+        // 4. Percentage & Hype Annotations
         g.color = Color(255, 255, 255)
         g.font = Font("SansSerif", Font.BOLD, 18)
         val pctStr = "%.2f%%".format(pct) + if (t.teamId == MlbTeamId.NYY) " 👎" else ""
-        g.drawString(pctStr, 345 + barW, yPos + 26)
+        g.drawString(pctStr, 410 + barW, yPos + 22)
 
         yPos += 58
     }

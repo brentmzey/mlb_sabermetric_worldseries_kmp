@@ -1,0 +1,109 @@
+/**
+ * PocketBase Migration: Initialize MLB Sabermetric & Standings Movement Schema
+ * Collections: tbl_mlb_teams, tbl_simulation_runs, tbl_team_snapshots, tbl_rank_movements
+ * Hungarian Prefix Notation & Database Relationships
+ */
+
+migrate((db) => {
+  const dao = new Dao(db);
+
+  // 1. tbl_mlb_teams
+  const teamsCollection = new Collection({
+    name: "tbl_mlb_teams",
+    type: "base",
+    schema: [
+      { name: "str_team_code", type: "text", required: true },
+      { name: "str_team_name", type: "text", required: true },
+      { name: "str_league", type: "text", required: true },
+      { name: "str_division", type: "text", required: true }
+    ],
+    indexes: [
+      "CREATE UNIQUE INDEX idx_mlb_teams_code ON tbl_mlb_teams(str_team_code)",
+      "CREATE INDEX idx_mlb_teams_league_div ON tbl_mlb_teams(str_league, str_division)"
+    ]
+  });
+  dao.saveCollection(teamsCollection);
+
+  // 2. tbl_simulation_runs
+  const runsCollection = new Collection({
+    name: "tbl_simulation_runs",
+    type: "base",
+    schema: [
+      { name: "str_run_id", type: "text", required: true },
+      { name: "dt_run_timestamp", type: "date", required: true },
+      { name: "int_total_iterations", type: "number", required: true },
+      { name: "int_random_seed", type: "number", required: true },
+      { name: "str_top_favorite_code", type: "text", required: true },
+      { name: "dbl_top_favorite_prob", type: "number", required: true },
+      { name: "str_causal_engine_status", type: "text", required: true },
+      { name: "str_hype_multiplier_note", type: "text", required: false }
+    ],
+    indexes: [
+      "CREATE UNIQUE INDEX idx_sim_runs_run_id ON tbl_simulation_runs(str_run_id)",
+      "CREATE INDEX idx_sim_runs_timestamp ON tbl_simulation_runs(dt_run_timestamp)"
+    ]
+  });
+  dao.saveCollection(runsCollection);
+
+  // 3. tbl_team_snapshots
+  const snapshotsCollection = new Collection({
+    name: "tbl_team_snapshots",
+    type: "base",
+    schema: [
+      { name: "rel_run_id", type: "relation", required: true, options: { collectionId: runsCollection.id, maxSelect: 1 } },
+      { name: "rel_team_id", type: "relation", required: true, options: { collectionId: teamsCollection.id, maxSelect: 1 } },
+      { name: "str_team_code", type: "text", required: true },
+      { name: "int_wins", type: "number", required: true },
+      { name: "int_losses", type: "number", required: true },
+      { name: "dbl_runs_scored", type: "number", required: true },
+      { name: "dbl_runs_allowed", type: "number", required: true },
+      { name: "dbl_team_war", type: "number", required: true },
+      { name: "dbl_woba", type: "number", required: true },
+      { name: "dbl_wrc_plus", type: "number", required: true },
+      { name: "dbl_fip", type: "number", required: true },
+      { name: "dbl_xfip", type: "number", required: true },
+      { name: "dbl_bullpen_wpa", type: "number", required: true },
+      { name: "dbl_top3_ace_era", type: "number", required: true },
+      { name: "dbl_thumbs_down_hype_index", type: "number", required: true }
+    ],
+    indexes: [
+      "CREATE UNIQUE INDEX uq_snapshot_run_team ON tbl_team_snapshots(rel_run_id, rel_team_id)",
+      "CREATE INDEX idx_snapshots_run_id ON tbl_team_snapshots(rel_run_id)",
+      "CREATE INDEX idx_snapshots_team_id ON tbl_team_snapshots(rel_team_id)"
+    ]
+  });
+  dao.saveCollection(snapshotsCollection);
+
+  // 4. tbl_rank_movements
+  const movementsCollection = new Collection({
+    name: "tbl_rank_movements",
+    type: "base",
+    schema: [
+      { name: "rel_run_id", type: "relation", required: true, options: { collectionId: runsCollection.id, maxSelect: 1 } },
+      { name: "rel_team_id", type: "relation", required: true, options: { collectionId: teamsCollection.id, maxSelect: 1 } },
+      { name: "str_team_code", type: "text", required: true },
+      { name: "int_regular_season_rank", type: "number", required: true },
+      { name: "int_sim_rank", type: "number", required: true },
+      { name: "int_rank_delta", type: "number", required: true },
+      { name: "str_movement_symbol", type: "text", required: true },
+      { name: "dbl_playoff_prob", type: "number", required: true },
+      { name: "dbl_pennant_prob", type: "number", required: true },
+      { name: "dbl_world_series_win_prob", type: "number", required: true },
+      { name: "dbl_expected_season_wins", type: "number", required: true },
+      { name: "dbl_latent_quality_score", type: "number", required: true }
+    ],
+    indexes: [
+      "CREATE UNIQUE INDEX uq_movement_run_team ON tbl_rank_movements(rel_run_id, rel_team_id)",
+      "CREATE INDEX idx_movements_run_id ON tbl_rank_movements(rel_run_id)",
+      "CREATE INDEX idx_movements_sim_rank ON tbl_rank_movements(int_sim_rank)",
+      "CREATE INDEX idx_movements_rank_delta ON tbl_rank_movements(int_rank_delta)"
+    ]
+  });
+  dao.saveCollection(movementsCollection);
+}, (db) => {
+  const dao = new Dao(db);
+  dao.deleteCollection("tbl_rank_movements");
+  dao.deleteCollection("tbl_team_snapshots");
+  dao.deleteCollection("tbl_simulation_runs");
+  dao.deleteCollection("tbl_mlb_teams");
+});

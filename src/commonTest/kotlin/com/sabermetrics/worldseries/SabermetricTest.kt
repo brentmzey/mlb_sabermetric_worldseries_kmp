@@ -81,10 +81,42 @@ class SabermetricTest {
     @Test
     fun testExportCleanCsvDataset() {
         val teams = SabermetricDataService.loadCleanedMlbDataset()
-        val csv = SabermetricDataService.exportCleanCsvDataset(teams)
+        val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 100, seed = 42L)
+        val csv = SabermetricDataService.exportCleanCsvDataset(teams, result.leaderboard)
         assertTrue(csv.contains("Team_ID,Team_Name,League,Division"))
+        assertTrue(csv.contains("Regular_Season_Rank,Sim_Rank,Rank_Movement"))
         assertTrue(csv.contains("NYY,\"New York Yankees\""))
         assertTrue(csv.contains("LAD,\"Los Angeles Dodgers\""))
     }
+
+    @Test
+    fun testStandingsMovementTracking() {
+        val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 500, seed = 999L)
+        assertTrue(result.leaderboard.all { it.regularSeasonRank in 1..30 })
+        assertTrue(result.leaderboard.all { it.simRank in 1..30 })
+
+        // Check NYY rank movement (regular season rank 3 -> sim rank 2 = ▲ +1)
+        val nyy = result.leaderboard.first { it.team.teamId == MlbTeamId.NYY }
+        assertEquals(3, nyy.regularSeasonRank)
+        assertEquals(2, nyy.simRank)
+        assertEquals(1, nyy.rankDelta)
+        assertEquals("▲ +1", nyy.movementSymbol)
+    }
+
+    @Test
+    fun testPocketHostDataTrackerPayloads() {
+        val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 100, seed = 42L)
+        val runPayload = com.sabermetrics.worldseries.data.PocketHostDataTracker.buildSimulationRunJsonPayload("RUN-TEST-001", result, 42L)
+        assertTrue(runPayload.contains("\"str_run_id\": \"RUN-TEST-001\""))
+        assertTrue(runPayload.contains("\"int_total_iterations\": 100"))
+        assertTrue(runPayload.contains("\"str_top_favorite_code\": \"LAD\""))
+
+        val movePayload = com.sabermetrics.worldseries.data.PocketHostDataTracker.buildRankMovementsJsonPayload("RUN-TEST-001", result.leaderboard)
+        assertTrue(movePayload.contains("\"str_team_code\": \"NYY\""))
+        assertTrue(movePayload.contains("\"int_regular_season_rank\": 3"))
+        assertTrue(movePayload.contains("\"str_movement_symbol\": \"▲ +1\""))
+    }
 }
+
+
 

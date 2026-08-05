@@ -111,17 +111,42 @@ object WorldSeriesSimulator {
             wsCounts[worldSeriesChampion.teamId] = (wsCounts[worldSeriesChampion.teamId] ?: 0) + 1
         }
 
-        val leaderboard = teams.map { t ->
+        // Calculate baseline regular-season win rank (1..30)
+        val sortedBySeasonWins = teams.sortedWith(
+            compareByDescending<MlbTeam> { it.wins }.thenByDescending { it.runDifferential }
+        )
+        val regularSeasonRankMap = sortedBySeasonWins.withIndex().associate { (idx, t) ->
+            t.teamId to (idx + 1)
+        }
+
+        val unrankedLeaderboard = teams.map { t ->
             val wsProb = (wsCounts[t.teamId] ?: 0).toDouble() / iterations
             val pennantProb = (pennantCounts[t.teamId] ?: 0).toDouble() / iterations
             val playoffProb = (playoffCounts[t.teamId] ?: 0).toDouble() / iterations
             val avgWins = (simulatedWinsTotal[t.teamId] ?: 0.0) / iterations
             val quality = computeLatentTeamQuality(t)
+            val regRank = regularSeasonRankMap[t.teamId] ?: 0
 
-            TeamProbability(t, playoffProb, pennantProb, wsProb, avgWins, quality)
+            TeamProbability(
+                team = t,
+                playoffProb = playoffProb,
+                pennantProb = pennantProb,
+                worldSeriesWinProb = wsProb,
+                expectedSeasonWins = avgWins,
+                latentQualityScore = quality,
+                regularSeasonRank = regRank
+            )
         }.sortedByDescending { it.worldSeriesWinProb }
 
-        val csvData = SabermetricDataService.exportCleanCsvDataset(teams)
+        val leaderboard = unrankedLeaderboard.withIndex().map { (idx, tp) ->
+            val currentSimRank = idx + 1
+            tp.copy(
+                simRank = currentSimRank,
+                rankDelta = tp.regularSeasonRank - currentSimRank
+            )
+        }
+
+        val csvData = SabermetricDataService.exportCleanCsvDataset(teams, leaderboard)
 
         val diagnostics = mapOf(
             "Total_Simulations" to iterations.toString(),
