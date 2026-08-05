@@ -6,6 +6,9 @@ on:
     - cron: '0 6 * * 1'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update-predictions-and-sync:
     runs-on: ubuntu-latest
@@ -38,7 +41,9 @@ jobs:
         env:
           POCKETHOST_ADMIN_EMAIL: ${{ secrets.POCKETHOST_ADMIN_EMAIL }}
           POCKETHOST_ADMIN_PASSWORD: ${{ secrets.POCKETHOST_ADMIN_PASSWORD }}
-        run: python3 scripts/sync_pockethost_rest.py
+        run: |
+          python3 -m pip install --upgrade urllib3 requests
+          python3 scripts/sync_pockethost_rest.py
 
       - name: 📤 Commit & Push Updated Datasets, Charts, & README
         run: |
