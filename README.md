@@ -38,7 +38,7 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 | 12 | **Seattle Mariners** | AL West | 85 - 77 | 87.1 | **60.3%** | **6.9%** | **2.43%** | `█` |
 | 13 | **New York Mets** | NL East | 89 - 73 | 88.2 | **53.0%** | **4.5%** | **2.11%** | `█` |
 | 14 | **Detroit Tigers** | AL Central | 86 - 76 | 85.5 | **40.0%** | **4.1%** | **1.52%** | `█` |
-| 15 | **Minnesota Twins** | AL Central | 82 - 80 | 83.8 | **20.8%** | **0.0%** | **0.00%** | `▏` |
+| 15 | **Chicago Cubs** | NL Central | 83 - 79 | 87.1 | **41.2%** | **2.3%** | **0.94%** | `▏` |
 
 ---
 

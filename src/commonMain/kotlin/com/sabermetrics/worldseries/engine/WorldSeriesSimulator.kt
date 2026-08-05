@@ -2,6 +2,7 @@ package com.sabermetrics.worldseries.engine
 
 import com.sabermetrics.worldseries.data.SabermetricDataService
 import com.sabermetrics.worldseries.model.*
+import com.sabermetrics.worldseries.util.formatDecimals
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.sqrt
@@ -61,16 +62,16 @@ object WorldSeriesSimulator {
         val teams = SabermetricDataService.loadCleanedMlbDataset()
         val random = Random(seed)
 
-        val playoffCounts = mutableMapOf<String, Int>()
-        val pennantCounts = mutableMapOf<String, Int>()
-        val wsCounts = mutableMapOf<String, Int>()
-        val simulatedWinsTotal = mutableMapOf<String, Double>()
+        val playoffCounts = mutableMapOf<MlbTeamId, Int>()
+        val pennantCounts = mutableMapOf<MlbTeamId, Int>()
+        val wsCounts = mutableMapOf<MlbTeamId, Int>()
+        val simulatedWinsTotal = mutableMapOf<MlbTeamId, Double>()
 
         for (t in teams) {
-            playoffCounts[t.id] = 0
-            pennantCounts[t.id] = 0
-            wsCounts[t.id] = 0
-            simulatedWinsTotal[t.id] = 0.0
+            playoffCounts[t.teamId] = 0
+            pennantCounts[t.teamId] = 0
+            wsCounts[t.teamId] = 0
+            simulatedWinsTotal[t.teamId] = 0.0
         }
 
         // Group teams by League and Division
@@ -82,11 +83,11 @@ object WorldSeriesSimulator {
             val seasonQuality = teams.associate { t ->
                 val pythW = t.pythagoreanWinsExpected
                 val simWins = (pythW + random.nextDouble(-5.0, 5.0)).coerceIn(50.0, 115.0)
-                t.id to simWins
+                t.teamId to simWins
             }
 
             for (t in teams) {
-                simulatedWinsTotal[t.id] = (simulatedWinsTotal[t.id] ?: 0.0) + (seasonQuality[t.id] ?: 81.0)
+                simulatedWinsTotal[t.teamId] = (simulatedWinsTotal[t.teamId] ?: 0.0) + (seasonQuality[t.teamId] ?: 81.0)
             }
 
             // Select AL & NL Playoff Teams (Top division winner in East/Central/West + top 3 Wild Cards)
@@ -94,27 +95,27 @@ object WorldSeriesSimulator {
             val nlPlayoffs = selectPlayoffField(nlTeams, seasonQuality)
 
             for (t in alPlayoffs + nlPlayoffs) {
-                playoffCounts[t.id] = (playoffCounts[t.id] ?: 0) + 1
+                playoffCounts[t.teamId] = (playoffCounts[t.teamId] ?: 0) + 1
             }
 
             // Run AL Postseason Bracket
             val alPennantWinner = runLeaguePlayoffBracket(alPlayoffs, random)
-            pennantCounts[alPennantWinner.id] = (pennantCounts[alPennantWinner.id] ?: 0) + 1
+            pennantCounts[alPennantWinner.teamId] = (pennantCounts[alPennantWinner.teamId] ?: 0) + 1
 
             // Run NL Postseason Bracket
             val nlPennantWinner = runLeaguePlayoffBracket(nlPlayoffs, random)
-            pennantCounts[nlPennantWinner.id] = (pennantCounts[nlPennantWinner.id] ?: 0) + 1
+            pennantCounts[nlPennantWinner.teamId] = (pennantCounts[nlPennantWinner.teamId] ?: 0) + 1
 
             // Run World Series (Best of 7)
             val worldSeriesChampion = simulateSeries(alPennantWinner, nlPennantWinner, bestOf = 7, random = random)
-            wsCounts[worldSeriesChampion.id] = (wsCounts[worldSeriesChampion.id] ?: 0) + 1
+            wsCounts[worldSeriesChampion.teamId] = (wsCounts[worldSeriesChampion.teamId] ?: 0) + 1
         }
 
         val leaderboard = teams.map { t ->
-            val wsProb = (wsCounts[t.id] ?: 0).toDouble() / iterations
-            val pennantProb = (pennantCounts[t.id] ?: 0).toDouble() / iterations
-            val playoffProb = (playoffCounts[t.id] ?: 0).toDouble() / iterations
-            val avgWins = (simulatedWinsTotal[t.id] ?: 0.0) / iterations
+            val wsProb = (wsCounts[t.teamId] ?: 0).toDouble() / iterations
+            val pennantProb = (pennantCounts[t.teamId] ?: 0).toDouble() / iterations
+            val playoffProb = (playoffCounts[t.teamId] ?: 0).toDouble() / iterations
+            val avgWins = (simulatedWinsTotal[t.teamId] ?: 0.0) / iterations
             val quality = computeLatentTeamQuality(t)
 
             TeamProbability(t, playoffProb, pennantProb, wsProb, avgWins, quality)
@@ -124,7 +125,7 @@ object WorldSeriesSimulator {
 
         val diagnostics = mapOf(
             "Total_Simulations" to iterations.toString(),
-            "Top_World_Series_Favorite" to "${leaderboard.first().team.name} (${"%.2f".format(leaderboard.first().worldSeriesWinProb * 100)}%)",
+            "Top_World_Series_Favorite" to "${leaderboard.first().team.name} (${(leaderboard.first().worldSeriesWinProb * 100).formatDecimals(2)}%)",
             "Causal_2SLS_IV_Engine" to "Active",
             "ThumbsDown_Hype_Multiplier" to "Applied (Inspired by Brian, Patrick, & Matthew)"
         )
@@ -132,12 +133,12 @@ object WorldSeriesSimulator {
         return WorldSeriesSimulationResult(iterations, leaderboard, diagnostics, csvData)
     }
 
-    private fun selectPlayoffField(leagueTeams: List<MlbTeam>, seasonWins: Map<String, Double>): List<MlbTeam> {
+    private fun selectPlayoffField(leagueTeams: List<MlbTeam>, seasonWins: Map<MlbTeamId, Double>): List<MlbTeam> {
         val divWinners = Division.entries.map { div ->
-            leagueTeams.filter { it.division == div }.maxByOrNull { seasonWins[it.id] ?: 0.0 }!!
-        }.sortedByDescending { seasonWins[it.id] }
+            leagueTeams.filter { it.division == div }.maxByOrNull { seasonWins[it.teamId] ?: 0.0 }!!
+        }.sortedByDescending { seasonWins[it.teamId] }
 
-        val nonDivWinners = leagueTeams.filter { it !in divWinners }.sortedByDescending { seasonWins[it.id] }
+        val nonDivWinners = leagueTeams.filter { it !in divWinners }.sortedByDescending { seasonWins[it.teamId] }
         val wildCards = nonDivWinners.take(3)
 
         return divWinners + wildCards // Seeds 1..6
