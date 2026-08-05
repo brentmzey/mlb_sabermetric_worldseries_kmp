@@ -1,5 +1,5 @@
 /**
- * PocketBase Migration: Initialize MLB Sabermetric & Standings Movement Schema
+ * PocketBase Migration: Initialize MLB Sabermetric & Standings Movement Schema (With Panel Data Support)
  * Collections: tbl_mlb_teams, tbl_simulation_runs, tbl_team_snapshots, tbl_rank_movements
  * Hungarian Prefix Notation & Database Relationships
  */
@@ -11,15 +11,15 @@ migrate((db) => {
   const teamsCollection = new Collection({
     name: "tbl_mlb_teams",
     type: "base",
-    schema: [
+    fields: [
       { name: "str_team_code", type: "text", required: true },
       { name: "str_team_name", type: "text", required: true },
       { name: "str_league", type: "text", required: true },
       { name: "str_division", type: "text", required: true }
     ],
     indexes: [
-      "CREATE UNIQUE INDEX idx_mlb_teams_code ON tbl_mlb_teams(str_team_code)",
-      "CREATE INDEX idx_mlb_teams_league_div ON tbl_mlb_teams(str_league, str_division)"
+      "CREATE UNIQUE INDEX idx_mlb_teams_code ON tbl_mlb_teams (str_team_code)",
+      "CREATE INDEX idx_mlb_teams_league_div ON tbl_mlb_teams (str_league, str_division)"
     ]
   });
   dao.saveCollection(teamsCollection);
@@ -28,9 +28,10 @@ migrate((db) => {
   const runsCollection = new Collection({
     name: "tbl_simulation_runs",
     type: "base",
-    schema: [
+    fields: [
       { name: "str_run_id", type: "text", required: true },
-      { name: "dt_run_timestamp", type: "date", required: true },
+      { name: "dt_run_timestamp", type: "text", required: true },
+      { name: "int_season_year", type: "number", required: true },
       { name: "int_total_iterations", type: "number", required: true },
       { name: "int_random_seed", type: "number", required: true },
       { name: "str_top_favorite_code", type: "text", required: true },
@@ -39,8 +40,9 @@ migrate((db) => {
       { name: "str_hype_multiplier_note", type: "text", required: false }
     ],
     indexes: [
-      "CREATE UNIQUE INDEX idx_sim_runs_run_id ON tbl_simulation_runs(str_run_id)",
-      "CREATE INDEX idx_sim_runs_timestamp ON tbl_simulation_runs(dt_run_timestamp)"
+      "CREATE UNIQUE INDEX idx_sim_runs_run_id ON tbl_simulation_runs (str_run_id)",
+      "CREATE INDEX idx_sim_runs_timestamp ON tbl_simulation_runs (dt_run_timestamp)",
+      "CREATE INDEX idx_sim_runs_year ON tbl_simulation_runs (int_season_year)"
     ]
   });
   dao.saveCollection(runsCollection);
@@ -49,10 +51,12 @@ migrate((db) => {
   const snapshotsCollection = new Collection({
     name: "tbl_team_snapshots",
     type: "base",
-    schema: [
-      { name: "rel_run_id", type: "relation", required: true, options: { collectionId: runsCollection.id, maxSelect: 1 } },
-      { name: "rel_team_id", type: "relation", required: true, options: { collectionId: teamsCollection.id, maxSelect: 1 } },
+    fields: [
+      { name: "rel_run_id", type: "text", required: true },
+      { name: "rel_team_id", type: "text", required: true },
       { name: "str_team_code", type: "text", required: true },
+      { name: "int_season_year", type: "number", required: true },
+      { name: "int_season_week", type: "number", required: true },
       { name: "int_wins", type: "number", required: true },
       { name: "int_losses", type: "number", required: true },
       { name: "dbl_runs_scored", type: "number", required: true },
@@ -67,9 +71,10 @@ migrate((db) => {
       { name: "dbl_thumbs_down_hype_index", type: "number", required: true }
     ],
     indexes: [
-      "CREATE UNIQUE INDEX uq_snapshot_run_team ON tbl_team_snapshots(rel_run_id, rel_team_id)",
-      "CREATE INDEX idx_snapshots_run_id ON tbl_team_snapshots(rel_run_id)",
-      "CREATE INDEX idx_snapshots_team_id ON tbl_team_snapshots(rel_team_id)"
+      "CREATE UNIQUE INDEX uq_snapshot_run_team ON tbl_team_snapshots (rel_run_id, rel_team_id)",
+      "CREATE INDEX idx_snapshots_run_id ON tbl_team_snapshots (rel_run_id)",
+      "CREATE INDEX idx_snapshots_team_id ON tbl_team_snapshots (rel_team_id)",
+      "CREATE INDEX idx_snapshots_panel ON tbl_team_snapshots (str_team_code, int_season_year, int_season_week)"
     ]
   });
   dao.saveCollection(snapshotsCollection);
@@ -78,10 +83,12 @@ migrate((db) => {
   const movementsCollection = new Collection({
     name: "tbl_rank_movements",
     type: "base",
-    schema: [
-      { name: "rel_run_id", type: "relation", required: true, options: { collectionId: runsCollection.id, maxSelect: 1 } },
-      { name: "rel_team_id", type: "relation", required: true, options: { collectionId: teamsCollection.id, maxSelect: 1 } },
+    fields: [
+      { name: "rel_run_id", type: "text", required: true },
+      { name: "rel_team_id", type: "text", required: true },
       { name: "str_team_code", type: "text", required: true },
+      { name: "int_season_year", type: "number", required: true },
+      { name: "int_season_week", type: "number", required: true },
       { name: "int_regular_season_rank", type: "number", required: true },
       { name: "int_sim_rank", type: "number", required: true },
       { name: "int_rank_delta", type: "number", required: true },
@@ -93,10 +100,11 @@ migrate((db) => {
       { name: "dbl_latent_quality_score", type: "number", required: true }
     ],
     indexes: [
-      "CREATE UNIQUE INDEX uq_movement_run_team ON tbl_rank_movements(rel_run_id, rel_team_id)",
-      "CREATE INDEX idx_movements_run_id ON tbl_rank_movements(rel_run_id)",
-      "CREATE INDEX idx_movements_sim_rank ON tbl_rank_movements(int_sim_rank)",
-      "CREATE INDEX idx_movements_rank_delta ON tbl_rank_movements(int_rank_delta)"
+      "CREATE UNIQUE INDEX uq_movement_run_team ON tbl_rank_movements (rel_run_id, rel_team_id)",
+      "CREATE INDEX idx_movements_run_id ON tbl_rank_movements (rel_run_id)",
+      "CREATE INDEX idx_movements_sim_rank ON tbl_rank_movements (int_sim_rank)",
+      "CREATE INDEX idx_movements_rank_delta ON tbl_rank_movements (int_rank_delta)",
+      "CREATE INDEX idx_movements_panel ON tbl_rank_movements (str_team_code, int_season_year, int_season_week)"
     ]
   });
   dao.saveCollection(movementsCollection);

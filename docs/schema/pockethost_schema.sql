@@ -1,6 +1,6 @@
 -- =================================================================================================
--- ⚾ POCKETHOST / POCKETBASE DATABASE SCHEMA (HUNGARIAN PREFIX NOTATION)
---    MLB Sabermetric World Series Prediction & Historical Standings Tracking Engine
+-- ⚾ POCKETHOST / POCKETBASE DATABASE SCHEMA (HUNGARIAN PREFIX NOTATION + PANEL DATA)
+--    MLB Sabermetric World Series Prediction, Historical Time Series, & Panel Data Engine
 -- =================================================================================================
 
 PRAGMA foreign_keys = ON;
@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS tbl_simulation_runs (
     id_run VARCHAR(36) PRIMARY KEY,
     str_run_id VARCHAR(50) NOT NULL UNIQUE,
     dt_run_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    int_season_year INTEGER NOT NULL DEFAULT 2026,
     int_total_iterations INTEGER NOT NULL DEFAULT 10000,
     int_random_seed BIGINT NOT NULL,
     str_top_favorite_code VARCHAR(10) NOT NULL,
@@ -37,15 +38,18 @@ CREATE TABLE IF NOT EXISTS tbl_simulation_runs (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_sim_runs_run_id ON tbl_simulation_runs(str_run_id);
 CREATE INDEX IF NOT EXISTS idx_sim_runs_timestamp ON tbl_simulation_runs(dt_run_timestamp);
+CREATE INDEX IF NOT EXISTS idx_sim_runs_year ON tbl_simulation_runs(int_season_year);
 
 -- -------------------------------------------------------------------------------------------------
--- 3. Team Snapshots Table: tbl_team_snapshots
+-- 3. Team Snapshots Table: tbl_team_snapshots (Panel Data & Time Series)
 -- -------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS tbl_team_snapshots (
     id_snapshot VARCHAR(36) PRIMARY KEY,
     rel_run_id VARCHAR(36) NOT NULL REFERENCES tbl_simulation_runs(id_run) ON DELETE CASCADE,
     rel_team_id VARCHAR(36) NOT NULL REFERENCES tbl_mlb_teams(id_team) ON DELETE CASCADE,
     str_team_code VARCHAR(10) NOT NULL,
+    int_season_year INTEGER NOT NULL DEFAULT 2026,
+    int_season_week INTEGER NOT NULL DEFAULT 1,
     int_wins INTEGER NOT NULL,
     int_losses INTEGER NOT NULL,
     dbl_runs_scored DOUBLE PRECISION NOT NULL,
@@ -64,20 +68,22 @@ CREATE TABLE IF NOT EXISTS tbl_team_snapshots (
 
 CREATE INDEX IF NOT EXISTS idx_snapshots_run_id ON tbl_team_snapshots(rel_run_id);
 CREATE INDEX IF NOT EXISTS idx_snapshots_team_id ON tbl_team_snapshots(rel_team_id);
-CREATE INDEX IF NOT EXISTS idx_snapshots_code ON tbl_team_snapshots(str_team_code);
+CREATE INDEX IF NOT EXISTS idx_snapshots_panel ON tbl_team_snapshots(str_team_code, int_season_year, int_season_week);
 
 -- -------------------------------------------------------------------------------------------------
--- 4. Rank Movements Table: tbl_rank_movements
+-- 4. Rank Movements Table: tbl_rank_movements (Panel Standings & Movement Trends)
 -- -------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS tbl_rank_movements (
     id_movement VARCHAR(36) PRIMARY KEY,
     rel_run_id VARCHAR(36) NOT NULL REFERENCES tbl_simulation_runs(id_run) ON DELETE CASCADE,
     rel_team_id VARCHAR(36) NOT NULL REFERENCES tbl_mlb_teams(id_team) ON DELETE CASCADE,
     str_team_code VARCHAR(10) NOT NULL,
+    int_season_year INTEGER NOT NULL DEFAULT 2026,
+    int_season_week INTEGER NOT NULL DEFAULT 1,
     int_regular_season_rank INTEGER NOT NULL,
     int_sim_rank INTEGER NOT NULL,
-    int_rank_delta INTEGER NOT NULL, -- (regular_season_rank - sim_rank)
-    str_movement_symbol VARCHAR(10) NOT NULL, -- '▲ +k', '▼ -k', '—'
+    int_rank_delta INTEGER NOT NULL,
+    str_movement_symbol VARCHAR(10) NOT NULL,
     dbl_playoff_prob DOUBLE PRECISION NOT NULL,
     dbl_pennant_prob DOUBLE PRECISION NOT NULL,
     dbl_world_series_win_prob DOUBLE PRECISION NOT NULL,
@@ -91,3 +97,4 @@ CREATE INDEX IF NOT EXISTS idx_movements_run_id ON tbl_rank_movements(rel_run_id
 CREATE INDEX IF NOT EXISTS idx_movements_team_id ON tbl_rank_movements(rel_team_id);
 CREATE INDEX IF NOT EXISTS idx_movements_sim_rank ON tbl_rank_movements(int_sim_rank);
 CREATE INDEX IF NOT EXISTS idx_movements_rank_delta ON tbl_rank_movements(int_rank_delta);
+CREATE INDEX IF NOT EXISTS idx_movements_panel ON tbl_rank_movements(str_team_code, int_season_year, int_season_week);
