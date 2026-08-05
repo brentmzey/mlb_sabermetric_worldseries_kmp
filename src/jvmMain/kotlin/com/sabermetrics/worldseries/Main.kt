@@ -162,11 +162,6 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
         yPos += 58
     }
 
-    // Footer Watermark
-    g.color = Color(100, 116, 139)
-    g.font = Font("SansSerif", Font.ITALIC, 15)
-    g.drawString("MLB Sabermetric Prediction Suite | Open Source KMP Engine", 70, height - 65)
-
     g.dispose()
 
     val chartDir = File("docs/charts")
@@ -292,11 +287,6 @@ fun generateLineChartImage(topTeams: List<TeamProbability>) {
 
         legendY += 34
     }
-
-    // Footer Watermark
-    g.color = Color(100, 116, 139)
-    g.font = Font("SansSerif", Font.ITALIC, 15)
-    g.drawString("MLB Sabermetric Prediction Suite | Open Source KMP Engine", 70, height - 65)
 
     g.dispose()
 
