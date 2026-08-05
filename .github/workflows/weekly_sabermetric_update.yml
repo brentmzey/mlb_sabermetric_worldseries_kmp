@@ -1,0 +1,48 @@
+name: Weekly Sabermetric Update & PocketHost Sync
+
+on:
+  schedule:
+    # Run every Monday at 06:00 UTC during the MLB Season
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-predictions-and-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up Java 17 (JDK)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 🐘 Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: 🐍 Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 🧪 Run Unit Test Suite
+        run: ./gradlew test
+
+      - name: ⚾ Run Monte Carlo Simulation Engine & Generate Visual Charts
+        run: ./gradlew run
+
+      - name: 🚀 Sync Updated Data & Standings Movements to PocketHost DB
+        env:
+          POCKETHOST_ADMIN_EMAIL: ${{ secrets.POCKETHOST_ADMIN_EMAIL }}
+          POCKETHOST_ADMIN_PASSWORD: ${{ secrets.POCKETHOST_ADMIN_PASSWORD }}
+        run: python3 scripts/sync_pockethost_rest.py
+
+      - name: 📤 Commit & Push Updated Datasets, Charts, & README
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add docs/charts/ output_datasets/ README.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "auto: weekly sabermetric simulation update & PocketHost sync [skip ci]" && git push)
