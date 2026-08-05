@@ -181,16 +181,26 @@ data class MlbTeam(
 }
 
 /**
- * Probability summary for each MLB team's postseason and World Series outcomes.
+ * Probability summary for each MLB team's postseason and World Series outcomes,
+ * including rank tracking and standings movement.
  */
 data class TeamProbability(
     val team: MlbTeam,
-    val playoffProb: Double,      // Probability of reaching postseason
-    val pennantProb: Double,      // Probability of winning AL/NL Pennant
-    val worldSeriesWinProb: Double, // Probability of winning World Series
+    val playoffProb: Double,        // Probability of reaching postseason
+    val pennantProb: Double,        // Probability of winning AL/NL Pennant
+    val worldSeriesWinProb: Double,   // Probability of winning World Series
     val expectedSeasonWins: Double,
-    val latentQualityScore: Double
-)
+    val latentQualityScore: Double,
+    val regularSeasonRank: Int = 0, // Baseline W-L rank (1..30)
+    val simRank: Int = 0,           // Causal World Series simulation rank (1..30)
+    val rankDelta: Int = 0          // Rank movement delta (regularSeasonRank - simRank)
+) {
+    val movementSymbol: String get() = when {
+        rankDelta > 0 -> "▲ +$rankDelta"
+        rankDelta < 0 -> "▼ $rankDelta"
+        else -> "—"
+    }
+}
 
 /**
  * Complete Output of 10,000-Iteration Sabermetric Monte Carlo Simulation.

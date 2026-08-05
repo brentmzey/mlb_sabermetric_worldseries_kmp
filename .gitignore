@@ -10,3 +10,14 @@ out/
 kotlin-js-store/
 output_datasets/
 
+# Secret & Credential Exclusions
+.env
+*.env
+*.key
+*.pem
+pockethost_ed25519*
+pb_data/
+*.secret
+*.credentials
+
+

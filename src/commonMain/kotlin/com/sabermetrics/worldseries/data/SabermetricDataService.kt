@@ -2,6 +2,7 @@ package com.sabermetrics.worldseries.data
 
 import com.sabermetrics.worldseries.model.MlbTeam
 import com.sabermetrics.worldseries.model.MlbTeamId
+import com.sabermetrics.worldseries.model.TeamProbability
 import com.sabermetrics.worldseries.util.formatDecimals
 
 /**
@@ -75,13 +76,19 @@ object SabermetricDataService {
     }
 
     /**
-     * Generates a clean, CSV-formatted string of the open-source dataset ready for export.
+     * Generates a clean, CSV-formatted string of the open-source dataset ready for export,
+     * including predictive standings rank movement metrics.
      */
-    fun exportCleanCsvDataset(teams: List<MlbTeam>): String {
+    fun exportCleanCsvDataset(teams: List<MlbTeam>, leaderboard: List<TeamProbability>? = null): String {
+        val probMap = leaderboard?.associateBy { it.team.teamId }
         val sb = StringBuilder()
-        sb.append("Team_ID,Team_Name,League,Division,Wins,Losses,Win_Pct,Runs_Scored,Runs_Allowed,Run_Differential,Pythagorean_Win_Pct,Team_WAR,wOBA,wRC_Plus,FIP,xFIP,Bullpen_WPA,Top3_Ace_ERA,Trade_Deadline_WAR,ThumbsDown_Hype_Index\n")
+        sb.append("Team_ID,Team_Name,League,Division,Wins,Losses,Win_Pct,Runs_Scored,Runs_Allowed,Run_Differential,Pythagorean_Win_Pct,Team_WAR,wOBA,wRC_Plus,FIP,xFIP,Bullpen_WPA,Top3_Ace_ERA,Trade_Deadline_WAR,ThumbsDown_Hype_Index,Regular_Season_Rank,Sim_Rank,Rank_Movement\n")
         for (t in teams) {
-            sb.append("${t.id},\"${t.name}\",${t.league},${t.division},${t.wins},${t.losses},${t.winPct.formatDecimals(3)},${t.runsScored},${t.runsAllowed},${t.runDifferential},${t.pythagoreanWinPct.formatDecimals(3)},${t.teamWar},${t.wOBA},${t.wRCPlus},${t.fip},${t.xFip},${t.bullpenWpa},${t.top3AceEra},${t.tradeDeadlineWarAdded},${t.thumbsDownHypeIndex}\n")
+            val tp = probMap?.get(t.teamId)
+            val regRank = tp?.regularSeasonRank?.toString() ?: ""
+            val simRank = tp?.simRank?.toString() ?: ""
+            val movement = tp?.movementSymbol ?: ""
+            sb.append("${t.id},\"${t.name}\",${t.league},${t.division},${t.wins},${t.losses},${t.winPct.formatDecimals(3)},${t.runsScored},${t.runsAllowed},${t.runDifferential},${t.pythagoreanWinPct.formatDecimals(3)},${t.teamWar},${t.wOBA},${t.wRCPlus},${t.fip},${t.xFip},${t.bullpenWpa},${t.top3AceEra},${t.tradeDeadlineWarAdded},${t.thumbsDownHypeIndex},$regRank,$simRank,$movement\n")
         }
         return sb.toString()
     }
