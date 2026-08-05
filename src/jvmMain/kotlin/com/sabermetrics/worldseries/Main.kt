@@ -1,6 +1,7 @@
 package com.sabermetrics.worldseries
 
 import com.sabermetrics.worldseries.engine.WorldSeriesSimulator
+import com.sabermetrics.worldseries.model.MlbTeamId
 import com.sabermetrics.worldseries.model.TeamProbability
 import java.awt.Color
 import java.awt.Font
@@ -42,7 +43,7 @@ fun main() {
         val pennantStr = "%.1f%%".format(tp.pennantProb * 100)
         val wsStr = "%.2f%%".format(tp.worldSeriesWinProb * 100)
 
-        val star = if (t.id == "NYY") " 👎 (Thumbs Down Rally)" else ""
+        val star = if (t.teamId == MlbTeamId.NYY) " 👎 (Thumbs Down Rally)" else ""
         println("%-4d | %-24s | %-6s | %-8s | %-12.1f | %-12s | %-14s | %-12s%s".format(
             rank, t.name, lgDiv, wl, tp.expectedSeasonWins, playoffStr, pennantStr, wsStr, star
         ))
@@ -129,7 +130,7 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
         // Percentage Text
         g.color = Color(255, 255, 255)
         g.font = Font("SansSerif", Font.BOLD, 18)
-        val pctStr = "%.2f%%".format(pct) + if (t.id == "NYY") " 👎" else ""
+        val pctStr = "%.2f%%".format(pct) + if (t.teamId == MlbTeamId.NYY) " 👎" else ""
         g.drawString(pctStr, 345 + barW, yPos + 26)
 
         yPos += 58

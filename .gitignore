@@ -2,6 +2,11 @@
 build/
 .idea/
 *.iml
+*.ipr
+*.iws
 .DS_Store
 out/
+.kotlin/
+kotlin-js-store/
 output_datasets/
+

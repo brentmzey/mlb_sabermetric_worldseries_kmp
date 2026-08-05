@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform") version "2.1.0"
+    idea
 }
 
 group = "com.sabermetrics.worldseries"
@@ -40,6 +41,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(kotlin("stdlib"))
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
         }
         commonTest.dependencies {
