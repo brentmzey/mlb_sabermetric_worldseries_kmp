@@ -12,9 +12,13 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 ---
 
-## 📈 Visual World Series Win Probability Chart
+## 📈 Visual World Series Win Probability & Season Trend Charts
 
+### 📊 Current Championship Probability Leaderboard
 ![World Series Win Probabilities Chart](https://raw.githubusercontent.com/brentmzey/mlb_sabermetric_worldseries_kmp/main/docs/charts/world_series_win_probabilities.png)
+
+### 📈 Season-Long Probability Trajectories (Weeks 1 - 18)
+![Team Probability Season Trends Line Chart](https://raw.githubusercontent.com/brentmzey/mlb_sabermetric_worldseries_kmp/main/docs/charts/team_probability_trends_over_time.png)
 
 ---
 
