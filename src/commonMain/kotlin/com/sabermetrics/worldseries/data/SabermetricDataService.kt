@@ -13,12 +13,12 @@ object SabermetricDataService {
     fun loadCleanedMlbDataset(): List<MlbTeam> {
         val dataset = listOf(
             // --- AL EAST ---
-            MlbTeam(MlbTeamId.NYY, 94, 68, 815.0, 668.0, 48.5, 0.334, 117.0, 3.74, 3.82, 3.8, 3.25, 2.5, 1.08), // Thumbs Down Hype!
+            MlbTeam(MlbTeamId.NYY, 94, 68, 815.0, 668.0, 48.5, 0.334, 117.0, 3.74, 3.82, 3.8, 3.25, 2.5, 1.05),
             MlbTeam(MlbTeamId.BAL, 91, 71, 786.0, 695.0, 44.2, 0.325, 111.0, 3.92, 3.98, 2.9, 3.45, 1.8, 1.04),
             MlbTeam(MlbTeamId.BOS, 81, 81, 752.0, 740.0, 32.1, 0.318, 104.0, 4.15, 4.20, 0.5, 4.10, 0.8, 1.00),
             MlbTeam(MlbTeamId.TBD, 80, 82, 630.0, 672.0, 33.4, 0.298, 95.0, 3.78, 3.85, 1.8, 3.60, 1.2, 1.00),
             MlbTeam(MlbTeamId.TOR, 74, 88, 671.0, 756.0, 26.8, 0.310, 100.0, 4.38, 4.32, -1.2, 4.25, 0.5, 0.98),
-
+            
             // --- AL CENTRAL ---
             MlbTeam(MlbTeamId.CLE, 92, 69, 708.0, 621.0, 41.0, 0.308, 98.0, 3.65, 3.75, 4.8, 3.30, 1.5, 1.03),
             MlbTeam(MlbTeamId.KC,  86, 76, 735.0, 642.0, 38.6, 0.312, 102.0, 3.85, 3.90, 1.2, 3.40, 2.0, 1.02),
@@ -51,7 +51,7 @@ object SabermetricDataService {
             MlbTeam(MlbTeamId.LAD, 98, 64, 842.0, 686.0, 52.0, 0.337, 119.0, 3.76, 3.80, 3.5, 3.05, 3.0, 1.30),
             MlbTeam(MlbTeamId.SD,  93, 69, 760.0, 669.0, 45.1, 0.326, 110.0, 3.75, 3.82, 3.1, 3.30, 2.2, 1.20),
             MlbTeam(MlbTeamId.ARI, 89, 73, 886.0, 788.0, 41.5, 0.332, 114.0, 4.25, 4.18, 0.8, 3.80, 1.3, 1.10),
-            MlbTeam(MlbTeamId.SF,  80, 82, 693.0, 710.0, 31.8, 0.308, 99.0, 3.98, 4.05, 0.2, 3.70, 0.7, 1.00),
+            MlbTeam(MlbTeamId.SF,  80, 82, 693.0, 710.0, 31.8, 0.308, 99.0, 4.70, 4.05, 0.2, 3.70, 0.7, 1.00),
             MlbTeam(MlbTeamId.COL, 61, 101, 683.0, 935.0, 12.0, 0.310, 86.0, 5.25, 5.15, -4.5, 5.40, -0.8, 0.75)
         )
         check(dataset.size == MlbTeamId.entries.size) {
@@ -82,13 +82,13 @@ object SabermetricDataService {
     fun exportCleanCsvDataset(teams: List<MlbTeam>, leaderboard: List<TeamProbability>? = null): String {
         val probMap = leaderboard?.associateBy { it.team.teamId }
         val sb = StringBuilder()
-        sb.append("Team_ID,Team_Name,League,Division,Wins,Losses,Win_Pct,Runs_Scored,Runs_Allowed,Run_Differential,Pythagorean_Win_Pct,Team_WAR,wOBA,wRC_Plus,FIP,xFIP,Bullpen_WPA,Top3_Ace_ERA,Trade_Deadline_WAR,ThumbsDown_Hype_Index,Regular_Season_Rank,Sim_Rank,Rank_Movement\n")
+        sb.append("Team_ID,Team_Name,League,Division,Wins,Losses,Win_Pct,Runs_Scored,Runs_Allowed,Run_Differential,Pythagorean_Win_Pct,Team_WAR,wOBA,wRC_Plus,FIP,xFIP,Bullpen_WPA,Top3_Ace_ERA,Trade_Deadline_WAR,Clubhouse_Hype_Index,Regular_Season_Rank,Sim_Rank,Rank_Movement\n")
         for (t in teams) {
             val tp = probMap?.get(t.teamId)
             val regRank = tp?.regularSeasonRank?.toString() ?: ""
             val simRank = tp?.simRank?.toString() ?: ""
             val movement = tp?.movementSymbol ?: ""
-            sb.append("${t.id},\"${t.name}\",${t.league},${t.division},${t.wins},${t.losses},${t.winPct.formatDecimals(3)},${t.runsScored},${t.runsAllowed},${t.runDifferential},${t.pythagoreanWinPct.formatDecimals(3)},${t.teamWar},${t.wOBA},${t.wRCPlus},${t.fip},${t.xFip},${t.bullpenWpa},${t.top3AceEra},${t.tradeDeadlineWarAdded},${t.thumbsDownHypeIndex},$regRank,$simRank,$movement\n")
+            sb.append("${t.id},\"${t.name}\",${t.league},${t.division},${t.wins},${t.losses},${t.winPct.formatDecimals(3)},${t.runsScored},${t.runsAllowed},${t.runDifferential},${t.pythagoreanWinPct.formatDecimals(3)},${t.teamWar},${t.wOBA},${t.wRCPlus},${t.fip},${t.xFip},${t.bullpenWpa},${t.top3AceEra},${t.tradeDeadlineWarAdded},${t.clubhouseHypeIndex},$regRank,$simRank,$movement\n")
         }
         return sb.toString()
     }

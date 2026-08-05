@@ -6,7 +6,7 @@
 [![Automated Updates](https://img.shields.io/badge/Weekly_Cron-MLB_Season-green.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Dedicated to Brian, Patrick, and Matthew — inspired by the iconic Yankees "Thumbs Down" Fan Rally! 👎**
+> **Dedicated to Brian, Patrick, and Matthew!**
 
 Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-source repository combines advanced sabermetrics (wOBA, wRC+, FIP, BaseRuns, Pythagorean Win %) with **2SLS Instrumental Variable Causal Modeling** and a **10,000-iteration Monte Carlo postseason simulator** to predict the exact World Series win probabilities for all 30 MLB teams.
 
@@ -29,7 +29,7 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 | Rank | Movement | Team Name | League & Div | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 | 🥇 1 | — | **Los Angeles Dodgers** | NL West | 98 - 64 | 96.0 | **100.0%** | **42.2%** | **29.87%** | `████████████████` |
-| 🥈 2 👎 | ▲ +1 | **New York Yankees** | AL East | 94 - 68 | 95.5 | **100.0%** | **31.1%** | **14.31%** | `████████` |
+| 🥈 2 | ▲ +1 | **New York Yankees** | AL East | 94 - 68 | 95.5 | **100.0%** | **31.1%** | **14.31%** | `████████` |
 | 🥉 3 | ▼ -1 | **Philadelphia Phillies** | NL East | 95 - 67 | 92.4 | **94.3%** | **14.0%** | **7.22%** | `████` |
 | 4 | — | **Milwaukee Brewers** | NL Central | 93 - 69 | 94.2 | **99.3%** | **14.1%** | **7.05%** | `████` |
 | 5 | — | **San Diego Padres** | NL West | 93 - 69 | 90.4 | **80.3%** | **11.6%** | **6.91%** | `████` |
@@ -62,7 +62,7 @@ flowchart TD
         E --> F
         F --> G[Stage 2 2SLS IV: Structural Latent Quality Estimation]
         H[Top 3 Ace Rotation ERA & Bullpen WPA] --> G
-        I[Thumbs Down Fan Hype Index] --> G
+        I[Clubhouse Momentum Index] --> G
     end
 
     subgraph Postseason Monte Carlo Engine
