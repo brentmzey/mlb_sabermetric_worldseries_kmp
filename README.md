@@ -22,8 +22,8 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 > **Updated Predictions (10,000-Iteration Postseason Monte Carlo Simulation)**
 
-| Rank | Movement | Team Name | League & Division | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
-| :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| Rank | Movement | Team Name | League & Div | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
+| :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 | 🥇 1 | — | **Los Angeles Dodgers** | NL West | 98 - 64 | 96.0 | **100.0%** | **42.2%** | **29.87%** | `████████████████` |
 | 🥈 2 👎 | ▲ +1 | **New York Yankees** | AL East | 94 - 68 | 95.5 | **100.0%** | **31.1%** | **14.31%** | `████████` |
 | 🥉 3 | ▼ -1 | **Philadelphia Phillies** | NL East | 95 - 67 | 92.4 | **94.3%** | **14.0%** | **7.22%** | `████` |
