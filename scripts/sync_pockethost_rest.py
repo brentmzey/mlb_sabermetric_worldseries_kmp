@@ -151,7 +151,7 @@ total_moves = 0
 print(f"📅 Populating Historical Time Series Panel Data across {len(seasons)} seasons ({seasons[0]} - {seasons[-1]})...")
 
 for yr in seasons:
-    run_id = f"RUN-{yr}-SEASON"
+    run_id = f"RUN-{yr}-SEASON-{int(time.time())}"
     timestamp = f"{yr}-10-01T12:00:00Z"
     top_fav = next((r for r in rows if r["Sim_Rank"] == "1"), rows[0])
 
@@ -210,7 +210,7 @@ for yr in seasons:
             "dbl_xfip": float(row["xFIP"]),
             "dbl_bullpen_wpa": float(row["Bullpen_WPA"]),
             "dbl_top3_ace_era": float(row["Top3_Ace_ERA"]),
-            "dbl_thumbs_down_hype_index": float(row["ThumbsDown_Hype_Index"])
+            "dbl_thumbs_down_hype_index": float(row.get("Clubhouse_Hype_Index", row.get("ThumbsDown_Hype_Index", 1.0)))
         }
         try:
             http_post(f"{POCKETHOST_URL}/api/collections/tbl_team_snapshots/records", snap_payload, token=token)
