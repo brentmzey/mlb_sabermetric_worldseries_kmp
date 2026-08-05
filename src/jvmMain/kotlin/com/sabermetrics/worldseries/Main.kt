@@ -14,7 +14,6 @@ fun main() {
     println("=================================================================================================================")
     println(" ⚾ MLB SABERMETRIC WORLD SERIES PREDICTION & CAUSAL ESTIMATION SUITE (KMP Multiplatform)")
     println("    Clean Open-Source Datasets + 10,000-Iteration Postseason Monte Carlo Simulator")
-    println("    Dedicated to Brian, Patrick, and Matthew")
     println("=================================================================================================================\n")
 
     println("🧠 ECONOMETRIC THEORY & SABERMETRIC REASONING BEHIND PREDICTIONS:")
@@ -166,7 +165,7 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
     // Footer Watermark
     g.color = Color(100, 116, 139)
     g.font = Font("SansSerif", Font.ITALIC, 15)
-    g.drawString("Dedicated to Brian, Patrick, & Matthew | Open Source KMP Engine", 70, height - 65)
+    g.drawString("MLB Sabermetric Prediction Suite | Open Source KMP Engine", 70, height - 65)
 
     g.dispose()
 
@@ -297,7 +296,7 @@ fun generateLineChartImage(topTeams: List<TeamProbability>) {
     // Footer Watermark
     g.color = Color(100, 116, 139)
     g.font = Font("SansSerif", Font.ITALIC, 15)
-    g.drawString("Dedicated to Brian, Patrick, & Matthew | Open Source KMP Engine", 70, height - 65)
+    g.drawString("MLB Sabermetric Prediction Suite | Open Source KMP Engine", 70, height - 65)
 
     g.dispose()
 
