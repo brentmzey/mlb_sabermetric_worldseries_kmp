@@ -26,16 +26,16 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 | Rank | Movement | Team Name | League & Div | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | — | **Los Angeles Dodgers** | NL West | 70 - 45 | 104.4 | **100.0%** | **60.3%** | **49.78%** | `████████████████` |
-| 🥈 2 | — | **New York Yankees** | AL East | 68 - 46 | 98.5 | **100.0%** | **34.5%** | **11.47%** | `████` |
-| 🥉 3 | — | **Milwaukee Brewers** | NL Central | 68 - 45 | 97.6 | **99.9%** | **11.2%** | **5.94%** | `██` |
-| 4 | ▲ +4 | **Atlanta Braves** | NL East | 64 - 48 | 95.2 | **96.2%** | **9.6%** | **5.51%** | `██` |
-| 5 | ▲ +4 | **Kansas City Royals** | AL Central | 64 - 52 | 93.1 | **99.8%** | **17.4%** | **4.91%** | `█` |
-| 6 | ▼ -1 | **Cleveland Guardians** | AL Central | 67 - 46 | 93.7 | **99.9%** | **16.5%** | **4.57%** | `█` |
-| 7 | ▲ +3 | **Houston Astros** | AL West | 63 - 51 | 91.8 | **99.3%** | **14.6%** | **4.08%** | `█` |
-| 8 | ▼ -4 | **Philadelphia Phillies** | NL East | 68 - 45 | 95.4 | **97.2%** | **7.3%** | **3.80%** | `█` |
-| 9 | ▼ -3 | **Chicago Cubs** | NL Central | 66 - 48 | 93.0 | **82.9%** | **5.7%** | **2.91%** | `█` |
-| 10 | ▲ +4 | **Seattle Mariners** | AL West | 60 - 54 | 87.2 | **78.3%** | **7.7%** | **1.85%** | `▏` |
+| 🥇 1 | — | **Los Angeles Dodgers** | NL West | 70 - 45 | 101.3 | **100.0%** | **42.0%** | **29.29%** | `████████████████` |
+| 🥈 2 | — | **New York Yankees** | AL East | 68 - 46 | 98.5 | **100.0%** | **33.3%** | **14.82%** | `████████` |
+| 🥉 3 | — | **Milwaukee Brewers** | NL Central | 68 - 45 | 97.5 | **99.8%** | **16.8%** | **9.24%** | `█████` |
+| 4 | ▲ +4 | **Atlanta Braves** | NL East | 64 - 48 | 95.2 | **96.3%** | **13.7%** | **7.65%** | `████` |
+| 5 | ▲ +4 | **Kansas City Royals** | AL Central | 64 - 52 | 93.1 | **99.9%** | **17.9%** | **7.40%** | `████` |
+| 6 | ▼ -1 | **Cleveland Guardians** | AL Central | 67 - 46 | 93.7 | **100.0%** | **17.3%** | **6.34%** | `███` |
+| 7 | ▲ +3 | **Houston Astros** | AL West | 63 - 51 | 91.8 | **99.3%** | **14.9%** | **5.98%** | `███` |
+| 8 | ▼ -4 | **Philadelphia Phillies** | NL East | 68 - 45 | 95.5 | **97.4%** | **11.2%** | **5.39%** | `███` |
+| 9 | ▼ -3 | **Chicago Cubs** | NL Central | 66 - 48 | 92.9 | **82.0%** | **7.8%** | **4.22%** | `██` |
+| 10 | ▲ +4 | **Seattle Mariners** | AL West | 60 - 54 | 87.2 | **78.3%** | **7.4%** | **2.59%** | `█` |
 | 11 | ▼ -2 | **Minnesota Twins** | AL Central | 63 - 50 | 87.5 | **81.4%** | **7.4%** | **2.81%** | `██` |
 | 12 | ▲ +1 | **Atlanta Braves** | NL East | 60 - 52 | 89.4 | **52.9%** | **4.3%** | **2.12%** | `██` |
 | 13 | ▼ -2 | **Arizona Diamondbacks** | NL West | 61 - 53 | 89.1 | **48.9%** | **4.0%** | **1.91%** | `█` |
@@ -330,6 +330,98 @@ cd mlb_sabermetric_worldseries_kmp
 # Build standalone Fat JAR & run headless server process
 ./gradlew fatJar
 java -jar build/libs/mlb_sabermetric_worldseries_kmp-1.0.0-all.jar
+```
+
+---
+
+## 🔬 Multi-Language Code Reproduction Guide (Kotlin, Python, Java, Scala)
+
+Researchers and quantitative analysts can easily reproduce the **2SLS Instrumental Variable Causal Engine** and **10,000-Iteration Bradley-Terry Playoff Monte Carlo Simulator** in their language of choice:
+
+### 🅺 1. Kotlin (Native KMP Engine)
+```kotlin
+import com.sabermetrics.worldseries.engine.WorldSeriesSimulator
+import com.sabermetrics.worldseries.data.SabermetricDataService
+
+fun main() {
+    val dataset = SabermetricDataService.loadCleanedMlbDataset()
+    val simulation = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 10000, seed = 20260803L)
+    
+    simulation.leaderboard.take(5).forEach { tp ->
+        println("${tp.simRank}. ${tp.team.name}: Playoff ${(tp.playoffProb * 100).format(1)}% | WS ${(tp.worldSeriesWinProb * 100).format(2)}%")
+    }
+}
+```
+
+---
+
+### 🐍 2. Python (NumPy & SciPy Econometric Implementation)
+```python
+import numpy as np
+import pandas as pd
+
+# 1. Pythagorean Run Expectancy
+def pythagorean_win_pct(r, ra, exp=1.83):
+    return (r ** exp) / ((r ** exp) + (ra ** exp))
+
+# 2. Bradley-Terry Logit Matchup Probability
+def logit_matchup_prob(quality_a, quality_b, scale=3.5):
+    return 1.0 / (1.0 + np.exp(-scale * (quality_a - quality_b)))
+
+# 3. Load Open-Source Cleaned Dataset
+df = pd.read_csv("output_datasets/mlb_sabermetric_clean_dataset.csv")
+df["Pyth_Pct"] = pythagorean_win_pct(df["Runs_Scored"], df["Runs_Allowed"])
+
+# Stage 2 Causal Latent Quality Score
+df["Latent_Quality"] = (
+    0.45 * df["Pyth_Pct"] +
+    0.25 * (3.80 / df["Top3_Ace_ERA"]) +
+    0.15 * df["Bullpen_WPA"] +
+    0.15 * df["Clubhouse_Hype_Index"]
+)
+
+print("Top 5 Causal Quality Contenders:")
+print(df.sort_values(by="Latent_Quality", ascending=False)[["Team_Name", "Pyth_Pct", "Latent_Quality"]].head())
+```
+
+---
+
+### ☕ 3. Java (JDK 17+ Modern Suite Integration)
+```java
+import com.sabermetrics.worldseries.engine.WorldSeriesSimulator;
+import com.sabermetrics.worldseries.model.SimulationResult;
+import com.sabermetrics.worldseries.model.TeamProbability;
+
+public class MlbSimulationRunner {
+    public static void main(String[] args) {
+        SimulationResult result = WorldSeriesSimulator.INSTANCE.runWorldSeriesSimulation(10000, 20260803L);
+        for (TeamProbability tp : result.getLeaderboard().subList(0, 5)) {
+            System.out.printf("%d. %s - WS Win Prob: %.2f%%\n",
+                tp.getSimRank(), tp.getTeam().getName(), tp.getWorldSeriesWinProb() * 100);
+        }
+    }
+}
+```
+
+---
+
+### 🔴 4. Scala (Scala 3 / Apache Spark Data Processing)
+```scala
+package com.sabermetrics.worldseries
+
+import com.sabermetrics.worldseries.engine.WorldSeriesSimulator
+
+object ScalaMlbSimulator {
+  def main(args: Array[String]): Unit = {
+    val simulation = WorldSeriesSimulator.INSTANCE.runWorldSeriesSimulation(10000, 20260803L)
+    val leaderboard = simulation.getLeaderboard
+    
+    println("=== Scala Postseason Monte Carlo Top Favorites ===")
+    leaderboard.stream().limit(5).forEach { tp =>
+      println(f"${tp.getSimRank}%d. ${tp.getTeam.getName}%s - Playoff: ${tp.getPlayoffProb * 100}%.1f%% | WS: ${tp.getWorldSeriesWinProb * 100}%.2f%%")
+    }
+  }
+}
 ```
 
 ---
