@@ -101,6 +101,42 @@ flowchart TD
 
 ---
 
+## 🏆 4-Round Postseason Playoff Monte Carlo Simulation Architecture
+
+For each of the **10,000 Monte Carlo iterations**, the engine simulates the exact MLB postseason bracket across 4 consecutive rounds:
+
+```mermaid
+flowchart TD
+    subgraph Round 1: Wild Card Series Best-of-3
+        WC1["#3 Division Winner vs #6 Wild Card"] -->|Best-of-3 Logit| WC1_Winner["Wild Card Winner 1"]
+        WC2["#4 Wild Card 1 vs #5 Wild Card 2"] -->|Best-of-3 Logit| WC2_Winner["Wild Card Winner 2"]
+    end
+
+    subgraph Round 2: Division Series Best-of-5
+        Bye1["#1 League Seed (First-Round Bye)"] --> DS1["DS Matchup 1"]
+        WC2_Winner --> DS1
+        DS1 -->|Best-of-5 Logit| DS1_Winner["Division Series Winner 1"]
+
+        Bye2["#2 League Seed (First-Round Bye)"] --> DS2["DS Matchup 2"]
+        WC1_Winner --> DS2
+        DS2 -->|Best-of-5 Logit| DS2_Winner["Division Series Winner 2"]
+    end
+
+    subgraph Round 3: League Championship Series Best-of-7
+        DS1_Winner --> LCS["LCS Pennant Matchup"]
+        DS2_Winner --> LCS
+        LCS -->|Best-of-7 Logit| Pennant_Winner["League Pennant Champion"]
+    end
+
+    subgraph Round 4: World Series Best-of-7
+        Pennant_AL["AL Pennant Champion"] --> WS["World Series Final"]
+        Pennant_NL["NL Pennant Champion"] --> WS
+        WS -->|Best-of-7 Logit| World_Series_Champion["🏆 World Series Champion"]
+    end
+```
+
+---
+
 ## 🧮 Formal Mathematical Models & Structural Equations
 
 Our predictions bridge raw sabermetrics and causal econometrics through 5 formal mathematical models:
