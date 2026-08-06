@@ -26,16 +26,16 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 | Rank | Movement | Team Name | League & Div | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | ▲ +1 | **Los Angeles Dodgers** | NL West | 68 - 47 | 96.1 | **99.5%** | **29.3%** | **18.58%** | `████████████████` |
-| 🥈 2 | ▲ +3 | **New York Yankees** | AL East | 66 - 48 | 95.4 | **100.0%** | **28.1%** | **12.50%** | `██████████` |
-| 🥉 3 | ▼ -2 | **Milwaukee Brewers** | NL Central | 68 - 45 | 97.6 | **100.0%** | **21.7%** | **12.19%** | `██████████` |
-| 4 | ▼ -1 | **Philadelphia Phillies** | NL East | 68 - 45 | 95.4 | **98.8%** | **16.1%** | **8.87%** | `███████` |
-| 5 | ▲ +3 | **Kansas City Royals** | AL Central | 64 - 52 | 93.1 | **99.9%** | **20.0%** | **8.68%** | `███████` |
-| 6 | — | **Chicago Cubs** | NL Central | 66 - 48 | 92.9 | **89.3%** | **13.2%** | **7.78%** | `██████` |
-| 7 | ▼ -3 | **Cleveland Guardians** | AL Central | 67 - 46 | 93.6 | **100.0%** | **18.4%** | **7.57%** | `██████` |
-| 8 | ▲ +2 | **Houston Astros** | AL West | 62 - 52 | 90.8 | **98.3%** | **14.8%** | **6.34%** | `█████` |
-| 9 | ▼ -2 | **San Diego Padres** | NL West | 66 - 49 | 90.4 | **65.9%** | **8.1%** | **4.44%** | `████` |
-| 10 | ▲ +4 | **Seattle Mariners** | AL West | 60 - 54 | 87.1 | **78.0%** | **8.2%** | **3.31%** | `███` |
+| 🥇 1 | — | **Los Angeles Dodgers** | NL West | 70 - 45 | 104.4 | **100.0%** | **60.3%** | **49.78%** | `████████████████` |
+| 🥈 2 | — | **New York Yankees** | AL East | 68 - 46 | 98.5 | **100.0%** | **34.5%** | **11.47%** | `████` |
+| 🥉 3 | — | **Milwaukee Brewers** | NL Central | 68 - 45 | 97.6 | **99.9%** | **11.2%** | **5.94%** | `██` |
+| 4 | ▲ +4 | **Atlanta Braves** | NL East | 64 - 48 | 95.2 | **96.2%** | **9.6%** | **5.51%** | `██` |
+| 5 | ▲ +4 | **Kansas City Royals** | AL Central | 64 - 52 | 93.1 | **99.8%** | **17.4%** | **4.91%** | `█` |
+| 6 | ▼ -1 | **Cleveland Guardians** | AL Central | 67 - 46 | 93.7 | **99.9%** | **16.5%** | **4.57%** | `█` |
+| 7 | ▲ +3 | **Houston Astros** | AL West | 63 - 51 | 91.8 | **99.3%** | **14.6%** | **4.08%** | `█` |
+| 8 | ▼ -4 | **Philadelphia Phillies** | NL East | 68 - 45 | 95.4 | **97.2%** | **7.3%** | **3.80%** | `█` |
+| 9 | ▼ -3 | **Chicago Cubs** | NL Central | 66 - 48 | 93.0 | **82.9%** | **5.7%** | **2.91%** | `█` |
+| 10 | ▲ +4 | **Seattle Mariners** | AL West | 60 - 54 | 87.2 | **78.3%** | **7.7%** | **1.85%** | `▏` |
 | 11 | ▼ -2 | **Minnesota Twins** | AL Central | 63 - 50 | 87.5 | **81.4%** | **7.4%** | **2.81%** | `██` |
 | 12 | ▲ +1 | **Atlanta Braves** | NL East | 60 - 52 | 89.4 | **52.9%** | **4.3%** | **2.12%** | `██` |
 | 13 | ▼ -2 | **Arizona Diamondbacks** | NL West | 61 - 53 | 89.1 | **48.9%** | **4.0%** | **1.91%** | `█` |
