@@ -13,46 +13,46 @@ object SabermetricDataService {
     fun loadCleanedMlbDataset(): List<MlbTeam> {
         val dataset = listOf(
             // --- AL EAST ---
-            MlbTeam(MlbTeamId.NYY, 68, 46, 608.0, 478.0, 36.5, 0.334, 117.0, 3.70, 3.78, 3.2, 3.15, 2.2, 1.10),
-            MlbTeam(MlbTeamId.BAL, 55, 58, 542.0, 558.0, 24.2, 0.312, 101.0, 4.18, 4.22, -0.4, 4.15, 0.5, 1.00),
-            MlbTeam(MlbTeamId.BOS, 59, 53, 550.0, 525.0, 26.8, 0.318, 104.0, 4.08, 4.15, 0.5, 3.95, 0.8, 1.00),
-            MlbTeam(MlbTeamId.TBD, 56, 56, 475.0, 490.0, 24.5, 0.298, 95.0, 3.82, 3.85, 1.2, 3.55, 1.0, 1.00),
-            MlbTeam(MlbTeamId.TOR, 52, 62, 482.0, 545.0, 19.8, 0.305, 98.0, 4.28, 4.30, -0.8, 4.10, 0.4, 0.98),
+            MlbTeam(MlbTeamId.NYY, 67, 52, 535.0, 450.0, 36.5, 0.334, 117.0, 3.70, 3.78, 3.2, 3.15, 2.2, 1.10, 6, 4, 1.028),
+            MlbTeam(MlbTeamId.BAL, 58, 63, 543.0, 579.0, 24.2, 0.312, 101.0, 4.18, 4.22, -0.4, 4.15, 0.5, 1.00, 4, 6, 1.033),
+            MlbTeam(MlbTeamId.BOS, 64, 56, 531.0, 452.0, 26.8, 0.318, 104.0, 4.08, 4.15, 0.5, 3.95, 0.8, 1.00, 5, 5, 1.008),
+            MlbTeam(MlbTeamId.TBD, 74, 46, 549.0, 487.0, 24.5, 0.298, 95.0, 3.82, 3.85, 1.2, 3.55, 1.0, 1.00, 9, 1, 0.99),
+            MlbTeam(MlbTeamId.TOR, 59, 63, 482.0, 536.0, 19.8, 0.305, 98.0, 4.28, 4.30, -0.8, 4.10, 0.4, 0.98, 7, 3, 1.014),
             
             // --- AL CENTRAL ---
-            MlbTeam(MlbTeamId.CLE, 67, 46, 525.0, 442.0, 31.0, 0.308, 98.0, 3.65, 3.75, 4.2, 3.28, 1.2, 1.03),
-            MlbTeam(MlbTeamId.KC,  64, 52, 568.0, 482.0, 35.6, 0.322, 110.0, 3.65, 3.75, 2.5, 3.35, 2.0, 1.04),
-            MlbTeam(MlbTeamId.MIN, 63, 50, 548.0, 502.0, 28.5, 0.320, 106.0, 3.98, 4.05, 0.8, 3.80, 0.6, 1.00),
-            MlbTeam(MlbTeamId.DET, 55, 59, 472.0, 488.0, 25.2, 0.302, 94.0, 3.75, 3.80, 1.8, 3.45, 0.8, 0.98),
-            MlbTeam(MlbTeamId.CWS, 28, 86, 352.0, 622.0, 5.2, 0.279, 76.0, 4.88, 4.95, -4.5, 5.10, -0.8, 0.85),
+            MlbTeam(MlbTeamId.CLE, 59, 62, 483.0, 510.0, 31.0, 0.308, 98.0, 3.65, 3.75, 4.2, 3.28, 1.2, 1.03, 3, 7, 1.03),
+            MlbTeam(MlbTeamId.KC, 49, 72, 501.0, 613.0, 35.6, 0.322, 110.0, 3.65, 3.75, 2.5, 3.35, 2.0, 1.04, 3, 7, 1.037),
+            MlbTeam(MlbTeamId.MIN, 60, 62, 571.0, 603.0, 28.5, 0.320, 106.0, 3.98, 4.05, 0.8, 3.80, 0.6, 1.00, 4, 6, 1.027),
+            MlbTeam(MlbTeamId.DET, 59, 61, 549.0, 462.0, 25.2, 0.302, 94.0, 3.75, 3.80, 1.8, 3.45, 0.8, 0.98, 7, 3, 0.971),
+            MlbTeam(MlbTeamId.CWS, 61, 57, 561.0, 525.0, 5.2, 0.279, 76.0, 4.88, 4.95, -4.5, 5.10, -0.8, 0.85, 4, 6, 1.029),
 
             // --- AL WEST ---
-            MlbTeam(MlbTeamId.HOU, 63, 51, 542.0, 468.0, 30.5, 0.324, 109.0, 3.75, 3.82, 2.0, 3.30, 1.5, 1.05),
-            MlbTeam(MlbTeamId.SEA, 60, 54, 476.0, 438.0, 28.0, 0.302, 97.0, 3.52, 3.60, 2.2, 2.95, 0.8, 1.02),
-            MlbTeam(MlbTeamId.TEX, 54, 60, 478.0, 502.0, 21.5, 0.306, 99.0, 4.15, 4.22, -0.5, 3.90, 0.3, 0.98),
-            MlbTeam(MlbTeamId.OAK, 48, 67, 452.0, 538.0, 15.4, 0.300, 94.0, 4.42, 4.48, -1.2, 4.40, 0.2, 0.95),
-            MlbTeam(MlbTeamId.LAA, 44, 69, 445.0, 558.0, 12.8, 0.296, 91.0, 4.58, 4.62, -2.0, 4.65, -0.2, 0.92),
+            MlbTeam(MlbTeamId.HOU, 62, 60, 559.0, 586.0, 30.5, 0.324, 109.0, 3.75, 3.82, 2.0, 3.30, 1.5, 1.05, 5, 5, 1.016),
+            MlbTeam(MlbTeamId.SEA, 56, 64, 463.0, 485.0, 28.0, 0.302, 97.0, 3.52, 3.60, 2.2, 2.95, 0.8, 1.02, 3, 7, 1.03),
+            MlbTeam(MlbTeamId.TEX, 60, 60, 495.0, 526.0, 21.5, 0.306, 99.0, 4.15, 4.22, -0.5, 3.90, 0.3, 0.98, 5, 5, 1.018),
+            MlbTeam(MlbTeamId.OAK, 47, 74, 524.0, 704.0, 15.4, 0.300, 94.0, 4.42, 4.48, -1.2, 4.40, 0.2, 0.95, 2, 8, 1.024),
+            MlbTeam(MlbTeamId.LAA, 46, 74, 488.0, 581.0, 12.8, 0.296, 91.0, 4.58, 4.62, -2.0, 4.65, -0.2, 0.92, 4, 6, 1.01),
 
             // --- NL EAST ---
-            MlbTeam(MlbTeamId.PHI, 68, 45, 558.0, 458.0, 35.2, 0.330, 114.0, 3.65, 3.70, 2.8, 3.10, 2.0, 1.05),
-            MlbTeam(MlbTeamId.ATL, 64, 48, 528.0, 435.0, 34.5, 0.320, 106.0, 3.52, 3.58, 3.8, 2.95, 2.8, 1.12),
-            MlbTeam(MlbTeamId.NYM, 61, 53, 542.0, 488.0, 29.8, 0.324, 109.0, 3.92, 4.00, 1.2, 3.50, 1.4, 1.03),
-            MlbTeam(MlbTeamId.WSH, 51, 63, 458.0, 538.0, 16.1, 0.303, 93.0, 4.42, 4.48, -1.0, 4.35, 0.2, 0.95),
-            MlbTeam(MlbTeamId.MIA, 43, 71, 432.0, 562.0, 11.5, 0.292, 88.0, 4.68, 4.72, -2.5, 4.75, -0.4, 0.90),
+            MlbTeam(MlbTeamId.PHI, 64, 58, 535.0, 542.0, 35.2, 0.330, 114.0, 3.65, 3.70, 2.8, 3.10, 2.0, 1.05, 5, 5, 1.016),
+            MlbTeam(MlbTeamId.ATL, 73, 48, 591.0, 467.0, 34.5, 0.320, 106.0, 3.52, 3.58, 3.8, 2.95, 2.8, 1.12, 7, 3, 1.038),
+            MlbTeam(MlbTeamId.NYM, 53, 69, 510.0, 557.0, 29.8, 0.324, 109.0, 3.92, 4.00, 1.2, 3.50, 1.4, 1.03, 6, 4, 1.02),
+            MlbTeam(MlbTeamId.WSH, 59, 63, 655.0, 639.0, 16.1, 0.303, 93.0, 4.42, 4.48, -1.0, 4.35, 0.2, 0.95, 4, 6, 1.018),
+            MlbTeam(MlbTeamId.MIA, 62, 59, 534.0, 511.0, 11.5, 0.292, 88.0, 4.68, 4.72, -2.5, 4.75, -0.4, 0.90, 6, 4, 1.034),
 
             // --- NL CENTRAL ---
-            MlbTeam(MlbTeamId.MIL, 68, 45, 562.0, 448.0, 35.5, 0.325, 108.0, 3.62, 3.68, 3.5, 3.30, 1.8, 1.12),
-            MlbTeam(MlbTeamId.CHC, 66, 48, 562.0, 478.0, 33.5, 0.325, 108.0, 3.72, 3.78, 2.8, 3.20, 1.8, 1.10),
-            MlbTeam(MlbTeamId.STL, 58, 56, 468.0, 502.0, 22.5, 0.309, 98.0, 4.12, 4.18, 0.3, 3.98, 0.4, 1.00),
-            MlbTeam(MlbTeamId.CIN, 54, 60, 488.0, 492.0, 20.0, 0.307, 95.0, 4.08, 4.12, -0.2, 3.85, 0.5, 0.95),
-            MlbTeam(MlbTeamId.PIT, 53, 60, 462.0, 512.0, 19.2, 0.301, 92.0, 4.15, 4.20, 0.1, 3.50, 0.6, 0.95),
+            MlbTeam(MlbTeamId.MIL, 74, 47, 592.0, 462.0, 35.5, 0.325, 108.0, 3.62, 3.68, 3.5, 3.30, 1.8, 1.12, 5, 5, 1.04),
+            MlbTeam(MlbTeamId.CHC, 71, 50, 634.0, 519.0, 33.5, 0.325, 108.0, 3.72, 3.78, 2.8, 3.20, 1.8, 1.10, 8, 2, 1.037),
+            MlbTeam(MlbTeamId.STL, 61, 60, 529.0, 530.0, 22.5, 0.309, 98.0, 4.12, 4.18, 0.3, 3.98, 0.4, 1.00, 7, 3, 1.036),
+            MlbTeam(MlbTeamId.CIN, 57, 61, 487.0, 560.0, 20.0, 0.307, 95.0, 4.08, 4.12, -0.2, 3.85, 0.5, 0.95, 6, 4, 1.003),
+            MlbTeam(MlbTeamId.PIT, 58, 64, 604.0, 591.0, 19.2, 0.301, 92.0, 4.15, 4.20, 0.1, 3.50, 0.6, 0.95, 2, 8, 1.012),
 
             // --- NL WEST ---
-            MlbTeam(MlbTeamId.LAD, 70, 45, 615.0, 465.0, 40.0, 0.338, 120.0, 3.62, 3.68, 3.8, 2.65, 3.2, 1.25),
-            MlbTeam(MlbTeamId.SD,  66, 49, 532.0, 468.0, 32.1, 0.326, 110.0, 3.72, 3.80, 2.4, 3.30, 1.8, 1.10),
-            MlbTeam(MlbTeamId.ARI, 61, 53, 612.0, 548.0, 29.5, 0.332, 114.0, 4.22, 4.15, 0.6, 3.80, 1.1, 1.08),
-            MlbTeam(MlbTeamId.SF,  56, 58, 482.0, 495.0, 22.8, 0.308, 99.0, 3.95, 4.02, 0.1, 3.68, 0.5, 1.00),
-            MlbTeam(MlbTeamId.COL, 42, 73, 475.0, 652.0, 8.0, 0.310, 86.0, 5.20, 5.10, -3.5, 5.35, -0.6, 0.75)
+            MlbTeam(MlbTeamId.LAD, 72, 48, 602.0, 462.0, 40.0, 0.338, 120.0, 3.62, 3.68, 3.8, 2.65, 3.2, 1.25, 3, 7, 1.025),
+            MlbTeam(MlbTeamId.SD, 65, 57, 522.0, 521.0, 32.1, 0.326, 110.0, 3.72, 3.80, 2.4, 3.30, 1.8, 1.10, 7, 3, 1.014),
+            MlbTeam(MlbTeamId.ARI, 64, 58, 552.0, 541.0, 29.5, 0.332, 114.0, 4.22, 4.15, 0.6, 3.80, 1.1, 1.08, 5, 5, 1.028),
+            MlbTeam(MlbTeamId.SF, 50, 71, 493.0, 557.0, 22.8, 0.308, 99.0, 3.95, 4.02, 0.1, 3.68, 0.5, 1.00, 3, 7, 1.015),
+            MlbTeam(MlbTeamId.COL, 48, 73, 577.0, 693.0, 8.0, 0.310, 86.0, 5.20, 5.10, -3.5, 5.35, -0.6, 0.75, 4, 6, 1.024)
         )
         check(dataset.size == MlbTeamId.entries.size) {
             "Dataset does not contain all ${MlbTeamId.entries.size} MLB teams!"
@@ -82,13 +82,13 @@ object SabermetricDataService {
     fun exportCleanCsvDataset(teams: List<MlbTeam>, leaderboard: List<TeamProbability>? = null): String {
         val probMap = leaderboard?.associateBy { it.team.teamId }
         val sb = StringBuilder()
-        sb.append("Team_ID,Team_Name,League,Division,Wins,Losses,Win_Pct,Runs_Scored,Runs_Allowed,Run_Differential,Pythagorean_Win_Pct,Team_WAR,wOBA,wRC_Plus,FIP,xFIP,Bullpen_WPA,Top3_Ace_ERA,Trade_Deadline_WAR,Clubhouse_Hype_Index,Regular_Season_Rank,Sim_Rank,Rank_Movement\n")
+        sb.append("Team_ID,Team_Name,League,Division,Wins,Losses,Win_Pct,Runs_Scored,Runs_Allowed,Run_Differential,Pythagorean_Win_Pct,Last10_Wins,Last10_Losses,Recency_Win_Pct,Season_Consistency_Index,Team_WAR,wOBA,wRC_Plus,FIP,xFIP,Bullpen_WPA,Top3_Ace_ERA,Trade_Deadline_WAR,Clubhouse_Hype_Index,Regular_Season_Rank,Sim_Rank,Rank_Movement\n")
         for (t in teams) {
             val tp = probMap?.get(t.teamId)
             val regRank = tp?.regularSeasonRank?.toString() ?: ""
             val simRank = tp?.simRank?.toString() ?: ""
             val movement = tp?.movementSymbol ?: ""
-            sb.append("${t.id},\"${t.name}\",${t.league},${t.division},${t.wins},${t.losses},${t.winPct.formatDecimals(3)},${t.runsScored},${t.runsAllowed},${t.runDifferential},${t.pythagoreanWinPct.formatDecimals(3)},${t.teamWar},${t.wOBA},${t.wRCPlus},${t.fip},${t.xFip},${t.bullpenWpa},${t.top3AceEra},${t.tradeDeadlineWarAdded},${t.clubhouseHypeIndex},$regRank,$simRank,$movement\n")
+            sb.append("${t.id},\"${t.name}\",${t.league},${t.division},${t.wins},${t.losses},${t.winPct.formatDecimals(3)},${t.runsScored},${t.runsAllowed},${t.runDifferential},${t.pythagoreanWinPct.formatDecimals(3)},${t.last10Wins},${t.last10Losses},${t.recencyWeightedWinPct.formatDecimals(3)},${t.seasonConsistencyIndex.formatDecimals(3)},${t.teamWar},${t.wOBA},${t.wRCPlus},${t.fip},${t.xFip},${t.bullpenWpa},${t.top3AceEra},${t.tradeDeadlineWarAdded},${t.clubhouseHypeIndex},$regRank,$simRank,$movement\n")
         }
         return sb.toString()
     }

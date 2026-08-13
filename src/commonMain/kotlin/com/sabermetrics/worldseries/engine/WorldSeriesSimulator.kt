@@ -15,19 +15,24 @@ import kotlin.random.Random
 object WorldSeriesSimulator {
 
     /**
-     * Estimates Latent True Team Quality Score using 2SLS IV & Sabermetrics.
+     * Estimates Latent True Team Quality Score using 2SLS IV, Sabermetrics,
+     * Recency Exponential Weighting, and Season Consistency Index.
      */
     fun computeLatentTeamQuality(team: MlbTeam): Double {
-        val baseScore = 0.30 * team.winPct +
+        val recencyWinPct = team.recencyWeightedWinPct
+
+        val baseScore = 0.30 * recencyWinPct +
                         0.25 * team.pythagoreanWinPct +
                         0.20 * (team.teamWar / 50.0).coerceIn(0.2, 1.2) +
                         0.15 * (3.80 / team.top3AceEra).coerceIn(0.5, 1.5) +
                         0.10 * (team.wRCPlus / 100.0)
 
-        // Trade deadline boost & clubhouse hype multiplier
+        // Trade deadline boost, clubhouse hype multiplier, and season consistency index
         val hypeMultiplier = team.clubhouseHypeIndex
+        val consistencyMultiplier = team.seasonConsistencyIndex
         val tradeBoost = team.tradeDeadlineWarAdded * 0.02
-        return (baseScore + tradeBoost) * hypeMultiplier
+
+        return (baseScore + tradeBoost) * hypeMultiplier * consistencyMultiplier
     }
 
     /**

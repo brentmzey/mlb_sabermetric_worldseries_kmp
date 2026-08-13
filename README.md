@@ -26,36 +26,36 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 | Rank | Movement | Team Name | League & Div | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | — | **Los Angeles Dodgers** | NL West | 70 - 45 | 101.3 | **100.0%** | **42.0%** | **29.29%** | `████████████████` |
-| 🥈 2 | — | **New York Yankees** | AL East | 68 - 46 | 98.5 | **100.0%** | **33.3%** | **14.82%** | `████████` |
-| 🥉 3 | — | **Milwaukee Brewers** | NL Central | 68 - 45 | 97.5 | **99.8%** | **16.8%** | **9.24%** | `█████` |
-| 4 | ▲ +4 | **Atlanta Braves** | NL East | 64 - 48 | 95.2 | **96.3%** | **13.7%** | **7.65%** | `████` |
-| 5 | ▲ +4 | **Kansas City Royals** | AL Central | 64 - 52 | 93.1 | **99.9%** | **17.9%** | **7.40%** | `████` |
-| 6 | ▼ -1 | **Cleveland Guardians** | AL Central | 67 - 46 | 93.7 | **100.0%** | **17.3%** | **6.34%** | `███` |
-| 7 | ▲ +3 | **Houston Astros** | AL West | 63 - 51 | 91.8 | **99.3%** | **14.9%** | **5.98%** | `███` |
-| 8 | ▼ -4 | **Philadelphia Phillies** | NL East | 68 - 45 | 95.5 | **97.4%** | **11.2%** | **5.39%** | `███` |
-| 9 | ▼ -3 | **Chicago Cubs** | NL Central | 66 - 48 | 92.9 | **82.0%** | **7.8%** | **4.22%** | `██` |
-| 10 | ▲ +4 | **Seattle Mariners** | AL West | 60 - 54 | 87.2 | **78.3%** | **7.4%** | **2.59%** | `█` |
-| 11 | ▼ -2 | **Minnesota Twins** | AL Central | 63 - 50 | 87.5 | **81.4%** | **7.4%** | **2.81%** | `██` |
-| 12 | ▲ +1 | **Atlanta Braves** | NL East | 60 - 52 | 89.4 | **52.9%** | **4.3%** | **2.12%** | `██` |
-| 13 | ▼ -2 | **Arizona Diamondbacks** | NL West | 61 - 53 | 89.1 | **48.9%** | **4.0%** | **1.91%** | `█` |
-| 14 | ▼ -2 | **New York Mets** | NL East | 61 - 53 | 88.8 | **44.9%** | **3.4%** | **1.63%** | `█` |
-| 15 | — | **Boston Red Sox** | AL East | 59 - 53 | 84.5 | **40.1%** | **3.5%** | **1.41%** | `█` |
-| 16 | ▲ +3 | **Baltimore Orioles** | AL East | 55 - 58 | 78.9 | **0.9%** | **0.0%** | **0.02%** | `▏` |
-| 17 | ▲ +1 | **Tampa Bay Rays** | AL East | 56 - 56 | 78.7 | **0.6%** | **0.0%** | **0.01%** | `▏` |
-| 18 | ▲ +2 | **Detroit Tigers** | AL Central | 55 - 59 | 78.5 | **0.4%** | **0.0%** | **0.01%** | `▏` |
-| 19 | ▲ +5 | **Toronto Blue Jays** | AL East | 52 - 62 | 71.9 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 20 | ▲ +10 | **Chicago White Sox** | AL Central | 28 - 86 | 50.0 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 21 | ▲ +1 | **Texas Rangers** | AL West | 54 - 60 | 77.4 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 22 | ▲ +4 | **Oakland Athletics** | AL West | 48 - 67 | 68.2 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 23 | ▲ +4 | **Los Angeles Angels** | AL West | 44 - 69 | 64.5 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 24 | ▲ +1 | **Washington Nationals** | NL East | 51 - 63 | 69.1 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 25 | ▲ +3 | **Miami Marlins** | NL East | 43 - 71 | 61.9 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 26 | ▼ -10 | **St. Louis Cardinals** | NL Central | 58 - 56 | 75.8 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 27 | ▼ -6 | **Cincinnati Reds** | NL Central | 54 - 60 | 80.4 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 28 | ▼ -5 | **Pittsburgh Pirates** | NL Central | 53 - 60 | 73.4 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 29 | ▼ -12 | **San Francisco Giants** | NL West | 56 - 58 | 79.0 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 30 | ▼ -1 | **Colorado Rockies** | NL West | 42 - 73 | 58.2 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 🥇 1 | ▲ +3 | **Los Angeles Dodgers** | NL West | 72 - 48 | 100.3 | **100.0%** | **39.7%** | **28.94%** | `████████████████` |
+| 🥈 2 | ▲ +4 | **New York Yankees** | AL East | 67 - 52 | 93.7 | **100.0%** | **34.0%** | **15.18%** | `████████` |
+| 🥉 3 | — | **Atlanta Braves** | NL East | 73 - 48 | 98.2 | **100.0%** | **21.4%** | **13.50%** | `███████` |
+| 4 | ▼ -3 | **Milwaukee Brewers** | NL Central | 74 - 47 | 99.0 | **100.0%** | **18.9%** | **11.70%** | `██████` |
+| 5 | — | **Chicago Cubs** | NL Central | 71 - 50 | 95.7 | **100.0%** | **13.5%** | **8.03%** | `████` |
+| 6 | ▲ +11 | **Detroit Tigers** | AL Central | 59 - 61 | 93.7 | **100.0%** | **21.3%** | **6.01%** | `███` |
+| 7 | ▲ +1 | **Boston Red Sox** | AL East | 64 - 56 | 92.9 | **100.0%** | **15.0%** | **4.37%** | `██` |
+| 8 | ▼ -6 | **Tampa Bay Rays** | AL East | 74 - 46 | 89.8 | **100.0%** | **12.5%** | **3.95%** | `██` |
+| 9 | ▲ +3 | **Houston Astros** | AL West | 62 - 60 | 77.5 | **37.4%** | **6.1%** | **2.18%** | `█` |
+| 10 | ▲ +14 | **Seattle Mariners** | AL West | 56 - 64 | 77.5 | **38.2%** | **4.7%** | **1.79%** | `█` |
+| 11 | ▼ -2 | **Arizona Diamondbacks** | NL West | 64 - 58 | 82.5 | **33.1%** | **1.8%** | **1.02%** | `█` |
+| 12 | ▲ +1 | **Chicago White Sox** | AL Central | 61 - 57 | 85.9 | **98.6%** | **4.0%** | **0.67%** | `▏` |
+| 13 | ▲ +2 | **Texas Rangers** | AL West | 60 - 60 | 76.5 | **24.6%** | **2.3%** | **0.67%** | `▏` |
+| 14 | ▼ -7 | **San Diego Padres** | NL West | 65 - 57 | 81.1 | **17.5%** | **1.2%** | **0.44%** | `▏` |
+| 15 | ▲ +6 | **Pittsburgh Pirates** | NL Central | 58 - 64 | 82.6 | **33.6%** | **0.8%** | **0.39%** | `▏` |
+| 16 | ▼ -5 | **Miami Marlins** | NL East | 62 - 59 | 84.3 | **54.8%** | **1.0%** | **0.31%** | `▏` |
+| 17 | ▼ -7 | **Philadelphia Phillies** | NL East | 64 - 58 | 80.1 | **8.8%** | **0.5%** | **0.28%** | `▏` |
+| 18 | — | **Washington Nationals** | NL East | 59 - 63 | 82.8 | **36.9%** | **0.8%** | **0.28%** | `▏` |
+| 19 | ▼ -5 | **St. Louis Cardinals** | NL Central | 61 - 60 | 80.9 | **15.4%** | **0.5%** | **0.25%** | `▏` |
+| 20 | ▼ -1 | **Cleveland Guardians** | AL Central | 59 - 62 | 77.0 | **0.6%** | **0.1%** | **0.02%** | `▏` |
+| 21 | ▲ +1 | **Baltimore Orioles** | AL East | 58 - 63 | 76.2 | **0.0%** | **0.0%** | **0.01%** | `▏` |
+| 22 | ▼ -6 | **Minnesota Twins** | AL Central | 60 - 62 | 77.0 | **0.5%** | **0.0%** | **0.01%** | `▏` |
+| 23 | ▼ -3 | **Toronto Blue Jays** | AL East | 59 - 63 | 73.2 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 24 | ▲ +3 | **Kansas City Royals** | AL Central | 49 - 72 | 66.2 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 25 | ▲ +4 | **Oakland Athletics** | AL West | 47 - 74 | 59.6 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 26 | ▲ +4 | **Los Angeles Angels** | AL West | 46 - 74 | 68.1 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 27 | ▼ -2 | **New York Mets** | NL East | 53 - 69 | 74.5 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 28 | ▼ -5 | **Cincinnati Reds** | NL Central | 57 - 61 | 70.7 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 29 | ▼ -3 | **San Francisco Giants** | NL West | 50 - 71 | 71.9 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 30 | ▼ -2 | **Colorado Rockies** | NL West | 48 - 73 | 67.6 | **0.0%** | **0.0%** | **0.00%** | `▏`
 
 ---
 
@@ -139,7 +139,7 @@ flowchart TD
 
 ## 🧮 Formal Mathematical Models & Structural Equations
 
-Our predictions bridge raw sabermetrics and causal econometrics through 5 formal mathematical models:
+Our predictions bridge raw sabermetrics and causal econometrics through 6 formal mathematical models:
 
 ### 1. **Bill James Pythagorean Expectancy Model**
 Eliminates 1-run game noise and bullpen sequencing variance by modeling win expectation strictly as a function of runs scored ($R$) and runs allowed ($RA$):
@@ -163,16 +163,27 @@ where:
 
 ---
 
-### 3. **Two-Stage Least Squares (2SLS / IV) Causal Structural Model**
+### 3. **Exponential Recency Weighting & Season Consistency Model**
+To capture momentum while preserving full-season signal stability, performance metrics are weighted with time-decay exponential smoothing and Bayesian backoff:
+
+$$W_{\text{recency}, i} = 0.50 \cdot \text{Pythagorean Win \%}_i + 0.35 \cdot \text{Win \%}_i + 0.15 \cdot \text{Last10 Win \%}_i$$
+
+$$\text{Consistency Index}_i = \left(1.0 + \text{clamp}\left(0.04 - 0.8 \cdot \left| \text{Win \%}_i - \text{Pythagorean Win \%}_i \right|, -0.08, 0.08\right)\right)$$
+
+This rewards teams with consistent performance across months while applying empirical backoff to avoid over-reacting to small sample noise.
+
+---
+
+### 4. **Two-Stage Least Squares (2SLS / IV) Causal Structural Model**
 Standard OLS regression of postseason success on regular season wins suffers from endogeneity (unobserved luck residuals). We instrument team win totals ($Win_i$) with Pythagorean expectation ($\text{Pythagorean Win \%}_i$) and Strength of Schedule ($SOS_i$) in Stage 1 to isolate true structural team quality ($\hat{Quality}_i$) in Stage 2:
 
 $$\text{\bf Stage 1 (First Stage)}: \quad Win_i = \gamma_0 + \gamma_1 \text{Pythagorean Win \%}_i + \gamma_2 SOS_i + v_i$$
 
-$$\text{\bf Stage 2 (Second Stage)}: \quad \hat{Quality}_i = \beta_0 + \beta_1 \hat{Win}_i + \beta_2 \left(\frac{3.80}{ERA_{Top3,i}}\right) + \beta_3 WPA_{Bullpen,i} + \beta_4 Hype_i + \varepsilon_i$$
+$$\text{\bf Stage 2 (Second Stage)}: \quad \hat{Quality}_i = \left( \beta_0 + \beta_1 W_{\text{recency}, i} + \beta_2 \left(\frac{3.80}{ERA_{Top3,i}}\right) + \beta_3 WPA_{Bullpen,i} + \beta_4 Hype_i \right) \cdot \text{Consistency Index}_i + \varepsilon_i$$
 
 ---
 
-### 4. **Bradley-Terry Logit Postseason Matchup Model**
+### 5. **Bradley-Terry Logit Postseason Matchup Model**
 In any individual playoff game between Team $A$ and Team $B$, the probability of Team $A$ winning is modeled via a Bradley-Terry logistic response function driven by their relative latent quality scores ($\hat{Quality}_A, \hat{Quality}_B$):
 
 $$P(\text{Team } A \text{ beats Team } B) = \frac{1}{1 + e^{-\lambda (\hat{Quality}_A - \hat{Quality}_B)}}$$
@@ -181,7 +192,7 @@ where $\lambda = 3.5$ represents the postseason intensity scaling factor.
 
 ---
 
-### 5. **Standings Movement & Rank Delta Formulation**
+### 6. **Standings Movement & Rank Delta Formulation**
 Quantifies how much a team's true championship odds move relative to their raw regular-season win-loss record after purging luck noise and adjusting for playoff rotation depth:
 
 $$\Delta \text{Rank}_i = \text{Rank}_{\text{Regular Season}, i} - \text{Rank}_{\text{Causal World Series Sim}, i}$$
@@ -198,16 +209,19 @@ where:
 Here is how the equations connect directly to the predictions displayed in the table above:
 
 ```
-[Raw Runs & Offense]   --> Equation (1) & (2)  --> [Luck-Filtered Run Differential]
-                                                        |
-                                                        v
-[Strength of Schedule] --> Equation (3) 2SLS   --> [Causal Latent Team Quality Score]
-                                                        |
-                                                        v
-[Playoff Compression]  --> Equation (4) Logit  --> [10,000 Playoff Bracket Simulations]
-                                                        |
-                                                        v
-                                                   [FINAL WORLD SERIES WIN PROBABILITIES]
+[Raw Runs & Offense]       --> Equations (1) & (2) --> [Luck-Filtered Run Differential]
+                                                            |
+                                                            v
+[Last 10 Trend & Stability] --> Equation (3) Recency --> [Exponential Recency & Consistency Index]
+                                                            |
+                                                            v
+[Strength of Schedule]     --> Equation (4) 2SLS    --> [Causal Latent Team Quality Score]
+                                                            |
+                                                            v
+[Playoff Compression]      --> Equation (5) Logit   --> [10,000 Playoff Bracket Simulations]
+                                                            |
+                                                            v
+                                                       [FINAL WORLD SERIES WIN PROBABILITIES]
 ```
 
 1. **Raw Data Ingestion**: Clean team statistics ($R, RA, wOBA, FIP$) enter **Equations (1) & (2)** to strip out luck-based game sequencing.

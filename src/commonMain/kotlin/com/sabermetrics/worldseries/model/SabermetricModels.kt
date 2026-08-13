@@ -107,7 +107,10 @@ data class MlbTeam(
     val bullpenWpa: Double,
     val top3AceEra: Double,
     val tradeDeadlineWarAdded: Double = 0.0,
-    val clubhouseHypeIndex: Double = 1.0 // Team Chemistry / Hype Index (0.5 to 2.0)
+    val clubhouseHypeIndex: Double = 1.0, // Team Chemistry / Hype Index (0.5 to 2.0)
+    val last10Wins: Int = 5,
+    val last10Losses: Int = 5,
+    val seasonConsistencyScore: Double = 1.0 // Season Consistency Metric (0.85 to 1.15)
 ) {
     val id: String get() = teamId.code
     val name: String get() = teamId.fullName
@@ -134,7 +137,10 @@ data class MlbTeam(
         bullpenWpa: Double,
         top3AceEra: Double,
         tradeDeadlineWarAdded: Double = 0.0,
-        clubhouseHypeIndex: Double = 1.0
+        clubhouseHypeIndex: Double = 1.0,
+        last10Wins: Int = 5,
+        last10Losses: Int = 5,
+        seasonConsistencyScore: Double = 1.0
     ) : this(
         teamId = MlbTeamId.fromCode(id),
         wins = wins,
@@ -149,12 +155,30 @@ data class MlbTeam(
         bullpenWpa = bullpenWpa,
         top3AceEra = top3AceEra,
         tradeDeadlineWarAdded = tradeDeadlineWarAdded,
-        clubhouseHypeIndex = clubhouseHypeIndex
+        clubhouseHypeIndex = clubhouseHypeIndex,
+        last10Wins = last10Wins,
+        last10Losses = last10Losses,
+        seasonConsistencyScore = seasonConsistencyScore
     )
 
     val gamesPlayed: Int get() = wins + losses
     val winPct: Double get() = if (gamesPlayed > 0) wins.toDouble() / gamesPlayed else 0.500
     val runDifferential: Double get() = runsScored - runsAllowed
+
+    val last10WinPct: Double get() = if (last10Wins + last10Losses > 0) last10Wins.toDouble() / (last10Wins + last10Losses) else 0.500
+
+    /**
+     * Exponentially Recency-Weighted Win Expectancy with Bayesian backoff smoothing.
+     * Combines Pythagorean expectation (50%), full-season win % (35%), and last 10 games trend (15%).
+     */
+    val recencyWeightedWinPct: Double get() {
+        return 0.50 * pythagoreanWinPct + 0.35 * winPct + 0.15 * last10WinPct
+    }
+
+    /**
+     * Bounded Season Consistency Index (0.85 to 1.15).
+     */
+    val seasonConsistencyIndex: Double get() = seasonConsistencyScore.coerceIn(0.85, 1.15)
 
     /**
      * Bill James Pythagorean Win Expectancy with Pythagenpat exponent (1.83).

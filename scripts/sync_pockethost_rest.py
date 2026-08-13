@@ -17,20 +17,20 @@ ADMIN_PASSWORD = os.getenv("POCKETHOST_ADMIN_PASSWORD")
 SCHEMA_FILE = os.path.join(os.path.dirname(__file__), "..", "docs", "schema", "pockethost_collections.json")
 CSV_FILE = os.path.join(os.path.dirname(__file__), "..", "output_datasets", "mlb_sabermetric_clean_dataset.csv")
 
-# Load ~/.env if present
-env_file = os.path.expanduser("~/.env")
-if os.path.exists(env_file):
-    with open(env_file, "r") as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                k, v = line.split("=", 1)
-                k = k.strip()
-                v = v.strip().strip('"').strip("'")
-                if k == "POCKETHOST_ADMIN_EMAIL" and not ADMIN_EMAIL:
-                    ADMIN_EMAIL = v
-                elif k == "POCKETHOST_ADMIN_PASSWORD" and not ADMIN_PASSWORD:
-                    ADMIN_PASSWORD = v
+# Load .env if present
+for env_location in [os.path.join(os.path.dirname(__file__), "..", ".env"), os.path.expanduser("~/.env")]:
+    if os.path.exists(env_location):
+        with open(env_location, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip().strip('"').strip("'")
+                    if k == "POCKETHOST_ADMIN_EMAIL" and not ADMIN_EMAIL:
+                        ADMIN_EMAIL = v
+                    elif k == "POCKETHOST_ADMIN_PASSWORD" and not ADMIN_PASSWORD:
+                        ADMIN_PASSWORD = v
 
 print("================================================================================")
 print(" 🚀 POCKETHOST REST API HISTORICAL PANEL DATA & TIME SERIES SYNC")
@@ -41,17 +41,30 @@ if not ADMIN_EMAIL or not ADMIN_PASSWORD:
     print("❌ Error: Missing admin credentials in ~/.env.")
     sys.exit(1)
 
-def http_post(url, data_dict, token=None):
+def http_post(url, data_dict, inner_token=None):
     headers = {
         "Content-Type": "application/json",
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
     }
-    if token:
-        headers["Authorization"] = token
-    req = urllib.request.Request(url, data=json.dumps(data_dict).encode("utf-8"), headers=headers, method="POST")
-    with urllib.request.urlopen(req) as resp:
-        body = resp.read().decode("utf-8")
-        return json.loads(body) if body.strip() else {}
+    if inner_token:
+        headers["Authorization"] = inner_token
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(url, data=json.dumps(data_dict).encode("utf-8"), headers=headers, method="POST")
+            with urllib.request.urlopen(req) as resp:
+                body = resp.read().decode("utf-8")
+                return json.loads(body) if body.strip() else {}
+        except urllib.error.HTTPError as e:
+            if e.code == 429 or e.code >= 500:
+                time.sleep(0.5 * (attempt + 1))
+                continue
+            raise e
+        except Exception as e:
+            if attempt < 2:
+                time.sleep(0.5)
+                continue
+            raise e
+    return None
 
 def http_put(url, data_dict, token=None):
     headers = {
@@ -74,20 +87,27 @@ def http_get(url, token=None):
     req = urllib.request.Request(url, headers=headers, method="GET")
     with urllib.request.urlopen(req) as resp:
         return json.loads(resp.read().decode("utf-8"))
+    return None
+
 
 # Step 1: Authenticate Admin / Superuser
 print("🔐 Authenticating Admin account with PocketHost...")
-time.sleep(1.0)
 token = None
-for auth_ep in ["/api/collections/_superusers/auth-with-password", "/api/admins/auth-with-password"]:
-    try:
-        res = http_post(f"{POCKETHOST_URL}{auth_ep}", {"identity": ADMIN_EMAIL, "password": ADMIN_PASSWORD})
-        token = res.get("token")
-        if token:
-            print(f"✅ Admin authenticated successfully via `{auth_ep}`.")
-            break
-    except Exception as e:
-        continue
+for attempt in range(5):
+    for auth_ep in ["/api/collections/_superusers/auth-with-password", "/api/admins/auth-with-password"]:
+        try:
+            res = http_post(f"{POCKETHOST_URL}{auth_ep}", {"identity": ADMIN_EMAIL, "password": ADMIN_PASSWORD})
+            if isinstance(res, dict) and res.get("token"):
+                token = res.get("token")
+                print(f"✅ Admin authenticated successfully via `{auth_ep}`.")
+                break
+        except Exception as e:
+            continue
+    if token:
+        break
+    if attempt < 4:
+        print(f"   Auth rate-limited, waiting 30 seconds before attempt {attempt + 2}...")
+        time.sleep(30.0)
 
 if not token:
     print("❌ Admin authentication failed on all endpoints.")
@@ -135,7 +155,7 @@ for row in rows:
             "str_division": row["Division"]
         }
         try:
-            created = http_post(f"{POCKETHOST_URL}/api/collections/tbl_mlb_teams/records", payload, token=token)
+            created = http_post(f"{POCKETHOST_URL}/api/collections/tbl_mlb_teams/records", payload, inner_token=token)
             teams_by_code[code] = created["id"]
         except Exception as e:
             print(f"Error creating team {code}: {e}")
@@ -169,9 +189,10 @@ for yr in seasons:
 
     run_record_id = None
     try:
-        run_rec = http_post(f"{POCKETHOST_URL}/api/collections/tbl_simulation_runs/records", run_payload, token=token)
-        run_record_id = run_rec.get("id")
-        total_runs += 1
+        run_rec = http_post(f"{POCKETHOST_URL}/api/collections/tbl_simulation_runs/records", run_payload, inner_token=token)
+        if isinstance(run_rec, dict) and "id" in run_rec:
+            run_record_id = run_rec["id"]
+            total_runs += 1
     except Exception as e:
         print(f"   Note: Run {run_id} setup: {e}")
 
@@ -213,7 +234,7 @@ for yr in seasons:
             "dbl_thumbs_down_hype_index": float(row.get("Clubhouse_Hype_Index", row.get("ThumbsDown_Hype_Index", 1.0)))
         }
         try:
-            http_post(f"{POCKETHOST_URL}/api/collections/tbl_team_snapshots/records", snap_payload, token=token)
+            http_post(f"{POCKETHOST_URL}/api/collections/tbl_team_snapshots/records", snap_payload, inner_token=token)
             total_snaps += 1
         except Exception:
             pass
@@ -237,7 +258,7 @@ for yr in seasons:
             "dbl_latent_quality_score": float(row["Pythagorean_Win_Pct"])
         }
         try:
-            http_post(f"{POCKETHOST_URL}/api/collections/tbl_rank_movements/records", move_payload, token=token)
+            http_post(f"{POCKETHOST_URL}/api/collections/tbl_rank_movements/records", move_payload, inner_token=token)
             total_moves += 1
         except Exception:
             pass
