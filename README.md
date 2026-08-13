@@ -240,7 +240,8 @@ Here is how the equations connect directly to the predictions displayed in the t
 To eliminate **data modeling drift**, **endogeneity**, and **single-metric blind spots**, our engine incorporates **Rest-of-Season (ROS) Standings Anchoring**, **Bayesian Luck Shrinkage**, **Betting Market Implied Futures**, and **Expert Projection Consensus**.
 
 For complete mathematical proofs, diagnostic matrices, and residual luck tables across all 30 teams, read the detailed documentation:
-📖 **[docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md)**
+- 📖 **[docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md)**: 30-Team Econometric Residual & Bias Mitigation Matrix
+- ⚾ **[docs/CUBS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/CUBS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md)**: Chicago Cubs & NL Central Division Championship Analysis
 
 ### 📊 Visual Chart Artifacts
 1. 🏆 **World Series Win Probabilities**: [`docs/charts/world_series_win_probabilities.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/world_series_win_probabilities.png)
