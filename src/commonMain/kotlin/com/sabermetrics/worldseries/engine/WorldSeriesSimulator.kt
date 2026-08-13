@@ -47,22 +47,23 @@ object WorldSeriesSimulator {
         // Normalized team WAR per 162-game pace
         val warNorm = if (team.gamesPlayed > 0) (team.teamWar / team.gamesPlayed * 162.0) / 45.0 else 0.50
 
-        val baseScore = 0.32 * recencyWinPct +
-                        0.22 * bayesWinPct +
+        val baseScore = 0.28 * recencyWinPct +
+                        0.20 * bayesWinPct +
                         0.14 * warNorm.coerceIn(0.5, 1.3) +
                         0.14 * (3.80 / team.top3AceEra).coerceIn(0.5, 1.5) +
-                        0.09 * (team.wRCPlus / 100.0) +
-                        0.09 * (team.marketImpliedWsProb * 4.0)
+                        0.08 * (team.wRCPlus / 100.0) +
+                        0.08 * (team.marketImpliedWsProb * 4.0) +
+                        0.08 * team.defensiveEfficiencyRating.coerceIn(0.85, 1.15)
 
-        // Trade deadline boost, bullpen clutch boost, clubhouse hype, season consistency, expert rating, and momentum multiplier
+        // Trade deadline boost, bullpen clutch boost, clubhouse hype, 4-pillar consistency, expert/media consensus, and momentum
         val bullpenClutchBoost = (team.bullpenWpa * 0.01).coerceIn(-0.05, 0.05)
         val hypeMultiplier = team.clubhouseHypeIndex
         val consistencyMultiplier = team.seasonConsistencyIndex
-        val expertMultiplier = team.expertConsensusRating.coerceIn(0.85, 1.25)
+        val expertMediaMultiplier = team.compositeExpertMediaIndex
         val momentumMultiplier = customMomentumMap?.get(team.teamId) ?: team.hotStreakMomentumMultiplier
         val tradeBoost = team.tradeDeadlineWarAdded * 0.015
 
-        return (baseScore + tradeBoost + bullpenClutchBoost) * hypeMultiplier * consistencyMultiplier * expertMultiplier * momentumMultiplier
+        return (baseScore + tradeBoost + bullpenClutchBoost) * hypeMultiplier * consistencyMultiplier * expertMediaMultiplier * momentumMultiplier
     }
 
     /**

@@ -70,6 +70,12 @@ class SabermetricTest {
         val tbd = SabermetricDataService.getTeam(MlbTeamId.TBD) // Rays 9-1 in last 10
         assertTrue(tbd.last10WinPct == 0.90)
         assertTrue(tbd.recencyWeightedWinPct > tbd.winPct)
+
+        val chc = SabermetricDataService.getTeam(MlbTeamId.CHC) // Cubs 8-2 in last 10
+        assertEquals(0.80, chc.last10WinPct, 1e-4)
+        assertTrue(chc.fourPillarConsistencyIndex in 0.85..1.15)
+        assertTrue(chc.compositeExpertMediaIndex in 0.85..1.25)
+        assertTrue(chc.defensiveEfficiencyRating in 0.90..1.15)
     }
 
     @Test

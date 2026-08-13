@@ -111,8 +111,14 @@ data class MlbTeam(
     val last10Wins: Int = 5,
     val last10Losses: Int = 5,
     val seasonConsistencyScore: Double = 1.0, // Season Consistency Metric (0.85 to 1.15)
-    val marketImpliedWsProb: Double = 0.03, // Market Futures Implied Probability
-    val expertConsensusRating: Double = 1.00 // Composite Expert Consensus Rating (0.85 to 1.25)
+    val marketImpliedWsProb: Double = 0.03, // Market Futures Implied Probability (Vegas / Sportsbooks)
+    val expertConsensusRating: Double = 1.00, // Analytical Consensus (PECOTA, ZiPS, FanGraphs)
+    val mediaPowerRankRating: Double = 1.00, // Media Consensus Power Ranking Index (MLB.com, ESPN, MLB Network)
+    val defensiveEfficiencyRating: Double = 1.00, // Defensive Runs Saved (DRS) & Outs Above Average (OAA)
+    val pillarOffenseConsistency: Double = 1.00, // Offense Pillar Consistency
+    val pillarDefenseConsistency: Double = 1.00, // Defense Pillar Consistency
+    val pillarPitchingConsistency: Double = 1.00, // Starting Pitching Rotation Pillar Consistency
+    val pillarBullpenConsistency: Double = 1.00 // Bullpen Leverage Pillar Consistency
 ) {
     val id: String get() = teamId.code
     val name: String get() = teamId.fullName
@@ -144,7 +150,13 @@ data class MlbTeam(
         last10Losses: Int = 5,
         seasonConsistencyScore: Double = 1.0,
         marketImpliedWsProb: Double = 0.03,
-        expertConsensusRating: Double = 1.00
+        expertConsensusRating: Double = 1.00,
+        mediaPowerRankRating: Double = 1.00,
+        defensiveEfficiencyRating: Double = 1.00,
+        pillarOffenseConsistency: Double = 1.00,
+        pillarDefenseConsistency: Double = 1.00,
+        pillarPitchingConsistency: Double = 1.00,
+        pillarBullpenConsistency: Double = 1.00
     ) : this(
         teamId = MlbTeamId.fromCode(id),
         wins = wins,
@@ -164,7 +176,13 @@ data class MlbTeam(
         last10Losses = last10Losses,
         seasonConsistencyScore = seasonConsistencyScore,
         marketImpliedWsProb = marketImpliedWsProb,
-        expertConsensusRating = expertConsensusRating
+        expertConsensusRating = expertConsensusRating,
+        mediaPowerRankRating = mediaPowerRankRating,
+        defensiveEfficiencyRating = defensiveEfficiencyRating,
+        pillarOffenseConsistency = pillarOffenseConsistency,
+        pillarDefenseConsistency = pillarDefenseConsistency,
+        pillarPitchingConsistency = pillarPitchingConsistency,
+        pillarBullpenConsistency = pillarBullpenConsistency
     )
 
     val gamesPlayed: Int get() = wins + losses
@@ -216,9 +234,33 @@ data class MlbTeam(
     }
 
     /**
+     * Four-Pillar Whole-Season Consistency Score.
+     * Evaluates full-season execution balance across:
+     * 1. Offense Consistency (30%)
+     * 2. Defense DRS / OAA (20%)
+     * 3. Starting Pitching Rotation Quality (30%)
+     * 4. Bullpen High-Leverage Reliability (20%)
+     */
+    val fourPillarConsistencyIndex: Double get() {
+        val composite = (0.30 * pillarOffenseConsistency +
+                         0.20 * pillarDefenseConsistency +
+                         0.30 * pillarPitchingConsistency +
+                         0.20 * pillarBullpenConsistency)
+        return composite.coerceIn(0.85, 1.15)
+    }
+
+    /**
+     * Combined Media & Expert Projection Index.
+     * Integrates PECOTA/ZiPS/FanGraphs expert consensus with ESPN/MLB.com/MLB Network power rankings.
+     */
+    val compositeExpertMediaIndex: Double get() {
+        return (0.50 * expertConsensusRating + 0.50 * mediaPowerRankRating).coerceIn(0.85, 1.25)
+    }
+
+    /**
      * Bounded Season Consistency Index (0.85 to 1.15).
      */
-    val seasonConsistencyIndex: Double get() = seasonConsistencyScore.coerceIn(0.85, 1.15)
+    val seasonConsistencyIndex: Double get() = (0.50 * seasonConsistencyScore + 0.50 * fourPillarConsistencyIndex).coerceIn(0.85, 1.15)
 
     /**
      * Bill James Pythagorean Win Expectancy with Pythagenpat exponent (1.83).
