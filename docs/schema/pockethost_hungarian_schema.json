@@ -1,0 +1,246 @@
+[
+  {
+    "name": "i_mlb_teams",
+    "type": "base",
+    "fields": [
+      { "name": "str_team_code", "type": "text", "required": true },
+      { "name": "str_team_name", "type": "text", "required": true },
+      { "name": "str_league", "type": "text", "required": true },
+      { "name": "str_division", "type": "text", "required": true },
+      { "name": "str_city", "type": "text", "required": false },
+      { "name": "str_ballpark", "type": "text", "required": false },
+      { "name": "int_founded_year", "type": "number", "required": false },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_i_teams_code ON i_mlb_teams (str_team_code)",
+      "CREATE INDEX idx_i_teams_lg_div ON i_mlb_teams (str_league, str_division)"
+    ]
+  },
+  {
+    "name": "i_team_season_inputs",
+    "type": "base",
+    "fields": [
+      { "name": "str_team_code", "type": "text", "required": true },
+      { "name": "int_season_year", "type": "number", "required": true },
+      { "name": "int_season_week", "type": "number", "required": true },
+      { "name": "int_wins", "type": "number", "required": true },
+      { "name": "int_losses", "type": "number", "required": true },
+      { "name": "dbl_runs_scored", "type": "number", "required": true },
+      { "name": "dbl_runs_allowed", "type": "number", "required": true },
+      { "name": "dbl_team_war", "type": "number", "required": true },
+      { "name": "dbl_woba", "type": "number", "required": true },
+      { "name": "dbl_wrc_plus", "type": "number", "required": true },
+      { "name": "dbl_fip", "type": "number", "required": true },
+      { "name": "dbl_xfip", "type": "number", "required": true },
+      { "name": "dbl_bullpen_wpa", "type": "number", "required": true },
+      { "name": "dbl_top3_ace_era", "type": "number", "required": true },
+      { "name": "int_last10_wins", "type": "number", "required": true },
+      { "name": "int_last10_losses", "type": "number", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_i_season_team_yr ON i_team_season_inputs (str_team_code, int_season_year, int_season_week)",
+      "CREATE INDEX idx_i_season_year ON i_team_season_inputs (int_season_year)"
+    ]
+  },
+  {
+    "name": "i_market_odds_inputs",
+    "type": "base",
+    "fields": [
+      { "name": "str_team_code", "type": "text", "required": true },
+      { "name": "int_season_year", "type": "number", "required": true },
+      { "name": "str_sportsbook", "type": "text", "required": true },
+      { "name": "dbl_implied_prob", "type": "number", "required": true },
+      { "name": "str_american_odds", "type": "text", "required": false },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_i_market_team_book ON i_market_odds_inputs (str_team_code, str_sportsbook)"
+    ]
+  },
+  {
+    "name": "i_expert_media_rankings",
+    "type": "base",
+    "fields": [
+      { "name": "str_team_code", "type": "text", "required": true },
+      { "name": "int_season_year", "type": "number", "required": true },
+      { "name": "str_source", "type": "text", "required": true },
+      { "name": "int_power_rank", "type": "number", "required": true },
+      { "name": "dbl_power_rating", "type": "number", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_i_expert_team_src ON i_expert_media_rankings (str_team_code, str_source)"
+    ]
+  },
+  {
+    "name": "m_simulation_runs",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "dt_run_timestamp", "type": "text", "required": true },
+      { "name": "int_season_year", "type": "number", "required": true },
+      { "name": "int_total_iterations", "type": "number", "required": true },
+      { "name": "int_random_seed", "type": "number", "required": true },
+      { "name": "str_engine_version", "type": "text", "required": true },
+      { "name": "str_top_favorite_code", "type": "text", "required": true },
+      { "name": "dbl_top_favorite_prob", "type": "number", "required": true },
+      { "name": "str_causal_iv_status", "type": "text", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX idx_m_sim_run_id ON m_simulation_runs (str_run_id)",
+      "CREATE INDEX idx_m_sim_year ON m_simulation_runs (int_season_year)"
+    ]
+  },
+  {
+    "name": "m_latent_quality_estimates",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "str_team_code", "type": "text", "required": true },
+      { "name": "int_season_year", "type": "number", "required": true },
+      { "name": "dbl_latent_quality_score", "type": "number", "required": true },
+      { "name": "dbl_bayes_adjusted_win_pct", "type": "number", "required": true },
+      { "name": "dbl_recency_win_pct", "type": "number", "required": true },
+      { "name": "dbl_momentum_multiplier", "type": "number", "required": true },
+      { "name": "dbl_hype_multiplier", "type": "number", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_m_latent_run_team ON m_latent_quality_estimates (str_run_id, str_team_code)",
+      "CREATE INDEX idx_m_latent_score ON m_latent_quality_estimates (dbl_latent_quality_score)"
+    ]
+  },
+  {
+    "name": "m_four_pillar_metrics",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "str_team_code", "type": "text", "required": true },
+      { "name": "dbl_offense_consistency", "type": "number", "required": true },
+      { "name": "dbl_defense_efficiency", "type": "number", "required": true },
+      { "name": "dbl_pitching_rotation_quality", "type": "number", "required": true },
+      { "name": "dbl_bullpen_leverage_reliability", "type": "number", "required": true },
+      { "name": "dbl_composite_pillar_index", "type": "number", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_m_pillar_run_team ON m_four_pillar_metrics (str_run_id, str_team_code)"
+    ]
+  },
+  {
+    "name": "s_division_standings_summary",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "str_league", "type": "text", "required": true },
+      { "name": "str_division", "type": "text", "required": true },
+      { "name": "str_division_leader_code", "type": "text", "required": true },
+      { "name": "dbl_division_leader_prob", "type": "number", "required": true },
+      { "name": "dbl_total_division_wins", "type": "number", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_s_div_run_lg_div ON s_division_standings_summary (str_run_id, str_league, str_division)"
+    ]
+  },
+  {
+    "name": "s_league_aggregates_summary",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "str_league", "type": "text", "required": true },
+      { "name": "dbl_mean_latent_quality", "type": "number", "required": true },
+      { "name": "dbl_pennant_favorite_prob", "type": "number", "required": true },
+      { "name": "str_pennant_favorite_code", "type": "text", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_s_lg_run_league ON s_league_aggregates_summary (str_run_id, str_league)"
+    ]
+  },
+  {
+    "name": "o_playoff_series_simulations",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "str_round_name", "type": "text", "required": true },
+      { "name": "str_team_a_code", "type": "text", "required": true },
+      { "name": "str_team_b_code", "type": "text", "required": true },
+      { "name": "dbl_team_a_win_prob", "type": "number", "required": true },
+      { "name": "dbl_expected_games", "type": "number", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_o_series_run_round ON o_playoff_series_simulations (str_run_id, str_round_name)"
+    ]
+  },
+  {
+    "name": "o_rank_movements",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "str_team_code", "type": "text", "required": true },
+      { "name": "int_regular_season_rank", "type": "number", "required": true },
+      { "name": "int_sim_rank", "type": "number", "required": true },
+      { "name": "int_rank_delta", "type": "number", "required": true },
+      { "name": "str_rank_movement_symbol", "type": "text", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_o_move_run_team ON o_rank_movements (str_run_id, str_team_code)"
+    ]
+  },
+  {
+    "name": "f_world_series_leaderboard",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "str_team_code", "type": "text", "required": true },
+      { "name": "str_team_name", "type": "text", "required": true },
+      { "name": "str_league", "type": "text", "required": true },
+      { "name": "str_division", "type": "text", "required": true },
+      { "name": "int_sim_rank", "type": "number", "required": true },
+      { "name": "dbl_expected_season_wins", "type": "number", "required": true },
+      { "name": "dbl_playoff_prob", "type": "number", "required": true },
+      { "name": "dbl_pennant_prob", "type": "number", "required": true },
+      { "name": "dbl_world_series_win_prob", "type": "number", "required": true },
+      { "name": "str_visual_bar", "type": "text", "required": false },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_f_ws_run_rank ON f_world_series_leaderboard (str_run_id, int_sim_rank)"
+    ]
+  },
+  {
+    "name": "f_cubs_scenario_analysis",
+    "type": "base",
+    "fields": [
+      { "name": "str_run_id", "type": "text", "required": true },
+      { "name": "str_scenario_name", "type": "text", "required": true },
+      { "name": "str_seed_designation", "type": "text", "required": true },
+      { "name": "dbl_expected_wins", "type": "number", "required": true },
+      { "name": "dbl_world_series_win_prob", "type": "number", "required": true },
+      { "name": "str_strategic_takeaway", "type": "text", "required": true },
+      { "name": "bool_is_active", "type": "bool", "required": false },
+      { "name": "str_status_code", "type": "text", "required": false }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_f_cubs_run_scenario ON f_cubs_scenario_analysis (str_run_id, str_scenario_name)"
+    ]
+  }
+]
