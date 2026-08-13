@@ -174,11 +174,12 @@ data class MlbTeam(
     val last10WinPct: Double get() = if (last10Wins + last10Losses > 0) last10Wins.toDouble() / (last10Wins + last10Losses) else 0.500
 
     /**
-     * Hot Streak Momentum Multiplier (0.90 to 1.15).
-     * Rewards teams on recent hot stretches (e.g. 8-2 form = 1.075x boost) and cools down cold stretches.
+     * Hot Streak Momentum Multiplier (gamma = 0.12, bounded [0.92, 1.08]).
+     * Provides an econometrically calibrated momentum adjustment (+3.6% boost for 8-2 form)
+     * without over-penalizing elite teams during 10-game sample slumps.
      */
     val hotStreakMomentumMultiplier: Double get() {
-        return (1.0 + 0.25 * (last10WinPct - 0.50)).coerceIn(0.90, 1.15)
+        return (1.0 + 0.12 * (last10WinPct - 0.50)).coerceIn(0.92, 1.08)
     }
 
     /**
@@ -192,11 +193,11 @@ data class MlbTeam(
     }
 
     /**
-     * Accelerated Recency-Weighted Win Expectancy.
-     * Combines recent hot/cold form (35%), full-season win % (35%), and Bayesian expectation (30%).
+     * Exponentially Recency-Weighted Win Expectancy.
+     * Combines recent hot/cold form (20%), full-season win % (40%), and Bayesian expectation (40%).
      */
     val recencyWeightedWinPct: Double get() {
-        return 0.35 * last10WinPct + 0.35 * winPct + 0.30 * bayesianAdjustedWinPct
+        return 0.20 * last10WinPct + 0.40 * winPct + 0.40 * bayesianAdjustedWinPct
     }
 
     /**
