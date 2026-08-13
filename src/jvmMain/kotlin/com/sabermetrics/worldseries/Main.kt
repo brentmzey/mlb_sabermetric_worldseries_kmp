@@ -67,6 +67,7 @@ fun main() {
     // Generate high-resolution chart graphics
     generateChartImage(result.leaderboard.take(8))
     generateLineChartImage(result.leaderboard.take(8))
+    generateLuckResidualChartImage(result.leaderboard)
     println("=================================================================================================================\n")
 }
 
@@ -298,5 +299,92 @@ fun generateLineChartImage(topTeams: List<TeamProbability>) {
     val outFile = File(chartDir, "team_probability_trends_over_time.png")
     ImageIO.write(img, "PNG", outFile)
     println("📈 Visual Line Chart Image generated at:")
+    println("   file://${outFile.absolutePath}")
+}
+
+fun generateLuckResidualChartImage(topTeams: List<TeamProbability>) {
+    val width = 1200
+    val height = 780
+    val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+    val g = img.createGraphics()
+
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+
+    // Dark background
+    g.color = Color(15, 23, 42)
+    g.fillRect(0, 0, width, height)
+
+    // Card background
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(40, 40, width - 80, height - 80, 24, 24)
+
+    // Title & Subtitle
+    g.color = Color(248, 250, 252)
+    g.font = Font("SansSerif", Font.BOLD, 28)
+    g.drawString("📊 2026 MLB Econometric Residual Luck & Bias Decomposition", 70, 92)
+
+    g.color = Color(148, 163, 184)
+    g.font = Font("SansSerif", Font.PLAIN, 16)
+    g.drawString("Residual Luck Differential (Actual Win % - Pythagorean Win %) Across Top Contenders", 70, 122)
+
+    // Legend (Top Right)
+    g.font = Font("SansSerif", Font.BOLD, 13)
+    g.color = Color(52, 211, 153)
+    g.drawString("■ Luck Surplus (+)", 800, 92)
+    g.color = Color(248, 113, 113)
+    g.drawString("■ Luck Deficit (-)", 940, 92)
+
+    val plotX = 350
+    val plotY = 160
+    val plotW = 750
+    val zeroX = plotX + 375 // Zero line in center of bar area
+
+    // Zero axis line
+    g.color = Color(100, 116, 139)
+    g.stroke = java.awt.BasicStroke(2.0f)
+    g.drawLine(zeroX, plotY, zeroX, plotY + 540)
+
+    val sampleTeams = topTeams.take(10)
+    var yPos = plotY + 15
+
+    for ((idx, tp) in sampleTeams.withIndex()) {
+        val t = tp.team
+        val luckResidual = t.winPct - t.pythagoreanWinPct
+        val pxLength = (kotlin.math.abs(luckResidual) * 3500.0).toInt().coerceIn(10, 320)
+
+        // Team Name & W-L Record
+        g.color = Color(226, 232, 240)
+        g.font = Font("SansSerif", Font.BOLD, 16)
+        g.drawString("#${idx + 1} ${t.name} (${t.wins}-${t.losses})", 65, yPos + 22)
+
+        if (luckResidual >= 0) {
+            // Surplus (Green Bar right of zero axis)
+            g.color = Color(16, 185, 129)
+            g.fillRoundRect(zeroX, yPos + 4, pxLength, 24, 8, 8)
+            g.color = Color(52, 211, 153)
+            g.font = Font("SansSerif", Font.BOLD, 14)
+            g.drawString("+%.3f".format(luckResidual), zeroX + pxLength + 10, yPos + 22)
+        } else {
+            // Deficit (Red Bar left of zero axis)
+            val barStart = zeroX - pxLength
+            g.color = Color(239, 68, 68)
+            g.fillRoundRect(barStart, yPos + 4, pxLength, 24, 8, 8)
+            g.color = Color(248, 113, 113)
+            g.font = Font("SansSerif", Font.BOLD, 14)
+            g.drawString("%.3f".format(luckResidual), barStart - 58, yPos + 22)
+        }
+
+        yPos += 52
+    }
+
+    g.dispose()
+
+    val chartDir = File("docs/charts")
+    if (!chartDir.exists()) chartDir.mkdirs()
+
+    val outFile = File(chartDir, "residual_luck_bias_decomposition.png")
+    ImageIO.write(img, "PNG", outFile)
+    println("📊 Visual Residual Luck Chart Image generated at:")
     println("   file://${outFile.absolutePath}")
 }
