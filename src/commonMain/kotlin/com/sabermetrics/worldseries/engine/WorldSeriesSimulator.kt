@@ -48,22 +48,23 @@ object WorldSeriesSimulator {
         val warNorm = if (team.gamesPlayed > 0) (team.teamWar / team.gamesPlayed * 162.0) / 45.0 else 0.50
 
         val baseScore = 0.28 * recencyWinPct +
-                        0.20 * bayesWinPct +
-                        0.14 * warNorm.coerceIn(0.5, 1.3) +
-                        0.14 * (3.80 / team.top3AceEra).coerceIn(0.5, 1.5) +
-                        0.08 * (team.wRCPlus / 100.0) +
-                        0.08 * (team.marketImpliedWsProb * 4.0) +
-                        0.08 * team.defensiveEfficiencyRating.coerceIn(0.85, 1.15)
+                        0.22 * bayesWinPct +
+                        0.15 * warNorm.coerceIn(0.5, 1.3) +
+                        0.15 * (3.80 / team.top3AceEra).coerceIn(0.5, 1.5) +
+                        0.10 * (team.wRCPlus / 100.0) +
+                        0.10 * team.defensiveEfficiencyRating.coerceIn(0.85, 1.15)
 
-        // Trade deadline boost, bullpen clutch boost, clubhouse hype, 4-pillar consistency, expert/media consensus, and momentum
-        val bullpenClutchBoost = (team.bullpenWpa * 0.01).coerceIn(-0.05, 0.05)
-        val hypeMultiplier = team.clubhouseHypeIndex
-        val consistencyMultiplier = team.seasonConsistencyIndex
-        val expertMediaMultiplier = team.compositeExpertMediaIndex
+        // Linear adjustments for endogenous heuristics to prevent non-linear multiplicative runaway
+        val hypeAdj = 1.0 + 0.30 * (team.clubhouseHypeIndex - 1.0)
+        val consistencyAdj = 1.0 + 0.40 * (team.seasonConsistencyIndex - 1.0)
+        val expertMediaAdj = 1.0 + 0.35 * (team.compositeExpertMediaIndex - 1.0)
         val momentumMultiplier = customMomentumMap?.get(team.teamId) ?: team.hotStreakMomentumMultiplier
-        val tradeBoost = team.tradeDeadlineWarAdded * 0.015
 
-        return (baseScore + tradeBoost + bullpenClutchBoost) * hypeMultiplier * consistencyMultiplier * expertMediaMultiplier * momentumMultiplier
+        val mktBoost = 0.05 * (team.marketImpliedWsProb * 3.0)
+        val bullpenClutchBoost = (team.bullpenWpa * 0.008).coerceIn(-0.03, 0.03)
+        val tradeBoost = team.tradeDeadlineWarAdded * 0.010
+
+        return (baseScore + tradeBoost + bullpenClutchBoost + mktBoost) * hypeAdj * consistencyAdj * expertMediaAdj * momentumMultiplier
     }
 
     /**
@@ -72,7 +73,7 @@ object WorldSeriesSimulator {
     fun predictGameWinProb(teamA: MlbTeam, teamB: MlbTeam, customMomentumMap: Map<MlbTeamId, Double>? = null): Double {
         val qA = computeLatentTeamQuality(teamA, customMomentumMap)
         val qB = computeLatentTeamQuality(teamB, customMomentumMap)
-        val delta = (qA - qB) * 1.2
+        val delta = (qA - qB) * 0.95
         return 1.0 / (1.0 + exp(-delta))
     }
 
