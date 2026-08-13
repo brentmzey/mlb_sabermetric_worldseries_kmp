@@ -258,12 +258,14 @@ $$W_i = \underbrace{\mathbb{E}[W_i \mid \mathbf{X}_i]}_{\text{Structural Latent 
 
 where $\mathbf{X}_i$ represents underlying peripheral components (contact quality, strikeout/walk rates, FIP, BaseRuns) and $\varepsilon_i \sim \mathcal{N}(0, \sigma_{\varepsilon}^2)$.
 
-### 1. **Pythagorean 1-Run Game Variance ($Luck_{\text{Pythagorean}}$)**
-   $$Luck_{\text{Pythagorean}, i} = W_i - 162 \cdot \left( \frac{R_i^{1.83}}{R_i^{1.83} + RA_i^{1.83}} \right)$$
-   *Mathematical Proof*: In 1-run games, run events follow a Poisson point process with independent increments. The outcome distribution of 1-run games reduces to a Bernoulli trial $Binomial(n, p=0.5)$ regardless of team skill. Deviations of actual wins $W_i$ from Pythagorean expectation are zero-mean random variables ($\mathbb{E}[\varepsilon_{\text{Pyth}}] = 0$).
+### 1. **Pythagorean 1-Run Game Variance ($\text{Luck}_{\text{Pythagorean}}$)**
+   $$\text{Luck}_{\text{Pythagorean}, i} = W_i - 162 \cdot \left( \frac{R_i^{1.83}}{R_i^{1.83} + RA_i^{1.83}} \right)$$
 
-### 2. **BaseRuns Hit-Clustering Variance ($Luck_{\text{Sequencing}}$)**
-   $$Luck_{\text{Sequencing}, i} = R_i - BSR_i = R_i - \left[ \frac{A_i \cdot B_i}{B_i + C_i} + D_i \right]$$
+   *Mathematical Proof*: In 1-run games, run events follow a Poisson point process with independent increments. The outcome distribution of 1-run games reduces to a Bernoulli trial $\text{Binomial}(n, p=0.5)$ regardless of team skill. Deviations of actual wins $W_i$ from Pythagorean expectation are zero-mean random variables ($\mathbb{E}[\varepsilon_{\text{Pyth}}] = 0$).
+
+### 2. **BaseRuns Hit-Clustering Variance ($\text{Luck}_{\text{Sequencing}}$)**
+   $$\text{Luck}_{\text{Sequencing}, i} = R_i - \text{BSR}_i = R_i - \left[ \frac{A_i \cdot B_i}{B_i + C_i} + D_i \right]$$
+
    *Mathematical Proof*: Batter events in an inning form a discrete Markov Chain state space. Clustering of hits within a single inning versus distribution across multiple innings represents an unobserved permutation variance that degrades to 0 as sample size $T \to \infty$.
 
 ### 3. **Purging the Luck Factor via 2SLS Instrumental Variables (IV)**
@@ -271,7 +273,7 @@ where $\mathbf{X}_i$ represents underlying peripheral components (contact qualit
    - **Relevance**: $\text{Cov}(Z_i, W_i) \neq 0$
    - **Exclusion Restriction**: $\text{Cov}(Z_i, \varepsilon_i) = 0$
 
-   $$\hat{Quality}_{2SLS} = \left( X^T Z (Z^T Z)^{-1} Z^T X \right)^{-1} X^T Z (Z^T Z)^{-1} Z^T Y$$
+   $$\hat{Quality}_{\text{2SLS}} = \left( X^T Z (Z^T Z)^{-1} Z^T X \right)^{-1} X^T Z (Z^T Z)^{-1} Z^T Y$$
 
    This isolates pure structural skill and completely purges the **Luck Factor** residual $\varepsilon_i$.
 
@@ -315,7 +317,7 @@ Our predictions and datasets combine authoritative open-source sabermetric datab
 
 We provide free, ready-to-use CSV datasets for researchers, sports analysts, and fans:
 
-* 📥 **[Download Clean MLB Sabermetric CSV Dataset](output_datasets/mlb_sabermetric_clean_dataset.csv)** (Includes wOBA, wRC+, FIP, xFIP, Pythagorean Win %, BaseRuns, Bullpen WPA, & Ace ERA).
+* 📥 **[Download Clean MLB Sabermetric CSV Dataset (`mlb_sabermetric_clean_dataset.csv`)](output_datasets/mlb_sabermetric_clean_dataset.csv)** (Includes `Wins`, `Losses`, `Win_Pct`, `Pythagorean_Win_Pct`, `Recency_Win_Pct`, `Season_Consistency_Index`, `Team_WAR`, `wOBA`, `wRC_Plus`, `FIP`, `xFIP`, `Bullpen_WPA`, `Top3_Ace_ERA`, `Trade_Deadline_WAR`, `Clubhouse_Hype_Index`, `Regular_Season_Rank`, `Sim_Rank`, `Rank_Movement`).
 
 ## 💻 Universal Guide: How to Run Models & Simulations on ANY Device
 
