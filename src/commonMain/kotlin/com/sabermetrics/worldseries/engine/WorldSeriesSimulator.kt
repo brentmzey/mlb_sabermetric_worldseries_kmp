@@ -84,11 +84,17 @@ object WorldSeriesSimulator {
         val nlTeams = teams.filter { it.league == League.NL }
 
         for (iter in 0 until iterations) {
-            // Simulate 162-game season variation around Pythagorean wins
+            // Rest-of-Season (ROS) anchored 162-game season simulation.
+            // Locks in actual empirical wins to-date + projects remaining games via recency-weighted quality.
             val seasonQuality = teams.associate { t ->
-                val pythW = t.pythagoreanWinsExpected
-                val simWins = (pythW + random.nextDouble(-5.0, 5.0)).coerceIn(50.0, 115.0)
-                t.teamId to simWins
+                val remainingGames = (162 - t.gamesPlayed).coerceAtLeast(0)
+                val rosWinPct = t.recencyWeightedWinPct
+                var simRemWins = 0
+                for (g in 0 until remainingGames) {
+                    if (random.nextDouble() < rosWinPct) simRemWins++
+                }
+                val totalWins = (t.wins + simRemWins).toDouble()
+                t.teamId to totalWins
             }
 
             for (t in teams) {

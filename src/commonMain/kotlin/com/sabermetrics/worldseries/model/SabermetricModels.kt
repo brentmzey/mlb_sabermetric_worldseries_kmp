@@ -169,10 +169,10 @@ data class MlbTeam(
 
     /**
      * Exponentially Recency-Weighted Win Expectancy with Bayesian backoff smoothing.
-     * Combines Pythagorean expectation (50%), full-season win % (35%), and last 10 games trend (15%).
+     * Combines Pythagorean expectation (45%), full-season win % (35%), and recent hot/cold form (20%).
      */
     val recencyWeightedWinPct: Double get() {
-        return 0.50 * pythagoreanWinPct + 0.35 * winPct + 0.15 * last10WinPct
+        return 0.45 * pythagoreanWinPct + 0.35 * winPct + 0.20 * last10WinPct
     }
 
     /**
