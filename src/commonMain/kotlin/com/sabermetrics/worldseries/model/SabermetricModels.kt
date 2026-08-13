@@ -110,7 +110,9 @@ data class MlbTeam(
     val clubhouseHypeIndex: Double = 1.0, // Team Chemistry / Hype Index (0.5 to 2.0)
     val last10Wins: Int = 5,
     val last10Losses: Int = 5,
-    val seasonConsistencyScore: Double = 1.0 // Season Consistency Metric (0.85 to 1.15)
+    val seasonConsistencyScore: Double = 1.0, // Season Consistency Metric (0.85 to 1.15)
+    val marketImpliedWsProb: Double = 0.03, // Market Futures Implied Probability
+    val expertConsensusRating: Double = 1.00 // Composite Expert Consensus Rating (0.85 to 1.25)
 ) {
     val id: String get() = teamId.code
     val name: String get() = teamId.fullName
@@ -140,7 +142,9 @@ data class MlbTeam(
         clubhouseHypeIndex: Double = 1.0,
         last10Wins: Int = 5,
         last10Losses: Int = 5,
-        seasonConsistencyScore: Double = 1.0
+        seasonConsistencyScore: Double = 1.0,
+        marketImpliedWsProb: Double = 0.03,
+        expertConsensusRating: Double = 1.00
     ) : this(
         teamId = MlbTeamId.fromCode(id),
         wins = wins,
@@ -158,7 +162,9 @@ data class MlbTeam(
         clubhouseHypeIndex = clubhouseHypeIndex,
         last10Wins = last10Wins,
         last10Losses = last10Losses,
-        seasonConsistencyScore = seasonConsistencyScore
+        seasonConsistencyScore = seasonConsistencyScore,
+        marketImpliedWsProb = marketImpliedWsProb,
+        expertConsensusRating = expertConsensusRating
     )
 
     val gamesPlayed: Int get() = wins + losses
