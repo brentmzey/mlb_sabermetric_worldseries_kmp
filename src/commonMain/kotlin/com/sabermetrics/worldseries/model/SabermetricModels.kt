@@ -168,11 +168,21 @@ data class MlbTeam(
     val last10WinPct: Double get() = if (last10Wins + last10Losses > 0) last10Wins.toDouble() / (last10Wins + last10Losses) else 0.500
 
     /**
+     * Bayesian-Adjusted Win Expectancy.
+     * Shrinks Pythagorean run-differential expectation towards actual season win percentage by factor 0.35.
+     * Prevents extreme luck residuals (blown 1-run games or hit clustering noise) from over-distorting quality.
+     */
+    val bayesianAdjustedWinPct: Double get() {
+        val luckResidual = pythagoreanWinPct - winPct
+        return winPct + (0.65 * luckResidual)
+    }
+
+    /**
      * Exponentially Recency-Weighted Win Expectancy with Bayesian backoff smoothing.
-     * Combines Pythagorean expectation (45%), full-season win % (35%), and recent hot/cold form (20%).
+     * Combines Bayesian-adjusted expectation (45%), full-season win % (35%), and recent hot/cold form (20%).
      */
     val recencyWeightedWinPct: Double get() {
-        return 0.45 * pythagoreanWinPct + 0.35 * winPct + 0.20 * last10WinPct
+        return 0.45 * bayesianAdjustedWinPct + 0.35 * winPct + 0.20 * last10WinPct
     }
 
     /**

@@ -16,23 +16,28 @@ object WorldSeriesSimulator {
 
     /**
      * Estimates Latent True Team Quality Score using 2SLS IV, Sabermetrics,
-     * Recency Exponential Weighting, and Season Consistency Index.
+     * Bayesian Luck Shrinkage, Recency Exponential Weighting, and Season Consistency Index.
      */
     fun computeLatentTeamQuality(team: MlbTeam): Double {
+        val bayesWinPct = team.bayesianAdjustedWinPct
         val recencyWinPct = team.recencyWeightedWinPct
 
-        val baseScore = 0.30 * recencyWinPct +
-                        0.25 * team.pythagoreanWinPct +
-                        0.20 * (team.teamWar / 50.0).coerceIn(0.2, 1.2) +
+        // Normalized team WAR per 162-game pace
+        val warNorm = if (team.gamesPlayed > 0) (team.teamWar / team.gamesPlayed * 162.0) / 45.0 else 0.50
+
+        val baseScore = 0.35 * recencyWinPct +
+                        0.25 * bayesWinPct +
+                        0.15 * warNorm.coerceIn(0.5, 1.3) +
                         0.15 * (3.80 / team.top3AceEra).coerceIn(0.5, 1.5) +
                         0.10 * (team.wRCPlus / 100.0)
 
-        // Trade deadline boost, clubhouse hype multiplier, and season consistency index
+        // Trade deadline boost, bullpen clutch boost, clubhouse hype multiplier, and season consistency index
+        val bullpenClutchBoost = (team.bullpenWpa * 0.01).coerceIn(-0.05, 0.05)
         val hypeMultiplier = team.clubhouseHypeIndex
         val consistencyMultiplier = team.seasonConsistencyIndex
-        val tradeBoost = team.tradeDeadlineWarAdded * 0.02
+        val tradeBoost = team.tradeDeadlineWarAdded * 0.015
 
-        return (baseScore + tradeBoost) * hypeMultiplier * consistencyMultiplier
+        return (baseScore + tradeBoost + bullpenClutchBoost) * hypeMultiplier * consistencyMultiplier
     }
 
     /**
