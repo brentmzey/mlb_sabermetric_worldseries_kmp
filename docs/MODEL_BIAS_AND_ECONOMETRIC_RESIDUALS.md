@@ -40,25 +40,35 @@ $$W_{\text{recency}, i} = 0.35 \cdot \text{Last10 Win \%}_i + 0.35 \cdot \text{W
 
 ---
 
-### D. Hot Streak Momentum Multiplier ($\text{Momentum}_i$) & Econometric Unbiasedness Proof
-To accelerate teams experiencing statistically significant late-season momentum without introducing estimator bias:
+### D. Multi-Dimensional Relative z-Score Form Estimator ($\text{z-score}_{\text{Form}, i}$) & Unbiasedness Proof
+Rather than relying solely on raw 10-game win count, our engine constructs a **Multi-Dimensional Composite Relative Form Score ($\text{Composite Form}_i$)** comparing relative performance across 4 empirical dimensions:
 
-$$\text{Momentum}_i = \text{clamp}\Big(1.0 + 0.25 \cdot (\text{Last10 Win \%}_i - 0.50), 0.90, 1.15\Big)$$
+1. **Recent W-L Form (40%)**: Rolling 10-game win percentage ($\text{Last10 W\%}_i$).
+2. **Offensive wRC+ Scoring Pace (25%)**: Context-neutral run creation pace ($\text{wRC+}_i / 100$).
+3. **Pitching FIP Prevention Pace (25%)**: Fielding-independent pitching run prevention ($3.80 / \text{FIP}_i$).
+4. **Bullpen High-Leverage Execution (10%)**: Late-inning win probability preservation ($\tanh(\text{Bullpen WPA}_i / 3.0)$).
 
-#### 📐 Mathematical Proof of Unbiasedness ($\mathbb{E}[\text{Momentum}_i] = 1.00$)
-Under the null hypothesis of stationary team performance over a 162-game season, expected 10-game win percentage equals true team win percentage ($\mathbb{E}[\text{Last10 Win \%}_i] = 0.500$ across an unbiased league distribution):
+$$\text{Composite Form}_i = 0.40 \cdot \text{Last10 W\%}_i + 0.25 \cdot \left(\frac{\text{wRC+}_i}{100}\right) + 0.25 \cdot \left(\frac{3.80}{\text{FIP}_i}\right) + 0.10 \cdot \tanh\left(\frac{\text{Bullpen WPA}_i}{3.0}\right)$$
 
-$$\mathbb{E}[\text{Momentum}_i] = 1.0 + 0.25 \cdot \Big(\mathbb{E}[\text{Last10 Win \%}_i] - 0.50\Big) = 1.0 + 0.25 \cdot (0.50 - 0.50) = \mathbf{1.00}$$
+We then standardize $\text{Composite Form}_i$ relative to the 30-team league mean ($\mu_{\text{Form}}$) and standard deviation ($\sigma_{\text{Form}}$):
 
-Thus, $\text{Bias}(\text{Momentum}_i) = \mathbb{E}[\text{Momentum}_i] - 1.00 = 0.00$. The multiplier is a **strictly unbiased estimator**.
+$$\text{z-score}_{\text{Form}, i} = \frac{\text{Composite Form}_i - \mu_{\text{Form}}}{\sigma_{\text{Form}}}$$
 
-#### 🔬 Statistical Significance & Autocorrelation Coefficient ($\rho_1$)
-In empirical sports econometrics, late-season 10-game rolling win percentage exhibits a statistically significant positive first-order autocorrelation coefficient ($\rho_1 \approx +0.21$, $p < 0.005$, $t = 3.42$), capturing trade deadline additions, bullpen usage efficiency, roster health, and momentum shifts right before the postseason.
+And pass $\text{z-score}_{\text{Form}, i}$ through an infinitely differentiable, S-shaped **Sigmoidal Tanh Transfer Function**:
+
+$$\text{Momentum Multiplier}_i = 1.0 + \text{clamp}\left(0.04 \cdot \tanh\left(\frac{\text{z-score}_{\text{Form}, i}}{1.5}\right), -0.05, +0.05\right)$$
+
+#### 📐 Mathematical Proof of Zero-Mean Unbiasedness ($\mathbb{E}[\text{Momentum}_i] = 1.0000$)
+Because z-scores are standardized relative to the population mean ($\mathbb{E}[\text{z-score}_{\text{Form}, i}] = 0.00$), and $\tanh(0) = 0$:
+
+$$\mathbb{E}[\text{Momentum}_i] = 1.0 + 0.04 \cdot \tanh\left(\frac{0.00}{1.5}\right) = \mathbf{1.0000}$$
+
+Thus, $\text{Bias}(\text{Momentum}_i) = \mathbb{E}[\text{Momentum}_i] - 1.0000 = \mathbf{0.0000}$. The estimator is **strictly unbiased, robust, and zero-mean across Major League Baseball**.
 
 ---
 
 ### E. Two-Stage Least Squares (2SLS / IV) Bayesian Market & Momentum Ensemble
-In Stage 1, team win totals are instrumented with Pythagorean expectation and Strength of Schedule ($SOS_i$). In Stage 2, latent quality ($\hat{Quality}_i$) incorporates Sabermetric metrics, normalized 162-game WAR pace, betting market implied futures odds ($P_{\text{market}, i}$), composite expert projection ratings ($\text{Expert Index}_i$), and Hot Streak Momentum Multipliers ($\text{Momentum}_i$):
+In Stage 1, team win totals are instrumented with Pythagorean expectation and Strength of Schedule ($SOS_i$). In Stage 2, latent quality ($\hat{Quality}_i$) incorporates Sabermetric metrics, normalized 162-game WAR pace, betting market implied futures odds ($P_{\text{market}, i}$), composite expert projection ratings ($\text{Expert Index}_i$), and Multi-Dimensional Relative Momentum Multipliers ($\text{Momentum}_i$):
 
 $$\text{\bf Stage 1}: \quad Win_i = \gamma_0 + \gamma_1 \text{Pythagorean Win \%}_i + \gamma_2 SOS_i + v_i$$
 

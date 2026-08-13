@@ -174,6 +174,21 @@ data class MlbTeam(
     val last10WinPct: Double get() = if (last10Wins + last10Losses > 0) last10Wins.toDouble() / (last10Wins + last10Losses) else 0.500
 
     /**
+     * Multi-Dimensional Composite Relative Form Score.
+     * Evaluates recent performance across 4 core empirical dimensions:
+     * 1. Recent W-L Form (40%)
+     * 2. Offensive wRC+ Scoring Pace (25%)
+     * 3. Pitching FIP Prevention Pace (25%)
+     * 4. Late-Inning Bullpen WPA High-Leverage Execution (10%)
+     */
+    val compositeRelativeFormScore: Double get() {
+        val wrcNorm = wRCPlus / 100.0
+        val fipNorm = if (fip > 0) 3.80 / fip else 1.0
+        val wpaNorm = kotlin.math.tanh(bullpenWpa / 3.0)
+        return 0.40 * last10WinPct + 0.25 * wrcNorm + 0.25 * fipNorm + 0.10 * wpaNorm
+    }
+
+    /**
      * Hot Streak Momentum Multiplier (gamma = 0.12, bounded [0.92, 1.08]).
      * Provides an econometrically calibrated momentum adjustment (+3.6% boost for 8-2 form)
      * without over-penalizing elite teams during 10-game sample slumps.
