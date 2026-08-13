@@ -216,21 +216,33 @@ data class MlbTeam(
     }
 
     /**
-     * Bayesian-Adjusted Win Expectancy.
-     * Shrinks Pythagorean run-differential expectation towards actual season win percentage by factor 0.35.
-     * Prevents extreme luck residuals (blown 1-run games or hit clustering noise) from over-distorting quality.
+     * Bill James Dynamic Pythagenpat Win Expectancy.
+     * Exponent x = (Runs Scored + Runs Allowed) ^ 0.287.
+     */
+    val pythagoreanWinPct: Double get() {
+        val pythExp = (runsScored + runsAllowed).pow(0.287)
+        val rExp = runsScored.pow(pythExp)
+        val raExp = runsAllowed.pow(pythExp)
+        return if (rExp + raExp > 0) rExp / (rExp + raExp) else 0.500
+    }
+
+    val pythagoreanWinsExpected: Double get() = pythagoreanWinPct * 162.0
+
+    /**
+     * Bill James Empirical Bayesian Shrinkage Model.
+     * Regresses observed win % toward Pythagenpat run-differential expectation with sample weight N = 40 games.
      */
     val bayesianAdjustedWinPct: Double get() {
-        val luckResidual = pythagoreanWinPct - winPct
-        return winPct + (0.65 * luckResidual)
+        val gp = gamesPlayed.toDouble().coerceAtLeast(1.0)
+        return (gp * winPct + 40.0 * pythagoreanWinPct) / (gp + 40.0)
     }
 
     /**
      * Exponentially Recency-Weighted Win Expectancy.
-     * Combines recent hot/cold form (20%), full-season win % (40%), and Bayesian expectation (40%).
+     * Combines recent hot/cold form (25%), full-season win % (35%), and Bayesian expectation (40%).
      */
     val recencyWeightedWinPct: Double get() {
-        return 0.20 * last10WinPct + 0.40 * winPct + 0.40 * bayesianAdjustedWinPct
+        return 0.25 * last10WinPct + 0.35 * winPct + 0.40 * bayesianAdjustedWinPct
     }
 
     /**
@@ -261,17 +273,6 @@ data class MlbTeam(
      * Bounded Season Consistency Index (0.85 to 1.15).
      */
     val seasonConsistencyIndex: Double get() = (0.50 * seasonConsistencyScore + 0.50 * fourPillarConsistencyIndex).coerceIn(0.85, 1.15)
-
-    /**
-     * Bill James Pythagorean Win Expectancy with Pythagenpat exponent (1.83).
-     */
-    val pythagoreanWinPct: Double get() {
-        val rExp = runsScored.pow(1.83)
-        val raExp = runsAllowed.pow(1.83)
-        return if (rExp + raExp > 0) rExp / (rExp + raExp) else 0.500
-    }
-
-    val pythagoreanWinsExpected: Double get() = pythagoreanWinPct * 162.0
 
     /**
      * BaseRuns (BSR) Expected Runs Scored Approximation.

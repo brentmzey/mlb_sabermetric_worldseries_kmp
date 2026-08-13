@@ -67,17 +67,22 @@ Thus, $\text{Bias}(\text{Momentum}_i) = \mathbb{E}[\text{Momentum}_i] - 1.0000 =
 
 ---
 
-### E. Two-Stage Least Squares (2SLS / IV) Multi-Source Bayesian & 4-Pillar Ensemble
-In Stage 1, team win totals are instrumented with Pythagorean expectation and Strength of Schedule ($SOS_i$). In Stage 2, latent quality ($\hat{Quality}_i$) incorporates Sabermetric metrics, normalized 162-game WAR pace, betting market implied futures odds ($P_{\text{market}, i}$), consensus media power rankings ($\text{Media Power Rank}_i$ from MLB.com/ESPN/MLB Network), composite expert projection ratings ($\text{Expert Index}_i$), **4-Pillar Whole-Season Consistency** ($\text{Pillar Consistency}_i$), **Defensive Efficiency** ($\text{Def}_{\text{Eff}, i}$), and **Multi-Dimensional Relative Momentum Multipliers** ($\text{Momentum}_i$):
+### E. Bill James Pythagenpat Log5 & Brian Kenny October Compression Ensemble
+In Stage 1, team win totals are instrumented with Pythagorean expectation and Strength of Schedule ($SOS_i$). In Stage 2, latent quality ($\hat{Quality}_i$) integrates **Bill James' 40-Game Empirical Bayesian Regression**, **Brian Kenny's Postseason Ace & Bullpen Leverage Compression**, betting market implied futures odds ($P_{\text{market}, i}$), consensus media power rankings ($\text{Media Power Rank}_i$ from MLB.com/ESPN/MLB Network), composite expert projection ratings ($\text{Expert Index}_i$), **4-Pillar Whole-Season Consistency** ($\text{Pillar Consistency}_i$), **Defensive Efficiency** ($\text{Def}_{\text{Eff}, i}$), and **Multi-Dimensional Relative Momentum Multipliers** ($\text{Momentum}_i$):
 
 $$\text{\bf Stage 1}: \quad Win_i = \gamma_0 + \gamma_1 \text{Pythagorean Win \%}_i + \gamma_2 SOS_i + v_i$$
 
 $$\begin{aligned}
-\text{\bf Stage 2}: \quad \hat{Quality}_i = \Bigg( & 0.28 W_{\text{recency}, i} + 0.22 W_{\text{Bayes}, i} + 0.15 \text{WAR}_{162, i} + 0.15 \left(\frac{3.80}{\text{ERA}_{\text{Top3}, i}}\right) \\
-& + 0.10 \left(\frac{\text{wRC+}_i}{100}\right) + 0.10 \text{Def}_{\text{Eff}, i} + 0.05 (P_{\text{market}, i} \times 3.0) + \text{ClutchBoost}_i \Bigg) \\
+\text{\bf Stage 2}: \quad \hat{Quality}_i = \Bigg( & 0.24 W_{\text{recency}, i} + 0.22 W_{\text{Bayes}, i} + 0.16 \text{WAR}_{162, i} + 0.16 \left(\frac{3.80}{\text{ERA}_{\text{Top3}, i}}\right) \\
+& + 0.12 \left(\frac{\text{wRC+}_i}{100}\right) + 0.10 \text{Def}_{\text{Eff}, i} + 0.05 (P_{\text{market}, i} \times 3.0) + \text{ClutchBoost}_i \Bigg) \\
 & \times \Big[1.0 + 0.30(\text{Hype}_i - 1.0)\Big] \times \Big[1.0 + 0.40(\text{Pillar Consistency}_i - 1.0)\Big] \\
 & \times \Big[1.0 + 0.35(\text{Media/Expert Index}_i - 1.0)\Big] \times \text{Momentum}_i + \varepsilon_i
 \end{aligned}$$
+
+#### ⚾ Bill James Pythagenpat Log5 Matchup Theorem:
+In postseason series play, single-game matchup probabilities are computed via the calibrated **Pythagenpat Log5 function**:
+
+$$P(\text{Team A beats Team B}) = \frac{q_A^{1.45}}{q_A^{1.45} + q_B^{1.45}}$$
 
 ---
 
@@ -87,21 +92,21 @@ Below is the complete 30-team diagnostic matrix cross-referencing actual standin
 
 | Team ID | Team Name | Record | Act W% | 4-Pillar Cons | Def Eff | Media/Exp Rank | Vegas Implied % | Latent Quality Score | WS Win Prob % | Sim Rank |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **LAD** | Los Angeles Dodgers | 72 - 48 | .600 | **1.162** | 1.06 | **1.220** (#1) | **23.5%** | **1.233** | **18.35%** | 1 |
-| **ATL** | Atlanta Braves | 73 - 48 | .603 | **1.103** | 1.05 | **1.170** (#2) | **17.5%** | **1.166** | **16.85%** | 2 |
-| **NYY** | New York Yankees | 67 - 52 | .563 | **1.090** | 1.04 | **1.145** (#3) | **13.5%** | **1.102** | **11.26%** | 3 |
-| **MIL** | Milwaukee Brewers | 74 - 47 | .612 | **1.094** | 1.08 | **1.090** (#4) | **8.5%** | **1.081** | **10.81%** | 4 |
-| **TBD** | Tampa Bay Rays | 74 - 46 | .617 | 1.016 | 1.04 | 1.055 | **5.0%** | **0.957** | **9.58%** | 5 |
-| **CHC** | Chicago Cubs | 71 - 50 | .587 | **1.083** | 1.07 | **1.110** (#5) | **7.5%** | **1.072** | **8.97%** | 6 |
-| **HOU** | Houston Astros | 62 - 60 | .508 | 1.066 | 1.04 | 1.080 | **6.0%** | **0.970** | **5.60%** | 7 |
-| **BOS** | Boston Red Sox | 64 - 56 | .533 | 1.007 | 0.97 | 1.025 | **3.5%** | **0.867** | **3.48%** | 8 |
-| **DET** | Detroit Tigers | 59 - 61 | .492 | 1.011 | 1.02 | 0.980 | **2.2%** | **0.842** | **3.33%** | 9 |
-| **SD** | San Diego Padres | 65 - 57 | .533 | 1.073 | 1.03 | 1.080 | **5.5%** | **1.009** | **3.11%** | 10 |
-| **TEX** | Texas Rangers | 60 - 60 | .500 | 0.989 | 1.02 | 1.005 | **2.0%** | **0.803** | **1.74%** | 11 |
-| **PHI** | Philadelphia Phillies | 64 - 58 | .525 | 1.078 | 0.98 | 1.095 | **9.5%** | **1.017** | **1.70%** | 12 |
-| **CWS** | Chicago White Sox | 61 - 57 | .517 | 0.842 | 0.93 | 0.925 | **1.0%** | **0.612** | **1.16%** | 13 |
-| **ARI** | Arizona Diamondbacks | 64 - 58 | .525 | 1.052 | **1.10** | 1.015 | **2.5%** | **0.916** | **0.88%** | 14 |
-| **MIN** | Minnesota Twins | 60 - 62 | .492 | 1.019 | 1.01 | 1.000 | **2.0%** | **0.846** | **0.84%** | 15 |
+| **LAD** | Los Angeles Dodgers | 72 - 48 | .600 | **1.162** | 1.06 | **1.220** (#1) | **23.5%** | **1.233** | **20.95%** | 1 |
+| **ATL** | Atlanta Braves | 73 - 48 | .603 | **1.103** | 1.05 | **1.170** (#2) | **17.5%** | **1.166** | **19.52%** | 2 |
+| **NYY** | New York Yankees | 67 - 52 | .563 | **1.090** | 1.04 | **1.145** (#3) | **13.5%** | **1.102** | **15.29%** | 3 |
+| **MIL** | Milwaukee Brewers | 74 - 47 | .612 | **1.094** | 1.08 | **1.090** (#4) | **8.5%** | **1.081** | **10.85%** | 4 |
+| **CHC** | Chicago Cubs | 71 - 50 | .587 | **1.083** | 1.07 | **1.110** (#5) | **7.5%** | **1.072** | **9.69%** | 5 |
+| **TBD** | Tampa Bay Rays | 74 - 46 | .617 | 1.016 | 1.04 | 1.055 | **5.0%** | **0.957** | **8.17%** | 6 |
+| **HOU** | Houston Astros | 62 - 60 | .508 | 1.066 | 1.04 | 1.080 | **6.0%** | **0.970** | **4.68%** | 7 |
+| **DET** | Detroit Tigers | 59 - 61 | .492 | 1.011 | 1.02 | 0.980 | **2.2%** | **0.842** | **2.68%** | 8 |
+| **SD** | San Diego Padres | 65 - 57 | .533 | 1.073 | 1.03 | 1.080 | **5.5%** | **1.009** | **2.46%** | 9 |
+| **BOS** | Boston Red Sox | 64 - 56 | .533 | 1.007 | 0.97 | 1.025 | **3.5%** | **0.867** | **1.72%** | 10 |
+| **PHI** | Philadelphia Phillies | 64 - 58 | .525 | 1.078 | 0.98 | 1.095 | **9.5%** | **1.017** | **1.60%** | 11 |
+| **TEX** | Texas Rangers | 60 - 60 | .500 | 0.989 | 1.02 | 1.005 | **2.0%** | **0.803** | **0.64%** | 12 |
+| **ARI** | Arizona Diamondbacks | 64 - 58 | .525 | 1.052 | **1.10** | 1.015 | **2.5%** | **0.916** | **0.52%** | 13 |
+| **MIN** | Minnesota Twins | 60 - 62 | .492 | 1.019 | 1.01 | 1.000 | **2.0%** | **0.846** | **0.36%** | 14 |
+| **CLE** | Cleveland Guardians | 59 - 62 | .488 | 1.064 | **1.12** | 0.990 | **1.2%** | **0.7953** | **0.29%** | 15 |
 
 ---
 
