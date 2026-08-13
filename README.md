@@ -79,7 +79,7 @@ flowchart TD
     end
 
     subgraph Postseason Monte Carlo Engine
-        G --> J[Bradley-Terry Logit Game-Level Probability Engine]
+        G --> J[Bill James Pythagenpat Log5 Matchup Probability Engine]
         J --> K[10,000-Iteration Postseason Playoff Simulation]
         K --> L[Wild Card Series Best-of-3]
         L --> M[Division Series Best-of-5]
