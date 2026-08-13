@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
 PocketHost Hungarian Relational Database Migration & Multi-Dimensional Sabermetric Data Ingestion Engine.
-Deploys Hungarian-prefixed relational collections (i_, m_, s_, o_, f_), sets up indices,
-and populates comprehensive traceable time-series and simulation data.
+Deploys 13 Hungarian-prefixed relational collections (i_, m_, s_, o_, f_), sets up indices for instantaneous
+latest-active index scans, and populates comprehensive traceable time-series and simulation data with
+explicit Epoch Milliseconds in UTC (int_created_epoch_ms_utc and int_updated_epoch_ms_utc).
 """
 import os
 import sys
 import json
 import csv
 import time
+import datetime
 import urllib.request
 import urllib.error
 
@@ -41,6 +43,10 @@ print("=========================================================================
 if not ADMIN_EMAIL or not ADMIN_PASSWORD:
     print("❌ Error: Missing admin credentials in ~/.env or .env.")
     sys.exit(1)
+
+def get_current_epoch_ms_utc():
+    """Returns the current timestamp in Epoch Milliseconds UTC as a 64-bit integer."""
+    return int(datetime.datetime.now(datetime.timezone.utc).timestamp() * 1000)
 
 def http_post(url, data_dict, inner_token=None):
     headers = {
@@ -105,7 +111,7 @@ if not token:
     print("❌ Admin authentication failed.")
     sys.exit(1)
 
-# Step 2: Import Hungarian Collections Schema
+# Step 2: Import Hungarian Collections Schema with Epoch UTC Milliseconds
 with open(SCHEMA_FILE, "r") as f:
     schema_collections = json.load(f)
 
@@ -115,12 +121,12 @@ existing_items = existing_cols.get("items", existing_cols) if isinstance(existin
 existing_names = {c.get("name"): c.get("id") for c in existing_items if isinstance(c, dict)}
 
 print(f"   Found {len(existing_names)} existing collections.")
-print("📦 Deploying 13 Hungarian-Prefixed Collections (i_, m_, s_, o_, f_)...")
+print("📦 Updating/Deploying 13 Hungarian-Prefixed Collections with Epoch Milliseconds UTC...")
 
 for col in schema_collections:
     cname = col["name"]
     if cname in existing_names:
-        print(f"   • Updating collection `{cname}`...")
+        print(f"   • Updating collection `{cname}` schema & indexes...")
         col_id = existing_names[cname]
         try:
             headers = {"Content-Type": "application/json", "Authorization": token, "User-Agent": "Mozilla/5.0"}
@@ -133,7 +139,7 @@ for col in schema_collections:
         http_post(f"{POCKETHOST_URL}/api/collections", col, inner_token=token)
     time.sleep(0.1)
 
-print("✅ All 13 Hungarian collections verified and synchronized.")
+print("✅ All 13 Hungarian collections verified and synchronized with UTC Epoch Milliseconds.")
 
 # Step 3: Populate Team Master Registry (i_mlb_teams)
 teams_metadata = {
@@ -169,6 +175,9 @@ teams_metadata = {
     "COL": ("Colorado Rockies", "NL", "West", "Denver", "Coors Field", 1993)
 }
 
+current_ms = get_current_epoch_ms_utc()
+print(f"🕒 Current UTC Epoch Milliseconds: {current_ms}")
+
 print("⚾ Ingesting Team Master Registry into `i_mlb_teams`...")
 for code, (name, lg, div, city, park, founded) in teams_metadata.items():
     team_payload = {
@@ -180,7 +189,9 @@ for code, (name, lg, div, city, park, founded) in teams_metadata.items():
         "str_ballpark": park,
         "int_founded_year": founded,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/i_mlb_teams/records", team_payload, inner_token=token)
     time.sleep(0.04)
@@ -198,7 +209,7 @@ print(f"📊 Read {len(rows)} team records from {CSV_FILE}.")
 run_id = "RUN-2026-08-13-JAMES-KENNY-MC10K"
 run_payload = {
     "str_run_id": run_id,
-    "dt_run_timestamp": "2026-08-13T13:07:00Z",
+    "dt_run_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     "int_season_year": 2026,
     "int_total_iterations": 10000,
     "int_random_seed": 20260803,
@@ -207,19 +218,15 @@ run_payload = {
     "dbl_top_favorite_prob": 0.2095,
     "str_causal_iv_status": "ACTIVE_2SLS_PYTHAGOREAN_LOG5",
     "bool_is_active": True,
-    "str_status_code": "ACTIVE"
+    "str_status_code": "ACTIVE",
+    "int_created_epoch_ms_utc": current_ms,
+    "int_updated_epoch_ms_utc": current_ms
 }
 http_post(f"{POCKETHOST_URL}/api/collections/m_simulation_runs/records", run_payload, inner_token=token)
 print(f"✅ Simulation run `{run_id}` recorded in `m_simulation_runs`.")
 
 # Step 6: Ingest 2026 Season Inputs, Model Stats, and Final Leaderboard
-print("📥 Ingesting 2026 Multi-Dimensional Data across Hungarian Collections...")
-
-total_inputs = 0
-total_latent = 0
-total_pillars = 0
-total_movements = 0
-total_leaderboard = 0
+print("📥 Ingesting 2026 Multi-Dimensional Data with Epoch UTC Milliseconds...")
 
 for row in rows:
     code = row["Team_ID"]
@@ -242,7 +249,6 @@ for row in rows:
     def_eff = float(row.get("Defensive_Efficiency", 1.0))
     media_rank = float(row.get("Media_Power_Rank_Index", 1.0))
     mkt_prob = float(row.get("Market_Futures_Prob", 0.03))
-    exp_rating = float(row.get("Expert_Consensus_Rating", 1.0))
     four_pillar = float(row.get("Four_Pillar_Consistency", 1.0))
     reg_rank = int(row.get("Regular_Season_Rank", 15))
     sim_rank = int(row.get("Sim_Rank", 15))
@@ -267,10 +273,11 @@ for row in rows:
         "int_last10_wins": l10_w,
         "int_last10_losses": l10_l,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/i_team_season_inputs/records", input_payload, inner_token=token)
-    total_inputs += 1
 
     # i_market_odds_inputs
     market_payload = {
@@ -280,7 +287,9 @@ for row in rows:
         "dbl_implied_prob": mkt_prob,
         "str_american_odds": f"+{int(100/mkt_prob - 100)}" if mkt_prob > 0 else "+5000",
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/i_market_odds_inputs/records", market_payload, inner_token=token)
 
@@ -292,7 +301,9 @@ for row in rows:
         "int_power_rank": sim_rank,
         "dbl_power_rating": media_rank,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/i_expert_media_rankings/records", expert_payload, inner_token=token)
 
@@ -307,10 +318,11 @@ for row in rows:
         "dbl_momentum_multiplier": 1.04 if l10_w >= 7 else (0.96 if l10_w <= 3 else 1.00),
         "dbl_hype_multiplier": float(row.get("Clubhouse_Hype_Index", 1.0)),
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/m_latent_quality_estimates/records", latent_payload, inner_token=token)
-    total_latent += 1
 
     # m_four_pillar_metrics
     pillar_payload = {
@@ -322,10 +334,11 @@ for row in rows:
         "dbl_bullpen_leverage_reliability": 1.08 if code == "CHC" else 1.00,
         "dbl_composite_pillar_index": four_pillar,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/m_four_pillar_metrics/records", pillar_payload, inner_token=token)
-    total_pillars += 1
 
     # o_rank_movements
     move_payload = {
@@ -336,10 +349,11 @@ for row in rows:
         "int_rank_delta": reg_rank - sim_rank,
         "str_rank_movement_symbol": movement,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/o_rank_movements/records", move_payload, inner_token=token)
-    total_movements += 1
 
     # f_world_series_leaderboard
     ws_prob_map = {
@@ -365,10 +379,11 @@ for row in rows:
         "dbl_world_series_win_prob": prob,
         "str_visual_bar": bar_str,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/f_world_series_leaderboard/records", final_payload, inner_token=token)
-    total_leaderboard += 1
 
     time.sleep(0.04)
 
@@ -391,7 +406,9 @@ for lg, div, ldr, prob, twins in divisions_list:
         "dbl_division_leader_prob": prob,
         "dbl_total_division_wins": twins,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/s_division_standings_summary/records", div_payload, inner_token=token)
     time.sleep(0.04)
@@ -404,7 +421,9 @@ for lg, mean_q, fav_p, fav_c in [("AL", 0.985, 0.324, "NYY"), ("NL", 1.015, 0.29
         "dbl_pennant_favorite_prob": fav_p,
         "str_pennant_favorite_code": fav_c,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/s_league_aggregates_summary/records", lg_payload, inner_token=token)
     time.sleep(0.04)
@@ -429,7 +448,9 @@ for s_run, s_round, tA, tB, pA, exp_g in series_list:
         "dbl_team_a_win_prob": pA,
         "dbl_expected_games": exp_g,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/o_playoff_series_simulations/records", series_payload, inner_token=token)
     time.sleep(0.04)
@@ -449,24 +470,25 @@ for c_run, c_name, c_seed, c_wins, c_prob, c_takeaway in cubs_scenarios:
         "dbl_world_series_win_prob": c_prob,
         "str_strategic_takeaway": c_takeaway,
         "bool_is_active": True,
-        "str_status_code": "ACTIVE"
+        "str_status_code": "ACTIVE",
+        "int_created_epoch_ms_utc": current_ms,
+        "int_updated_epoch_ms_utc": current_ms
     }
     http_post(f"{POCKETHOST_URL}/api/collections/f_cubs_scenario_analysis/records", cubs_payload, inner_token=token)
     time.sleep(0.04)
 
+# Step 10: Verify Index Seek Query for Latest Active Record
+print("🔍 Testing Latest-Active Index Seek Query for Chicago Cubs (`CHC`)...")
+query_url = f"{POCKETHOST_URL}/api/collections/f_world_series_leaderboard/records?filter=(str_team_code='CHC'%26%26bool_is_active=true)&sort=-int_updated_epoch_ms_utc&limit=1"
+query_res = http_get(query_url, token=token)
+if query_res and "items" in query_res and len(query_res["items"]) > 0:
+    latest_item = query_res["items"][0]
+    print(f"✅ Latest-Active Query Succeeded!")
+    print(f"   Team: {latest_item.get('str_team_name')} ({latest_item.get('str_team_code')})")
+    print(f"   Status: {latest_item.get('str_status_code')}")
+    print(f"   Updated UTC Epoch MS: {latest_item.get('int_updated_epoch_ms_utc')}")
+    print(f"   WS Win Prob: {latest_item.get('dbl_world_series_win_prob') * 100:.2f}%")
+
 print("================================================================================")
-print(" 🎉 SUCCESS! Hungarian Relational Collections fully deployed and populated:")
-print(f"    • i_mlb_teams: 30 master teams")
-print(f"    • i_team_season_inputs: {total_inputs} records")
-print(f"    • i_market_odds_inputs: 30 records")
-print(f"    • i_expert_media_rankings: 30 records")
-print(f"    • m_simulation_runs: 1 run metadata")
-print(f"    • m_latent_quality_estimates: {total_latent} records")
-print(f"    • m_four_pillar_metrics: {total_pillars} records")
-print(f"    • s_division_standings_summary: 6 division summaries")
-print(f"    • s_league_aggregates_summary: 2 league summaries")
-print(f"    • o_playoff_series_simulations: 7 series simulations")
-print(f"    • o_rank_movements: {total_movements} records")
-print(f"    • f_world_series_leaderboard: {total_leaderboard} records")
-print(f"    • f_cubs_scenario_analysis: 2 scenarios")
+print(" 🎉 SUCCESS! Hungarian Relational Collections updated with UTC Epoch Milliseconds!")
 print("================================================================================")
