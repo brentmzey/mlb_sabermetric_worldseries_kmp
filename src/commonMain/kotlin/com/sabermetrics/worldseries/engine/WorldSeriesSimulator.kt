@@ -32,14 +32,15 @@ object WorldSeriesSimulator {
                         0.09 * (team.wRCPlus / 100.0) +
                         0.09 * (team.marketImpliedWsProb * 4.0)
 
-        // Trade deadline boost, bullpen clutch boost, clubhouse hype, season consistency, and expert rating
+        // Trade deadline boost, bullpen clutch boost, clubhouse hype, season consistency, expert rating, and momentum multiplier
         val bullpenClutchBoost = (team.bullpenWpa * 0.01).coerceIn(-0.05, 0.05)
         val hypeMultiplier = team.clubhouseHypeIndex
         val consistencyMultiplier = team.seasonConsistencyIndex
         val expertMultiplier = team.expertConsensusRating.coerceIn(0.85, 1.25)
+        val momentumMultiplier = team.hotStreakMomentumMultiplier
         val tradeBoost = team.tradeDeadlineWarAdded * 0.015
 
-        return (baseScore + tradeBoost + bullpenClutchBoost) * hypeMultiplier * consistencyMultiplier * expertMultiplier
+        return (baseScore + tradeBoost + bullpenClutchBoost) * hypeMultiplier * consistencyMultiplier * expertMultiplier * momentumMultiplier
     }
 
     /**
