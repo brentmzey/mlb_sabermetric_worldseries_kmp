@@ -163,27 +163,29 @@ where:
 
 ---
 
-### 3. **Bayesian Luck Shrinkage & Exponential Recency Weighting**
-To eliminate extreme 1-run game luck distortions (such as blown bullpen sequencing noise or hit clustering variance), we apply a **Bayesian Shrinkage Model** to the residual luck differential ($\varepsilon_{\text{luck}, i} = \text{Pythagorean Win \%}_i - \text{Win \%}_i$):
+### 3. **Bayesian Luck Shrinkage, Accelerated Recency & Hot Streak Momentum**
+To eliminate 1-run game luck distortions while capturing late-season momentum, we apply **Bayesian Luck Shrinkage** ($\varepsilon_{\text{luck}, i} = \text{Pythagorean Win \%}_i - \text{Win \%}_i$), **Accelerated Recency Weighting** ($W_{\text{recency}, i}$), and an **Unbiased Hot Streak Momentum Multiplier** ($\text{Momentum}_i$):
 
 $$W_{\text{Bayes}, i} = \text{Win \%}_i + 0.65 \cdot \Big(\text{Pythagorean Win \%}_i - \text{Win \%}_i\Big)$$
 
-$$W_{\text{recency}, i} = 0.45 \cdot W_{\text{Bayes}, i} + 0.35 \cdot \text{Win \%}_i + 0.20 \cdot \text{Last10 Win \%}_i$$
+$$W_{\text{recency}, i} = 0.35 \cdot \text{Last10 Win \%}_i + 0.35 \cdot \text{Win \%}_i + 0.30 \cdot W_{\text{Bayes}, i}$$
+
+$$\text{Momentum}_i = \text{clamp}\Big(1.0 + 0.25 \cdot (\text{Last10 Win \%}_i - 0.50), 0.90, 1.15\Big)$$
 
 $$\text{Consistency Index}_i = 1.0 + \text{clamp}\left(0.04 - 0.8 \cdot \left| \text{Win \%}_i - \text{Pythagorean Win \%}_i \right|, -0.08, 0.08\right)$$
 
-This anchors projections on locked-in empirical wins to-date while filtering out unearned luck residuals.
+This anchors projections on empirical completed wins to-date while dynamically accelerating teams experiencing statistically significant late-season momentum (such as the Chicago Cubs' $1.075\times$ momentum boost for 8–2 form).
 
 ---
 
 ### 4. **Two-Stage Least Squares (2SLS / IV) Causal Structural Model with Market & Expert Consensus Ensemble**
 Standard OLS regression of postseason success on regular season wins suffers from endogeneity (unobserved luck residuals). We instrument team win totals ($Win_i$) with Pythagorean expectation ($\text{Pythagorean Win \%}_i$) and Strength of Schedule ($SOS_i$) in Stage 1 to isolate true structural team quality ($\hat{Quality}_i$) in Stage 2. 
 
-To eliminate residual single-metric blind spots, Stage 2 integrates **Betting Market Implied Futures Probabilities ($P_{\text{market}, i}$)** and **Composite Expert Projection Indexes ($\text{Expert Index}_i$)** from PECOTA, ZiPS, FanGraphs, and MLB expert consensus:
+To eliminate residual single-metric blind spots, Stage 2 integrates **Betting Market Implied Futures Probabilities ($P_{\text{market}, i}$)**, **Composite Expert Projection Indexes ($\text{Expert Index}_i$)**, and **Hot Streak Momentum Multipliers ($\text{Momentum}_i$)**:
 
 $$\text{\bf Stage 1 (First Stage)}: \quad Win_i = \gamma_0 + \gamma_1 \text{Pythagorean Win \%}_i + \gamma_2 SOS_i + v_i$$
 
-$$\text{\bf Stage 2 (Second Stage)}: \quad \hat{Quality}_i = \left( \beta_0 + \beta_1 W_{\text{recency}, i} + \beta_2 W_{\text{Bayes}, i} + \beta_3 \text{WAR}_{162, i} + \beta_4 \left(\frac{3.80}{\text{ERA}_{\text{Top3}, i}}\right) + \beta_5 P_{\text{market}, i} \right) \cdot \text{Hype}_i \cdot \text{Consistency}_i \cdot \text{Expert Index}_i + \varepsilon_i$$
+$$\text{\bf Stage 2 (Second Stage)}: \quad \hat{Quality}_i = \left( \beta_0 + \beta_1 W_{\text{recency}, i} + \beta_2 W_{\text{Bayes}, i} + \beta_3 \text{WAR}_{162, i} + \beta_4 \left(\frac{3.80}{\text{ERA}_{\text{Top3}, i}}\right) + \beta_5 P_{\text{market}, i} \right) \cdot \text{Hype}_i \cdot \text{Consistency}_i \cdot \text{Expert Index}_i \cdot \text{Momentum}_i + \varepsilon_i$$
 
 ---
 
