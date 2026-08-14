@@ -12,10 +12,10 @@ As of mid-August 2026 (Game 121), the **Chicago Cubs (71–50, .587 W-L)** are e
 ## 🧮 1. The 5 Structural & Econometric Factors
 
 ### Factor 1: 4-Pillar Whole-Season Consistency (1.083) & Defense (1.07)
-- **Offense Consistency (1.08)**: 108 wRC+, .325 wOBA, balanced run creation across all months.
-- **Defensive Efficiency (1.07)**: Elite middle infield defense (Dansby Swanson, Nico Hoerner) and outfield range (Cody Bellinger, Pete Crow-Armstrong).
+- **Offense Consistency (1.08)**: 108 wRC+, .325 wOBA, balanced run creation anchored by Michael Busch, Isaac Paredes, Ian Happ, and Seiya Suzuki.
+- **Defensive Efficiency (1.07)**: Elite middle infield defense (Dansby Swanson, Nico Hoerner), Gold Glove left field anchor (Ian Happ), and premier center field range and Outs Above Average (Pete Crow-Armstrong).
 - **Starting Rotation (1.09)**: 3.20 Top-3 Ace ERA (Justin Steele, Shota Imanaga, Jameson Taillon).
-- **Bullpen Leverage (1.08)**: +2.8 Win Probability Added (WPA).
+- **Bullpen Leverage (1.08)**: +2.8 Win Probability Added (WPA) with high-leverage shutdown relief.
 
 ---
 
