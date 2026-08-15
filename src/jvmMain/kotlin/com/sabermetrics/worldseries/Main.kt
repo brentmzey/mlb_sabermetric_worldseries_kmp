@@ -23,7 +23,8 @@ fun main() {
     println("   4. Season Consistency Index: Rewards low-variance steady execution across months with stability multipliers.")
     println("   5. 2SLS IV Causal Model: Instruments win totals with Pythagorean expectation & SOS to remove endogeneity.")
     println("   6. Postseason Compression: Short series leverage Top-3 Ace ERAs and high-leverage bullpen WPA over roster depth.")
-    println("   7. Clubhouse Momentum Index: Team chemistry & trade additions boost non-linear October performance.\n")
+    println("   7. Active Playoff Roster Conditioning: Injured players out for postseason are excluded from rotation & anchor metrics.")
+    println("   8. Clubhouse Momentum Index: Team chemistry & trade additions boost non-linear October performance.\n")
 
     println("⏳ Running 10,000-iteration Monte Carlo playoff simulation...")
     val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 10000, seed = 20260803L)
@@ -414,7 +415,7 @@ fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>) {
 
     g.color = Color(148, 163, 184)
     g.font = Font("SansSerif", Font.PLAIN, 15)
-    g.drawString("Audited 2026 Active Lineups, Rotation Aces, and World Series Win Probabilities", 70, 116)
+    g.drawString("Audited 2026 Active Lineups, Rotation Aces, and World Series Win Probabilities (Injuries Excluded)", 70, 116)
 
     // Table Header
     val startY = 160
@@ -432,16 +433,36 @@ fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>) {
     g.drawString("2026 CORE ROSTER & ROTATION ANCHORS", 780, startY)
 
     val rosterAnchorsMap = mapOf(
-        MlbTeamId.LAD to "Ohtani, Betts, Freeman, Yamamoto, Glasnow",
-        MlbTeamId.ATL to "Acuña Jr., Riley, Olson, Sale, Strider",
-        MlbTeamId.NYY to "Judge, Soto, Cole, Rodón, Gil",
-        MlbTeamId.MIL to "Chourio, Contreras, Yelich, Peralta, Megill",
-        MlbTeamId.CHC to "PCA, Happ, Swanson, Hoerner, Steele, Imanaga",
-        MlbTeamId.TBD to "Díaz, Lowe, Bradley, Baz, Fairbanks",
-        MlbTeamId.HOU to "Alvarez, Tucker, Bregman, Altuve, Valdez",
+        MlbTeamId.LAD to "Ohtani, Betts, Freeman, Yamamoto, Flaherty",
+        MlbTeamId.ATL to "Sale, Riley, Olson, Ozuna, Schwellenbach, Lopez",
+        MlbTeamId.NYY to "Judge, Soto, Cole, Rodón, Chisholm Jr.",
+        MlbTeamId.MIL to "Chourio, Contreras, Adames, Peralta, Megill",
+        MlbTeamId.CHC to "PCA, Happ, Busch, Swanson, Imanaga, Taillon",
+        MlbTeamId.TBD to "Díaz, Lowe, Caminero, Bradley, Fairbanks",
+        MlbTeamId.HOU to "Alvarez, Altuve, Bregman, Valdez, Brown, Hader",
         MlbTeamId.DET to "Skubal, Greene, Carpenter, Keith, Holton",
         MlbTeamId.SD  to "Tatis Jr., Machado, Merrill, Cease, King",
-        MlbTeamId.BOS to "Devers, Duran, Casas, Houck, Crawford"
+        MlbTeamId.BOS to "Devers, Duran, Casas, Houck, Crawford",
+        MlbTeamId.PHI to "Harper, Turner, Schwarber, Wheeler, Nola",
+        MlbTeamId.TEX to "Seager, Semien, García, Eovaldi, Yates",
+        MlbTeamId.ARI to "Marte, Carroll, Walker, Gallen, Kelly",
+        MlbTeamId.MIN to "Correa, Lewis, Buxton, López, Duran",
+        MlbTeamId.CLE to "Ramírez, Naylor, Kwan, Clase, Bibee",
+        MlbTeamId.TOR to "Guerrero Jr., Bichette, Gausman, Berríos, Bassitt",
+        MlbTeamId.STL to "Goldschmidt, Arenado, Donovan, Gray, Helsley",
+        MlbTeamId.BAL to "Henderson, Rutschman, Santander, Burnes, Eflin",
+        MlbTeamId.CWS to "Robert Jr., Vaughn, Crochet, Kuhl",
+        MlbTeamId.SEA to "Rodríguez, Raleigh, Kirby, Gilbert, Muñoz",
+        MlbTeamId.KC  to "Witt Jr., Perez, Pasquantino, Ragans, Lugo",
+        MlbTeamId.OAK to "Rooker, Butler, Bleday, Miller, Sears",
+        MlbTeamId.LAA to "Neto, O'Hoppe, Ward, Anderson, Joyce",
+        MlbTeamId.NYM to "Lindor, Alonso, Nimmo, Manaea, Díaz",
+        MlbTeamId.WSH to "Abrams, Wood, García Jr., Gore, Finnegan",
+        MlbTeamId.MIA to "Burger, Lopez, Edwards, Cabrera, Faucher",
+        MlbTeamId.CIN to "De La Cruz, Steer, India, Greene, Díaz",
+        MlbTeamId.PIT to "Skenes, Keller, Jones, Reynolds, Cruz",
+        MlbTeamId.SF  to "Chapman, Ramos, Webb, Harrison, Walker",
+        MlbTeamId.COL to "Tovar, Doyle, McMahon, Freeland"
     )
 
     var rowY = startY + 45
