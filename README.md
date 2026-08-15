@@ -256,6 +256,18 @@ where:
 - $\Delta \text{Rank}_i < 0 \implies \text{\bf Dropped } (\mathbf{\text{▼} -k})$: Team benefited from regular-season luck or lacks 3-ace rotation depth.
 - $\Delta \text{Rank}_i = 0 \implies \text{\bf Unchanged } (\mathbf{\text{—}})$: Baseline win rank aligns with postseason quality score.
 
+#### 📈 Key Standings Movers & Narrative Drivers:
+| Movement | Team Name | Record | Reg Rank $\to$ Sim Rank | WS Win Prob % | Primary Sabermetric / Econometric Driver |
+| :---: | :--- | :---: | :---: | :---: | :--- |
+| 🚀 **▲ +10** | **Detroit Tigers** | 59 - 61 | #17 $\to$ #7 | **5.39%** | **Tarik Skubal Cy Young Factor**: Elite Ace compression in short Wild Card series & weak AL Central bracket. |
+| 🚀 **▲ +4** | **Houston Astros** | 62 - 60 | #12 $\to$ #8 | **5.05%** | **Bullpen Leverage (+2.0 WPA)**: Josh Hader & playoff rotation out-perform regular-season run differential. |
+| 🚀 **▲ +3** | **Los Angeles Dodgers** | 72 - 48 | #4 $\to$ #1 | **23.53%** | **2.70 Ace ERA & 120 wRC+**: Yamamoto, Flaherty, & Buehler provide the highest structural floor in MLB. |
+| 🚀 **▲ +1** | **Chicago Cubs** | 71 - 50 | #5 $\to$ #4 | **11.31%** | **+115 Run Diff & 8-2 Form**: Imanaga, Taillon, & Assad healthy rotation out-performs injured contenders. |
+| ⚠️ **▼ -9** | **Miami Marlins** | 62 - 59 | #11 $\to$ #20 | **0.18%** | **1-Run Luck Deflation**: -71 run differential regressed to true mean by Bayesian shrinkage; lack of ace starters. |
+| ⚠️ **▼ -7** | **Pittsburgh Pirates** | 58 - 64 | #21 $\to$ #28 | **0.00%** | **Offensive Deficiency (88 wRC+)**: Skenes/Keller brilliance cannot overcome lack of run creation in 7-game series. |
+| ⚠️ **▼ -3** | **Atlanta Braves** | 73 - 48 | #3 $\to$ #6 | **5.46%** | **Phantom Roster Injuries**: Season-ending injuries to Strider, Acuña, & Riley severely degrade October ceiling. |
+| ⚠️ **▼ -2** | **Milwaukee Brewers** | 74 - 47 | #1 $\to$ #3 | **12.14%** | **Offensive Ceiling (92 wRC+)**: Elite defense & bullpen hold regular season rank, but trail LAD/NYY in run creation. |
+
 ---
 
 ## 🔗 Linking the Equations to the Predictions

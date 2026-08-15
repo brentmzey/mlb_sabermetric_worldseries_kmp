@@ -50,6 +50,38 @@ fun main() {
     }
     println("---------------------------------------------------------------------------------------------------------------------------------")
 
+    println("\n📈 KEY STANDINGS & PROBABILITY TREND MOVEMENTS (EXPLAINED):")
+    val climbers = result.leaderboard.filter { it.rankDelta >= 2 }.sortedByDescending { it.rankDelta }
+    val fallers = result.leaderboard.filter { it.rankDelta <= -2 }.sortedBy { it.rankDelta }
+
+    println("   🚀 TOP CLIMBERS (Structural Skill & Playoff Rotation Exceed Standings):")
+    for (tp in climbers.take(4)) {
+        val note = when (tp.team.teamId) {
+            MlbTeamId.DET -> "Tarik Skubal Cy Young ace compression in short series & weak AL Central path."
+            MlbTeamId.HOU -> "Elite bullpen leverage (Hader +2.0 WPA) & proven October playoff pedigree."
+            MlbTeamId.LAD -> "2.70 active Ace ERA (Yamamoto, Flaherty, Buehler) & #1 offense (120 wRC+)."
+            MlbTeamId.TEX -> "Offensive ceiling & Nathan Eovaldi October rotation sharpness."
+            else -> "High underlying run differential and October rotation efficiency."
+        }
+        println("      • %-22s %-6s (Reg #%-2d → Sim #%-2d | %.2f%% WS) : %s".format(
+            tp.team.name, tp.movementSymbol, tp.regularSeasonRank, tp.simRank, tp.worldSeriesWinProb * 100, note
+        ))
+    }
+
+    println("\n   ⚠️  TOP FALLERS (Luck Deflation, Phantom Roster Injuries, or Wild Card Hazard):")
+    for (tp in fallers.take(4)) {
+        val note = when (tp.team.teamId) {
+            MlbTeamId.MIA -> "Extreme 1-run game luck deflation (-71 run diff) & lack of ace starting depth."
+            MlbTeamId.PIT -> "88 wRC+ offense cannot support Skenes/Keller in 7-game postseason series."
+            MlbTeamId.ATL -> "Season-ending injuries to Strider, Acuña, & Riley severely degrade October ceiling."
+            MlbTeamId.STL -> "Aging rotation & negative run differential regress to true baseline."
+            else -> "Regular-season win surplus regressed by Bayesian luck shrinkage."
+        }
+        println("      • %-22s %-6s (Reg #%-2d → Sim #%-2d | %.2f%% WS) : %s".format(
+            tp.team.name, tp.movementSymbol, tp.regularSeasonRank, tp.simRank, tp.worldSeriesWinProb * 100, note
+        ))
+    }
+
     println("\n📊 CAUSAL MODEL & SIMULATION DIAGNOSTICS:")
     for ((key, value) in result.causalDiagnostics) {
         println("   • $key: $value")
