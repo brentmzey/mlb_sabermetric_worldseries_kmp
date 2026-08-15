@@ -97,6 +97,25 @@ fun main() {
     println("\n📁 Open-Source Cleaned Sabermetric Dataset exported to:")
     println("   file://${csvFile.absolutePath}")
 
+    // Sync to PocketHost / PocketBase Cloud DB with Exponential Back-Off
+    val syncClient = com.sabermetrics.worldseries.sync.PocketHostSyncClient()
+    val syncReport = syncClient.syncDatabaseWithRetry("run_2026_postseason_mc10k", result, 20260814L)
+    val syncPayloadJson = syncClient.generateFullDatabaseSyncPackage("run_2026_postseason_mc10k", result, 20260814L)
+    val syncPayloadFile = File(outputDir, "pockethost_sync_payload.json")
+    syncPayloadFile.writeText(syncPayloadJson)
+
+    println("\n☁️  POCKETHOST / POCKETBASE CLOUD DATABASE SYNC STATUS:")
+    println("   • Target_Instance: ${syncClient.config.baseUrl}")
+    println("   • Schema_Version: 1.0.0-hungarian (Epoch UTC Millis)")
+    println("   • Retry_Policy: Exponential Back-Off (Initial: 500ms, Max: 8000ms, Factor: 2.0x, MaxAttempts: 4, Jitter: ±15%)")
+    println("   • Total_Records_Synced: ${syncReport.totalRecordsSynced} across ${syncReport.collectionsSynced.size} collections")
+    println("   • Sync_Status: ${if (syncReport.isSuccessful) "✅ ALIGNED & SYNCHRONIZED" else "⚠️ RETRY WARNING"}")
+    println("   • Synced Collections:")
+    println("       1. [m_simulation_runs] -> 1 Run Record (Seed: 20260814, Iterations: 10,000)")
+    println("       2. [m_latent_quality_estimates] -> 30 Team Quality Records")
+    println("       3. [f_world_series_leaderboard] -> 30 Team Leaderboard Records")
+    println("   • Cloud Sync Bundle Exported: file://${syncPayloadFile.absolutePath}")
+
     // Generate high-resolution chart graphics
     generateChartImage(result.leaderboard.take(8))
     generateLineChartImage(result.leaderboard.take(8))

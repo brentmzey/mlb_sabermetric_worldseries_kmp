@@ -271,14 +271,16 @@ where:
 #### 📈 Key Standings Movers & Narrative Drivers:
 | Movement | Team Name | Record | Reg Rank $\to$ Sim Rank | WS Win Prob % | Primary Sabermetric / Econometric Driver |
 | :---: | :--- | :---: | :---: | :---: | :--- |
-| 🚀 **▲ +10** | **Detroit Tigers** | 59 - 61 | #17 $\to$ #7 | **5.39%** | **Tarik Skubal Cy Young Factor**: Elite Ace compression in short Wild Card series & weak AL Central bracket. |
-| 🚀 **▲ +4** | **Houston Astros** | 62 - 60 | #12 $\to$ #8 | **5.05%** | **Bullpen Leverage (+2.0 WPA)**: Josh Hader & playoff rotation out-perform regular-season run differential. |
-| 🚀 **▲ +3** | **Los Angeles Dodgers** | 72 - 48 | #4 $\to$ #1 | **23.53%** | **2.70 Ace ERA & 120 wRC+**: Yamamoto, Flaherty, & Buehler provide the highest structural floor in MLB. |
-| 🚀 **▲ +1** | **Chicago Cubs** | 71 - 50 | #5 $\to$ #4 | **11.31%** | **+115 Run Diff & 8-2 Form**: Imanaga, Taillon, & Assad healthy rotation out-performs injured contenders. |
-| ⚠️ **▼ -9** | **Miami Marlins** | 62 - 59 | #11 $\to$ #20 | **0.18%** | **1-Run Luck Deflation**: -71 run differential regressed to true mean by Bayesian shrinkage; lack of ace starters. |
-| ⚠️ **▼ -7** | **Pittsburgh Pirates** | 58 - 64 | #21 $\to$ #28 | **0.00%** | **Offensive Deficiency (88 wRC+)**: Skenes/Keller brilliance cannot overcome lack of run creation in 7-game series. |
-| ⚠️ **▼ -3** | **Atlanta Braves** | 73 - 48 | #3 $\to$ #6 | **5.46%** | **Phantom Roster Injuries**: Season-ending injuries to Strider, Acuña, & Riley severely degrade October ceiling. |
-| ⚠️ **▼ -2** | **Milwaukee Brewers** | 74 - 47 | #1 $\to$ #3 | **12.14%** | **Offensive Ceiling (92 wRC+)**: Elite defense & bullpen hold regular season rank, but trail LAD/NYY in run creation. |
+| 🚀 **▲ +6** | **Detroit Tigers** | 60 - 62 | #15 $\to$ #9 | **4.02%** | **Tarik Skubal Cy Young Factor**: Elite Ace compression in short Wild Card series & weak AL Central bracket. |
+| 🚀 **▲ +5** | **Houston Astros** | 62 - 60 | #12 $\to$ #7 | **6.38%** | **Bullpen Leverage (+2.0 WPA)**: Josh Hader & playoff rotation out-perform regular-season run differential. |
+| 🚀 **▲ +2** | **Los Angeles Dodgers** | 73 - 49 | #3 $\to$ #1 | **16.63%** | **2.70 Ace ERA & 120 wRC+**: Yamamoto, Flaherty, & Buehler provide the highest structural floor in MLB (36% Polymarket). |
+| 🚀 **▲ +2** | **New York Yankees** | 68 - 54 | #6 $\to$ #4 | **10.63%** | **#1 AL Lineup & Rotation Frontline**: Judge/Soto/Cole power overcomes regular-season deficit to reach #4 in MLB. |
+| ⚠️ **▼ -12** | **Pittsburgh Pirates** | 60 - 64 | #16 $\to$ #28 | **0.00%** | **Offensive Deficiency (88 wRC+)**: Skenes/Keller brilliance cannot overcome lack of run creation in 7-game series. |
+| ⚠️ **▼ -11** | **Miami Marlins** | 62 - 61 | #11 $\to$ #22 | **0.02%** | **1-Run Luck Deflation**: -71 run differential regressed to true mean by Bayesian shrinkage; lack of ace starters. |
+| ⚠️ **▼ -6** | **Washington Nationals** | 60 - 64 | #17 $\to$ #23 | **0.01%** | **Regression to Mean**: Regular-season win surplus regressed by Bayesian luck shrinkage. |
+| ⚠️ **▼ -4** | **St. Louis Cardinals** | 61 - 61 | #14 $\to$ #18 | **0.12%** | **Aging Rotation Drag**: -4 run differential and sub-1.00 latent quality regress to true baseline. |
+| ⚠️ **▼ -2** | **Atlanta Braves** | 73 - 49 | #4 $\to$ #6 | **8.55%** | **Phantom Roster Injuries**: Season-ending injuries to Strider, Acuña, & Riley severely degrade October ceiling. |
+| ⚠️ **▼ -1** | **Milwaukee Brewers** | 75 - 47 | #1 $\to$ #2 | **14.18%** | **Offensive Ceiling (92 wRC+)**: Elite defense & bullpen hold regular season rank, but trail LAD in run creation. |
 
 ---
 

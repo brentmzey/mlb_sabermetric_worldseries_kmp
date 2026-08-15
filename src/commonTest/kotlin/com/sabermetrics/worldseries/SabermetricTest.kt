@@ -15,6 +15,9 @@ import com.sabermetrics.worldseries.repository.ITeamSeasonInputRecord
 import com.sabermetrics.worldseries.repository.MLatentQualityEstimateRecord
 import com.sabermetrics.worldseries.repository.MSimulationRunRecord
 import com.sabermetrics.worldseries.repository.RecordStatusCode
+import com.sabermetrics.worldseries.sync.ExponentialBackoffPolicy
+import com.sabermetrics.worldseries.sync.PocketHostConfig
+import com.sabermetrics.worldseries.sync.PocketHostSyncClient
 import com.sabermetrics.worldseries.util.format
 import com.sabermetrics.worldseries.util.formatDecimals
 import kotlin.random.Random
@@ -23,6 +26,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class SabermetricTest {
@@ -422,5 +427,129 @@ class SabermetricTest {
 
         val singleArg = "Hello %s".format("World")
         assertEquals("Hello World", singleArg)
+    }
+
+    @Test
+    fun testExponentialBackoffPolicyAndRetries() {
+        val policy = ExponentialBackoffPolicy(
+            initialDelayMs = 200L,
+            maxDelayMs = 2000L,
+            factor = 2.0,
+            maxAttempts = 4,
+            jitterRatio = 0.10
+        )
+
+        assertEquals(200L, policy.calculateBaseDelayMs(1))
+        assertEquals(400L, policy.calculateBaseDelayMs(2))
+        assertEquals(800L, policy.calculateBaseDelayMs(3))
+        assertEquals(1600L, policy.calculateBaseDelayMs(4))
+        assertEquals(2000L, policy.calculateBaseDelayMs(5)) // Capped at maxDelayMs
+
+        val jittered = policy.calculateDelayWithJitterMs(2, Random(42))
+        assertTrue(jittered in 360L..440L)
+
+        // Validation bounds
+        assertFailsWith<IllegalArgumentException> {
+            ExponentialBackoffPolicy(initialDelayMs = 0)
+        }
+        assertFailsWith<IllegalArgumentException> {
+            ExponentialBackoffPolicy(initialDelayMs = 500, maxDelayMs = 100)
+        }
+        assertFailsWith<IllegalArgumentException> {
+            ExponentialBackoffPolicy(maxAttempts = 0)
+        }
+        assertFailsWith<IllegalArgumentException> {
+            ExponentialBackoffPolicy(jitterRatio = 0.6)
+        }
+
+        // Test sync retry with eventual success
+        var attemptsRan = 0
+        val successResult = policy.executeSync { attempt ->
+            attemptsRan = attempt
+            if (attempt < 3) throw RuntimeException("Simulated Transient Failure $attempt")
+            "SUCCESS_ON_$attempt"
+        }
+        assertTrue(successResult.isSuccess)
+        assertEquals("SUCCESS_ON_3", successResult.getOrNull())
+        assertEquals(3, attemptsRan)
+
+        // Test sync retry with ultimate failure after max attempts
+        val failResult = policy.executeSync { attempt ->
+            throw RuntimeException("Persistent Failure $attempt")
+        }
+        assertTrue(failResult.isFailure)
+        assertTrue(failResult.exceptionOrNull()?.message?.contains("Persistent Failure 4") == true)
+    }
+
+    @Test
+    fun testPocketHostSyncClientAndPayloads() {
+        val client = PocketHostSyncClient()
+        val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 100, seed = 42L)
+
+        val runJson = client.serializeSimulationRunRecord("RUN-TEST-100", result, 42L)
+        assertTrue(runJson.contains("\"str_run_id\": \"RUN-TEST-100\""))
+        assertTrue(runJson.contains("\"int_total_iterations\": 100"))
+        assertTrue(runJson.contains("\"bool_is_active\": true"))
+
+        val lbJson = client.serializeLeaderboardRecords("RUN-TEST-100", result.leaderboard)
+        assertTrue(lbJson.contains("\"str_team_code\": \"LAD\""))
+        assertTrue(lbJson.contains("\"int_sim_rank\": 1"))
+
+        val qualJson = client.serializeLatentQualities("RUN-TEST-100", result.leaderboard)
+        assertTrue(qualJson.contains("\"str_team_code\": \"LAD\""))
+        assertTrue(qualJson.contains("\"dbl_latent_quality_score\""))
+
+        val fullBundle = client.generateFullDatabaseSyncPackage("RUN-TEST-100", result, 42L)
+        assertTrue(fullBundle.contains("\"schema_version\": \"1.0.0-hungarian\""))
+        assertTrue(fullBundle.contains("\"m_simulation_runs\""))
+        assertTrue(fullBundle.contains("\"f_world_series_leaderboard\""))
+
+        // Test simulated sync with successful transporter
+        val report = client.syncDatabaseWithRetry("RUN-TEST-100", result, 42L) { col, payload ->
+            assertTrue(payload.isNotEmpty())
+            true
+        }
+        assertTrue(report.isSuccessful)
+        assertEquals(61, report.totalRecordsSynced) // 1 run + 30 qualities + 30 leaderboard
+        assertEquals(3, report.collectionsSynced.size)
+
+        // Test sync with transporter failures to verify fallback and log branches
+        var callCount = 0
+        val fastPolicy = ExponentialBackoffPolicy(initialDelayMs = 1L, maxDelayMs = 5L, factor = 1.5, maxAttempts = 2)
+        val fastClient = PocketHostSyncClient(PocketHostConfig(backoffPolicy = fastPolicy))
+        val failingReport = fastClient.syncDatabaseWithRetry("RUN-FAIL-01", result, 42L) { col, _ ->
+            callCount++
+            false // Simulate failed HTTP network requests
+        }
+        assertFalse(failingReport.isSuccessful)
+        assertEquals(0, failingReport.totalRecordsSynced)
+        assertTrue(failingReport.logEntries.any { it.contains("❌") })
+
+        // Test default sync without transporter
+        val defaultReport = fastClient.syncDatabaseWithRetry("RUN-DEFAULT-01", result, 42L)
+        assertTrue(defaultReport.isSuccessful)
+        assertEquals(61, defaultReport.totalRecordsSynced)
+
+        // Test suspend retry execution
+        kotlinx.coroutines.runBlocking {
+            var sCount = 0
+            val sRes = fastPolicy.executeSuspend(
+                onRetry = { att, err, delay ->
+                    sCount++
+                }
+            ) { attempt ->
+                if (attempt == 1) throw RuntimeException("Suspend retry test")
+                "SUSPEND_OK"
+            }
+            assertTrue(sRes.isSuccess)
+            assertEquals("SUSPEND_OK", sRes.getOrNull())
+            assertEquals(1, sCount)
+
+            // Failing suspend retry
+            val sFail = fastPolicy.executeSuspend { attempt ->
+                throw RuntimeException("Permanent suspend error $attempt")
+            }
+            assertTrue(sFail.isFailure)
+        }
     }
 }

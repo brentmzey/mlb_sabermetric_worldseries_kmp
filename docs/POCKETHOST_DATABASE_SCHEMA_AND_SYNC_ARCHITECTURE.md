@@ -190,6 +190,52 @@ GET /api/collections/f_world_series_leaderboard/records?filter=(bool_is_active=t
 
 ---
 
+## 🛡️ 2.1. Resilient Cloud Synchronization with Exponential Back-Off & Randomized Jitter
+
+When writing simulation runs and querying leaderboard states from PocketHost / PocketBase cloud endpoints, network requests may encounter transient HTTP status codes (`429 Too Many Requests`, `502 Bad Gateway`, `503 Service Unavailable`, or connection timeouts).
+
+To guarantee **zero data loss** and prevent **thundering herd storms**, all read/write operations execute under our [`ExponentialBackoffPolicy`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/src/commonMain/kotlin/com/sabermetrics/worldseries/sync/ExponentialBackoffPolicy.kt):
+
+### Mathematical Formulation
+$$\text{Delay}(a) = \min\left(D_{\max},\; D_{\text{init}} \cdot F^{a - 1}\right) \cdot (1 + \mathcal{U}[-J, +J])$$
+
+Where:
+* $a \in \{1, 2, \dots, N\}$: Attempt index ($N = 4$)
+* $D_{\text{init}} = 500\text{ ms}$: Initial back-off delay
+* $D_{\max} = 8,000\text{ ms}$: Maximum delay cap
+* $F = 2.0$: Exponential back-off factor
+* $J = 0.15$ ($\pm 15\%$): Uniformly distributed randomized jitter ratio $\mathcal{U}[-0.15, +0.15]$
+
+```kotlin
+// Ingestion Execution via PocketHostSyncClient
+val client = PocketHostSyncClient(
+    PocketHostConfig(
+        baseUrl = "https://mlb-sabermetrics.pockethost.io",
+        backoffPolicy = ExponentialBackoffPolicy(
+            initialDelayMs = 500L,
+            maxDelayMs = 8000L,
+            factor = 2.0,
+            maxAttempts = 4,
+            jitterRatio = 0.15
+        )
+    )
+)
+
+val report = client.syncDatabaseWithRetry(
+    runId = "run_2026_postseason_mc10k",
+    result = simulationResult,
+    seed = 20260814L
+)
+```
+
+### Sync Pipeline Behavior
+1. **Simulation Run (`m_simulation_runs`)**: Emits 1 run record with execution metadata, seed, and top favorite.
+2. **Latent Quality Estimates (`m_latent_quality_estimates`)**: Ingests all 30 team vectors with Bayesian win %, recency win %, and clubhouse hype multipliers.
+3. **World Series Leaderboard (`f_world_series_leaderboard`)**: Ingests all 30 teams with expected wins, playoff %, pennant %, and championship odds.
+4. **Local Artifact Backup**: Generates [`output_datasets/pockethost_sync_payload.json`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/output_datasets/pockethost_sync_payload.json) for offline sync & auditing.
+
+---
+
 ## 💻 3. PocketBase Automated Migration Script (`pb_migrations`)
 
 Below is the automated JavaScript migration script to provision the entire collection suite in PocketHost:
