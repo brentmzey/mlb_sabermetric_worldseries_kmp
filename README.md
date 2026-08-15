@@ -323,6 +323,7 @@ To rigorously select our architecture over naive alternatives, we benchmarked 4 
 | **Model 4: Selected Model (Ours)** | **Active Roster 2SLS IV + Additive Quality + Log5 ($\gamma=1.20$)** | **48.6** | **94.2** | **102.8** | **0.1604** | ✅ **Optimal AIC/BIC, Zero-Mean Unbiased, Parity Calibrated** |
 
 For complete mathematical proofs, diagnostic matrices, and residual luck tables across all 30 teams, read the detailed documentation:
+- 🎲 **[docs/DAILY_SIMULATION_PIPELINE_AND_OUTCOME_SAMPLING.md](docs/DAILY_SIMULATION_PIPELINE_AND_OUTCOME_SAMPLING.md)**: Daily Stochastic Sampling, Outcome Propensity Distribution & Automated Pipeline Execution
 - 🧠 **[docs/CAUSAL_SURVIVAL_THEORY_AND_OCTOBER_PREDICTIONS.md](docs/CAUSAL_SURVIVAL_THEORY_AND_OCTOBER_PREDICTIONS.md)**: Causal Survival Theory, First-Round Bye Hazard Arbitrage, Rotation Compression & October Prediction Tables
 - 🧠 **[docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md](docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md)**: Deep Explainer on Model Structures, 2SLS IV Asymptotic Consistency, White $HC_1/HC_3$ Robustness, Heuristic Reasoning & Comparative Performance
 - 📖 **[docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md](docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md)**: 30-Team Econometric Residual & Bias Mitigation Matrix
@@ -334,11 +335,12 @@ For complete mathematical proofs, diagnostic matrices, and residual luck tables 
 ### 📊 Visual Chart Artifacts
 1. 🏆 **Causal vs. Correlational Survival Framework**: [`docs/charts/causal_vs_correlational_survival_framework.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/causal_vs_correlational_survival_framework.png)
 2. ☁️ **PocketHost Cloud Sync Architecture**: [`docs/charts/pockethost_cloud_sync_architecture.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/pockethost_cloud_sync_architecture.png)
-3. 🏆 **World Series Win Probabilities**: [`docs/charts/world_series_win_probabilities.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/world_series_win_probabilities.png)
-4. 📈 **Season Trend Checkpoints**: [`docs/charts/team_probability_trends_over_time.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/team_probability_trends_over_time.png)
-5. 📊 **Residual Luck & Bias Decomposition**: [`docs/charts/residual_luck_bias_decomposition.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/residual_luck_bias_decomposition.png)
-6. 🖼️ **2026 Core Roster Anchors**: [`docs/charts/roster_anchors_leaderboard.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/roster_anchors_leaderboard.png)
-7. ⚔️ **Cross-League Matchup Matrix**: [`docs/charts/cross_league_matchup_matrix.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/cross_league_matchup_matrix.png)
+3. 🎲 **Monte Carlo Outcome Propensities**: [`docs/charts/monte_carlo_outcome_propensities.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/monte_carlo_outcome_propensities.png)
+4. 🏆 **World Series Win Probabilities**: [`docs/charts/world_series_win_probabilities.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/world_series_win_probabilities.png)
+5. 📈 **Season Trend Checkpoints**: [`docs/charts/team_probability_trends_over_time.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/team_probability_trends_over_time.png)
+6. 📊 **Residual Luck & Bias Decomposition**: [`docs/charts/residual_luck_bias_decomposition.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/residual_luck_bias_decomposition.png)
+7. 🖼️ **2026 Core Roster Anchors**: [`docs/charts/roster_anchors_leaderboard.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/roster_anchors_leaderboard.png)
+8. ⚔️ **Cross-League Matchup Matrix**: [`docs/charts/cross_league_matchup_matrix.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/cross_league_matchup_matrix.png)
 
 ---
 
