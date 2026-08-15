@@ -435,7 +435,7 @@ fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>) {
 
     val rosterAnchorsMap = mapOf(
         MlbTeamId.LAD to "Ohtani, Betts, Freeman, Yamamoto, Flaherty",
-        MlbTeamId.ATL to "Sale, Riley, Olson, Ozuna, Schwellenbach, Lopez",
+        MlbTeamId.ATL to "Sale, Olson, Ozuna, Schwellenbach, Lopez, Harris II",
         MlbTeamId.NYY to "Judge, Soto, Cole, Rodón, Chisholm Jr.",
         MlbTeamId.MIL to "Chourio, Contreras, Adames, Peralta, Megill",
         MlbTeamId.CHC to "PCA, Happ, Busch, Swanson, Imanaga, Taillon",
