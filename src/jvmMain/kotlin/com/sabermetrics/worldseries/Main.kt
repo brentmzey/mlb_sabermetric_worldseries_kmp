@@ -573,17 +573,16 @@ fun generateCrossLeagueMatchupChartImage() {
     )
 
     val matchups = listOf(
-        MatchupRow("LA Dodgers (1.228)", "NY Yankees (1.168)", 0.538, 0.582, "Dodgers' 2.65 Ace ERA & 120 wRC+ hold edge over Yankees 117 wRC+"),
-        MatchupRow("Atlanta Braves (1.205)", "NY Yankees (1.168)", 0.524, 0.551, "Braves' 3.52 FIP pitching slightly outduels Yankees over 7 games"),
-        MatchupRow("Milwaukee Brewers (1.134)", "NY Yankees (1.168)", 0.488, 0.475, "Yankees offense holds small edge over Brewers' +3.5 WPA bullpen"),
-        MatchupRow("Chicago Cubs (1.118)", "NY Yankees (1.168)", 0.480, 0.458, "Evenly matched pitching (3.20 vs 3.15 ERA); NYY higher slugging"),
-        MatchupRow("LA Dodgers (1.228)", "Tampa Bay Rays (1.102)", 0.581, 0.668, "Dodgers overwhelm Rays in run creation (120 vs 95 wRC+)"),
-        MatchupRow("Atlanta Braves (1.205)", "Tampa Bay Rays (1.102)", 0.567, 0.640, "Atlanta rotation depth overmatches Tampa Bay offense"),
-        MatchupRow("Milwaukee Brewers (1.134)", "Tampa Bay Rays (1.102)", 0.511, 0.523, "Elite run suppression mirror; Brewers have higher defense (1.12)"),
-        MatchupRow("Chicago Cubs (1.118)", "Tampa Bay Rays (1.102)", 0.505, 0.511, "Cubs' 108 wRC+ offense provides slight edge over Rays' 95 wRC+"),
-        MatchupRow("LA Dodgers (1.228)", "Houston Astros (1.075)", 0.598, 0.702, "Dodgers hold significant edge across all 4 statistical pillars"),
-        MatchupRow("Milwaukee Brewers (1.134)", "Houston Astros (1.075)", 0.521, 0.544, "Brewers bullpen (+3.5 WPA) out-leverages Astros (+2.0 WPA)"),
-        MatchupRow("Chicago Cubs (1.118)", "Houston Astros (1.075)", 0.515, 0.532, "Cubs' +115 run diff outpaces Astros' -27 regular-season run differential")
+        MatchupRow("LA Dodgers (1.042)", "NY Yankees (0.985)", 0.514, 0.530, "Dodgers' 2.70 Ace ERA & 120 wRC+ hold edge over Yankees 117 wRC+"),
+        MatchupRow("LA Dodgers (1.042)", "Tampa Bay Rays (0.957)", 0.522, 0.548, "Dodgers overwhelm Rays in run creation (120 vs 95 wRC+)"),
+        MatchupRow("Milwaukee Brewers (0.982)", "NY Yankees (0.985)", 0.499, 0.498, "Yankees offense holds small edge over Brewers' +3.5 WPA bullpen"),
+        MatchupRow("Chicago Cubs (0.978)", "NY Yankees (0.985)", 0.498, 0.496, "Evenly matched pitching (3.28 vs 3.15 ERA); NYY higher slugging"),
+        MatchupRow("Milwaukee Brewers (0.982)", "Tampa Bay Rays (0.957)", 0.508, 0.518, "Elite run suppression mirror; Brewers have higher defense (1.09)"),
+        MatchupRow("Chicago Cubs (0.978)", "Tampa Bay Rays (0.957)", 0.506, 0.514, "Cubs' 108 wRC+ offense provides edge over Rays' 95 wRC+"),
+        MatchupRow("Atlanta Braves (0.892)", "NY Yankees (0.985)", 0.475, 0.448, "Yankees offense holds edge over depleted Braves lineup"),
+        MatchupRow("LA Dodgers (1.042)", "Houston Astros (0.910)", 0.536, 0.579, "Dodgers hold significant edge across all 4 statistical pillars"),
+        MatchupRow("Milwaukee Brewers (0.982)", "Houston Astros (0.910)", 0.523, 0.550, "Brewers bullpen (+3.5 WPA) out-leverages Astros (+2.0 WPA)"),
+        MatchupRow("Chicago Cubs (0.978)", "Houston Astros (0.910)", 0.521, 0.546, "Cubs' +115 run diff outpaces Astros' -27 regular-season run differential")
     )
 
     var rowY = startY + 45
