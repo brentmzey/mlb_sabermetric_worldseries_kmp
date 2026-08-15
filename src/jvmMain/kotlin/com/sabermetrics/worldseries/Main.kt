@@ -122,6 +122,8 @@ fun main() {
     generateLuckResidualChartImage(result.leaderboard)
     generateRosterAnchorsChartImage(result.leaderboard.take(10))
     generateCrossLeagueMatchupChartImage()
+    generateCausalSurvivalFrameworkImage()
+    generatePocketHostCloudSyncArchitectureImage()
     println("=================================================================================================================\n")
 }
 
@@ -692,6 +694,336 @@ fun generateCrossLeagueMatchupChartImage() {
     val outFile = File(chartDir, "cross_league_matchup_matrix.png")
     ImageIO.write(img, "PNG", outFile)
     println("🖼️  Visual Cross-League Matchup Chart Image generated at:")
+    println("   file://${outFile.absolutePath}")
+}
+
+fun generateCausalSurvivalFrameworkImage() {
+    val width = 1200
+    val height = 750
+    val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+    val g = img.createGraphics()
+
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+
+    // Dark background
+    g.color = Color(15, 23, 42)
+    g.fillRect(0, 0, width, height)
+
+    // Header Card
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(30, 20, 1140, 70, 12, 12)
+    g.color = Color(51, 65, 85)
+    g.drawRoundRect(30, 20, 1140, 70, 12, 12)
+
+    g.color = Color(248, 250, 252)
+    g.font = Font("SansSerif", Font.BOLD, 20)
+    g.drawString("⚾ Causal vs. Correlational October Postseason Framework", 50, 48)
+
+    g.color = Color(148, 163, 184)
+    g.font = Font("SansSerif", Font.PLAIN, 12)
+    g.drawString("Why Regular-Season Standings ≠ October Championship Probability | 4-Round Hazard Mechanics & Ace Compression", 50, 72)
+
+    // 2 Top Comparison Panels: Non-Causal vs Causal
+    // Panel 1: Non-Causal Regular Season Noise
+    val p1X = 30
+    val p1Y = 105
+    val pW = 555
+    val pH = 190
+
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(p1X, p1Y, pW, pH, 12, 12)
+    g.color = Color(239, 68, 68, 120) // Red border
+    g.drawRoundRect(p1X, p1Y, pW, pH, 12, 12)
+
+    g.color = Color(239, 68, 68)
+    g.font = Font("SansSerif", Font.BOLD, 15)
+    g.drawString("⚠️  NON-CAUSAL REGULAR-SEASON NOISE (FILTERED OUT)", p1X + 20, p1Y + 30)
+
+    val noiseItems = listOf(
+        "• 1-Run Game Sequencing Luck (Regressed via Bayesian Shrinkage)",
+        "• 162-Game Inning Eaters / Roster Depth (Irrelevant in October)",
+        "• Phantom Injured Stars (Steele, Strider, Acuña, Yelich Purged)",
+        "• Unadjusted W-L Standings (Subject to endogeneity & SOS distortions)"
+    )
+    g.color = Color(203, 213, 225)
+    g.font = Font("SansSerif", Font.PLAIN, 12)
+    var ny = p1Y + 60
+    for (item in noiseItems) {
+        g.drawString(item, p1X + 20, ny)
+        ny += 30
+    }
+
+    // Panel 2: Causal October Survival Drivers
+    val p2X = 615
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(p2X, p1Y, pW, pH, 12, 12)
+    g.color = Color(16, 185, 129, 120) // Green border
+    g.drawRoundRect(p2X, p1Y, pW, pH, 12, 12)
+
+    g.color = Color(16, 185, 129)
+    g.font = Font("SansSerif", Font.BOLD, 15)
+    g.drawString("✅  CAUSAL OCTOBER SURVIVAL DRIVERS (PROVEN)", p2X + 20, p1Y + 30)
+
+    val causalItems = listOf(
+        "• First-Round Bye (0% Round 1 Hazard Mortality vs 35.2% Wild Card Trapdoor)",
+        "• Top-3 Ace Rotation Compression (Shortened series leverage top arms)",
+        "• High-Leverage Bullpen WPA (+3.5 WPA closes 45%+ of postseason outs)",
+        "• League Bracket Structure & Cross-League Dodgers Hurdle (16.6% WS / 36% Poly)"
+    )
+    g.color = Color(203, 213, 225)
+    g.font = Font("SansSerif", Font.PLAIN, 12)
+    var cy = p1Y + 60
+    for (item in causalItems) {
+        g.drawString(item, p2X + 20, cy)
+        cy += 30
+    }
+
+    // Bottom Panel: Top 5 Contenders Causal Decomposition
+    val bY = 310
+    val bW = 1140
+    val bH = 410
+
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(30, bY, bW, bH, 12, 12)
+    g.color = Color(51, 65, 85)
+    g.drawRoundRect(30, bY, bW, bH, 12, 12)
+
+    g.color = Color(248, 250, 252)
+    g.font = Font("SansSerif", Font.BOLD, 15)
+    g.drawString("🏆 2026 TOP 5 CONTENDERS CAUSAL DECOMPOSITION & HAZARD PROFILE", 50, bY + 30)
+
+    // Table Header
+    val thY = bY + 60
+    g.color = Color(15, 23, 42)
+    g.fillRoundRect(50, thY, 1100, 30, 6, 6)
+
+    g.color = Color(148, 163, 184)
+    g.font = Font("SansSerif", Font.BOLD, 11)
+    g.drawString("TEAM", 70, thY + 20)
+    g.drawString("RECORD", 220, thY + 20)
+    g.drawString("BYE STATUS", 320, thY + 20)
+    g.drawString("TOP-3 ACE ERA", 450, thY + 20)
+    g.drawString("BULLPEN WPA", 580, thY + 20)
+    g.drawString("POLYMARKET", 700, thY + 20)
+    g.drawString("SIM WS %", 820, thY + 20)
+    g.drawString("PRIMARY CAUSAL EXPLANATION", 920, thY + 20)
+
+    data class Top5Row(
+        val name: String, val record: String, val bye: String, val ace: String,
+        val bp: String, val poly: String, val ws: String, val desc: String, val color: Color
+    )
+
+    val rows = listOf(
+        Top5Row("1. LA Dodgers", "73-49", "YES (NL Seed 1)", "2.70 (Yamamoto/Flaherty)", "+3.8 WPA", "36.0%", "16.63%", "#1 Offense (120 wRC+), elite ace frontline & Bye", Color(14, 165, 233)),
+        Top5Row("2. Milwaukee Brewers", "75-47", "YES (NL Seed 2)", "3.35 (Peralta/Myers)", "+3.5 WPA", "8.0%", "14.18%", "Skips WC trapdoor; #1 NL defense & +3.5 WPA bullpen", Color(234, 179, 8)),
+        Top5Row("3. Tampa Bay Rays", "74-46", "YES (AL Seed 1)", "3.55 (Bradley/Baz)", "+1.2 WPA", "9.0%", "14.16%", "#1 AL Seed Bye; 9-1 L10 streak & run suppression", Color(56, 189, 248)),
+        Top5Row("4. NY Yankees", "68-54", "NO (AL WC Seed 4)", "3.15 (Cole/Rodón)", "+3.2 WPA", "11.0%", "10.63%", "35.2% WC hazard mortality reduces Judge/Soto power", Color(168, 85, 247)),
+        Top5Row("5. Chicago Cubs", "72-51", "NO (NL WC Seed 4)", "3.28 (Imanaga/Taillon)", "+2.8 WPA", "7.5%", "10.21%", "8-2 surge (+111 run diff); 16.8% WS if overtaking MIL", Color(59, 130, 246))
+    )
+
+    var rowY = thY + 60
+    for (r in rows) {
+        g.color = r.color
+        g.font = Font("SansSerif", Font.BOLD, 13)
+        g.drawString(r.name, 70, rowY)
+
+        g.color = Color(248, 250, 252)
+        g.font = Font("SansSerif", Font.PLAIN, 12)
+        g.drawString(r.record, 220, rowY)
+
+        g.color = if (r.bye.startsWith("YES")) Color(16, 185, 129) else Color(239, 68, 68)
+        g.font = Font("SansSerif", Font.BOLD, 11)
+        g.drawString(r.bye, 320, rowY)
+
+        g.color = Color(203, 213, 225)
+        g.font = Font("SansSerif", Font.PLAIN, 12)
+        g.drawString(r.ace, 450, rowY)
+        g.drawString(r.bp, 580, rowY)
+
+        g.color = Color(245, 158, 11)
+        g.font = Font("SansSerif", Font.BOLD, 12)
+        g.drawString(r.poly, 700, rowY)
+
+        g.color = Color(16, 185, 129)
+        g.font = Font("SansSerif", Font.BOLD, 13)
+        g.drawString(r.ws, 820, rowY)
+
+        g.color = Color(148, 163, 184)
+        g.font = Font("SansSerif", Font.PLAIN, 11)
+        g.drawString(r.desc, 920, rowY)
+
+        rowY += 56
+    }
+
+    g.dispose()
+
+    val chartDir = File("docs/charts")
+    if (!chartDir.exists()) chartDir.mkdirs()
+
+    val outFile = File(chartDir, "causal_vs_correlational_survival_framework.png")
+    ImageIO.write(img, "PNG", outFile)
+    println("🖼️  Visual Causal Survival Framework Image generated at:")
+    println("   file://${outFile.absolutePath}")
+}
+
+fun generatePocketHostCloudSyncArchitectureImage() {
+    val width = 1200
+    val height = 700
+    val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+    val g = img.createGraphics()
+
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+
+    // Dark background
+    g.color = Color(15, 23, 42)
+    g.fillRect(0, 0, width, height)
+
+    // Header Card
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(30, 20, 1140, 70, 12, 12)
+    g.color = Color(51, 65, 85)
+    g.drawRoundRect(30, 20, 1140, 70, 12, 12)
+
+    g.color = Color(248, 250, 252)
+    g.font = Font("SansSerif", Font.BOLD, 20)
+    g.drawString("☁️ PocketHost / PocketBase Cloud Synchronization Architecture", 50, 48)
+
+    g.color = Color(148, 163, 184)
+    g.font = Font("SansSerif", Font.PLAIN, 12)
+    g.drawString("Resilient Multiplatform Ingestion | Exponential Back-Off Policy (±15% Jitter) | Real-Time SSE Subscriptions", 50, 72)
+
+    // 4 Architecture Column Cards
+    val colW = 265
+    val colH = 550
+    val colY = 110
+
+    // Card 1: Local KMP Simulation Engine
+    val c1X = 30
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(c1X, colY, colW, colH, 12, 12)
+    g.color = Color(59, 130, 246)
+    g.drawRoundRect(c1X, colY, colW, colH, 12, 12)
+
+    g.color = Color(59, 130, 246)
+    g.font = Font("SansSerif", Font.BOLD, 14)
+    g.drawString("1. LOCAL KMP ENGINE", c1X + 15, colY + 30)
+
+    val c1Lines = listOf(
+        "• 10,000 Monte Carlo Runs",
+        "• 2SLS IV Causal Estimation",
+        "• Bill James Pythagenpat Log5",
+        "• Brian Kenny Ace Compression",
+        "• Active Postseason Filtering",
+        "• Polymarket Prior Calibration",
+        "• Output Clean CSV Dataset",
+        "• Generates 7 High-Res PNGs"
+    )
+    g.color = Color(203, 213, 225)
+    g.font = Font("SansSerif", Font.PLAIN, 12)
+    var c1Y = colY + 65
+    for (l in c1Lines) {
+        g.drawString(l, c1X + 15, c1Y)
+        c1Y += 32
+    }
+
+    // Card 2: Exponential Back-Off Policy
+    val c2X = 320
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(c2X, colY, colW, colH, 12, 12)
+    g.color = Color(245, 158, 11)
+    g.drawRoundRect(c2X, colY, colW, colH, 12, 12)
+
+    g.color = Color(245, 158, 11)
+    g.font = Font("SansSerif", Font.BOLD, 14)
+    g.drawString("2. EXPONENTIAL BACK-OFF", c2X + 15, colY + 30)
+
+    val c2Lines = listOf(
+        "• Delay(a) = min(Dmax, Dinit·2^(a-1))",
+        "• Initial Delay: 500 ms",
+        "• Max Ceiling: 8,000 ms",
+        "• Multiplier Factor: 2.0x",
+        "• Max Attempts: 4 tries",
+        "• Randomized Jitter: ±15%",
+        "• Handles HTTP 429/502/503",
+        "• Zero-Loss Fault Tolerance"
+    )
+    g.color = Color(203, 213, 225)
+    g.font = Font("SansSerif", Font.PLAIN, 12)
+    var c2Y = colY + 65
+    for (l in c2Lines) {
+        g.drawString(l, c2X + 15, c2Y)
+        c2Y += 32
+    }
+
+    // Card 3: PocketHost Collections
+    val c3X = 610
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(c3X, colY, colW, colH, 12, 12)
+    g.color = Color(16, 185, 129)
+    g.drawRoundRect(c3X, colY, colW, colH, 12, 12)
+
+    g.color = Color(16, 185, 129)
+    g.font = Font("SansSerif", Font.BOLD, 14)
+    g.drawString("3. POCKETHOST COLLECTIONS", c3X + 15, colY + 30)
+
+    val c3Lines = listOf(
+        "• m_simulation_runs",
+        "  - 1 Run Record (Seed: 20260814)",
+        "• m_latent_quality_estimates",
+        "  - 30 Team Quality Vectors",
+        "• f_world_series_leaderboard",
+        "  - 30 Championship Predictions",
+        "• i_mlb_teams",
+        "  - Master Franchise Registry",
+        "• Epoch UTC Millis Timestamps"
+    )
+    g.color = Color(203, 213, 225)
+    g.font = Font("SansSerif", Font.PLAIN, 12)
+    var c3Y = colY + 65
+    for (l in c3Lines) {
+        g.drawString(l, c3X + 15, c3Y)
+        c3Y += 32
+    }
+
+    // Card 4: Live SSE Subscriptions & Clients
+    val c4X = 900
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(c4X, colY, colW, colH, 12, 12)
+    g.color = Color(168, 85, 247)
+    g.drawRoundRect(c4X, colY, colW, colH, 12, 12)
+
+    g.color = Color(168, 85, 247)
+    g.font = Font("SansSerif", Font.BOLD, 14)
+    g.drawString("4. CLIENTS & REAL-TIME SSE", c4X + 15, colY + 30)
+
+    val c4Lines = listOf(
+        "• Real-Time Server-Sent Events",
+        "• Web / React / Vue Clients",
+        "• iOS Native App (Swift/KMP)",
+        "• Android App (Compose/KMP)",
+        "• Desktop JVM CLI",
+        "• REST API: /api/collections/...",
+        "• Non-destructive Versioning",
+        "• Automated GitHub CI Sync"
+    )
+    g.color = Color(203, 213, 225)
+    g.font = Font("SansSerif", Font.PLAIN, 12)
+    var c4Y = colY + 65
+    for (l in c4Lines) {
+        g.drawString(l, c4X + 15, c4Y)
+        c4Y += 32
+    }
+
+    g.dispose()
+
+    val chartDir = File("docs/charts")
+    if (!chartDir.exists()) chartDir.mkdirs()
+
+    val outFile = File(chartDir, "pockethost_cloud_sync_architecture.png")
+    ImageIO.write(img, "PNG", outFile)
+    println("🖼️  Visual PocketHost Cloud Sync Architecture Image generated at:")
     println("   file://${outFile.absolutePath}")
 }
 

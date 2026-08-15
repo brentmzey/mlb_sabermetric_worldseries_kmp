@@ -323,6 +323,7 @@ To rigorously select our architecture over naive alternatives, we benchmarked 4 
 | **Model 4: Selected Model (Ours)** | **Active Roster 2SLS IV + Additive Quality + Log5 ($\gamma=1.20$)** | **48.6** | **94.2** | **102.8** | **0.1604** | ✅ **Optimal AIC/BIC, Zero-Mean Unbiased, Parity Calibrated** |
 
 For complete mathematical proofs, diagnostic matrices, and residual luck tables across all 30 teams, read the detailed documentation:
+- 🧠 **[docs/CAUSAL_SURVIVAL_THEORY_AND_OCTOBER_PREDICTIONS.md](docs/CAUSAL_SURVIVAL_THEORY_AND_OCTOBER_PREDICTIONS.md)**: Causal Survival Theory, First-Round Bye Hazard Arbitrage, Rotation Compression & October Prediction Tables
 - 🧠 **[docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md](docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md)**: Deep Explainer on Model Structures, 2SLS IV Asymptotic Consistency, White $HC_1/HC_3$ Robustness, Heuristic Reasoning & Comparative Performance
 - 📖 **[docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md](docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md)**: 30-Team Econometric Residual & Bias Mitigation Matrix
 - ☁️ **[docs/POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md](docs/POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md)**: PocketHost DB Schema, Hungarian DTOs & Migration Scripts
@@ -331,11 +332,13 @@ For complete mathematical proofs, diagnostic matrices, and residual luck tables 
 - ⚾ **[docs/CUBS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md](docs/CUBS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md)**: Chicago Cubs & NL Central Division Championship Analysis
 
 ### 📊 Visual Chart Artifacts
-1. 🏆 **World Series Win Probabilities**: [`docs/charts/world_series_win_probabilities.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/world_series_win_probabilities.png)
-2. 📈 **Season Trend Checkpoints**: [`docs/charts/team_probability_trends_over_time.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/team_probability_trends_over_time.png)
-3. 📊 **Residual Luck & Bias Decomposition**: [`docs/charts/residual_luck_bias_decomposition.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/residual_luck_bias_decomposition.png)
-4. 🖼️ **2026 Core Roster Anchors**: [`docs/charts/roster_anchors_leaderboard.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/roster_anchors_leaderboard.png)
-5. ⚔️ **Cross-League Matchup Matrix**: [`docs/charts/cross_league_matchup_matrix.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/cross_league_matchup_matrix.png)
+1. 🏆 **Causal vs. Correlational Survival Framework**: [`docs/charts/causal_vs_correlational_survival_framework.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/causal_vs_correlational_survival_framework.png)
+2. ☁️ **PocketHost Cloud Sync Architecture**: [`docs/charts/pockethost_cloud_sync_architecture.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/pockethost_cloud_sync_architecture.png)
+3. 🏆 **World Series Win Probabilities**: [`docs/charts/world_series_win_probabilities.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/world_series_win_probabilities.png)
+4. 📈 **Season Trend Checkpoints**: [`docs/charts/team_probability_trends_over_time.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/team_probability_trends_over_time.png)
+5. 📊 **Residual Luck & Bias Decomposition**: [`docs/charts/residual_luck_bias_decomposition.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/residual_luck_bias_decomposition.png)
+6. 🖼️ **2026 Core Roster Anchors**: [`docs/charts/roster_anchors_leaderboard.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/roster_anchors_leaderboard.png)
+7. ⚔️ **Cross-League Matchup Matrix**: [`docs/charts/cross_league_matchup_matrix.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/cross_league_matchup_matrix.png)
 
 ---
 

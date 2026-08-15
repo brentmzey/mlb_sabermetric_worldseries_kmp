@@ -23,13 +23,20 @@ class MainJvmTest {
         assertTrue(csvLines[0].contains("Team_ID"), "CSV header must contain Team_ID")
         assertTrue(csvLines[0].contains("Pythagorean_Win_Pct"), "CSV header must contain Pythagorean_Win_Pct")
 
-        // Verify all 5 chart images exist and are non-empty
+        // Verify PocketHost cloud sync payload exists
+        val syncPayloadFile = File("output_datasets/pockethost_sync_payload.json")
+        assertTrue(syncPayloadFile.exists(), "PocketHost sync payload must exist")
+        assertTrue(syncPayloadFile.length() > 500L, "PocketHost sync payload must contain serialized JSON")
+
+        // Verify all 7 chart images exist and are non-empty
         val chartFiles = listOf(
             File("docs/charts/world_series_win_probabilities.png"),
             File("docs/charts/team_probability_trends_over_time.png"),
             File("docs/charts/residual_luck_bias_decomposition.png"),
             File("docs/charts/roster_anchors_leaderboard.png"),
-            File("docs/charts/cross_league_matchup_matrix.png")
+            File("docs/charts/cross_league_matchup_matrix.png"),
+            File("docs/charts/causal_vs_correlational_survival_framework.png"),
+            File("docs/charts/pockethost_cloud_sync_architecture.png")
         )
 
         for (cf in chartFiles) {
@@ -50,6 +57,8 @@ class MainJvmTest {
         generateLuckResidualChartImage(result.leaderboard)
         generateRosterAnchorsChartImage(result.leaderboard.take(10))
         generateCrossLeagueMatchupChartImage()
+        generateCausalSurvivalFrameworkImage()
+        generatePocketHostCloudSyncArchitectureImage()
 
         val barChart = File("docs/charts/world_series_win_probabilities.png")
         assertTrue(barChart.exists() && barChart.length() > 0)
