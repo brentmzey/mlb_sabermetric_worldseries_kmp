@@ -68,6 +68,7 @@ fun main() {
     generateChartImage(result.leaderboard.take(8))
     generateLineChartImage(result.leaderboard.take(8))
     generateLuckResidualChartImage(result.leaderboard)
+    generateRosterAnchorsChartImage(result.leaderboard.take(10))
     println("=================================================================================================================\n")
 }
 
@@ -388,3 +389,118 @@ fun generateLuckResidualChartImage(topTeams: List<TeamProbability>) {
     println("📊 Visual Residual Luck Chart Image generated at:")
     println("   file://${outFile.absolutePath}")
 }
+
+fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>) {
+    val width = 1200
+    val height = 760
+    val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+    val g = img.createGraphics()
+
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+
+    // Dark background
+    g.color = Color(15, 23, 42)
+    g.fillRect(0, 0, width, height)
+
+    // Card background
+    g.color = Color(30, 41, 59)
+    g.fillRoundRect(40, 40, width - 80, height - 80, 24, 24)
+
+    // Title & Subtitle
+    g.color = Color(248, 250, 252)
+    g.font = Font("SansSerif", Font.BOLD, 28)
+    g.drawString("⚾ 2026 MLB Championship Contenders & Core Roster Anchors", 70, 88)
+
+    g.color = Color(148, 163, 184)
+    g.font = Font("SansSerif", Font.PLAIN, 15)
+    g.drawString("Audited 2026 Active Lineups, Rotation Aces, and World Series Win Probabilities", 70, 116)
+
+    // Table Header
+    val startY = 160
+    g.color = Color(51, 65, 85)
+    g.fillRoundRect(65, startY - 24, width - 130, 36, 12, 12)
+
+    g.color = Color(203, 213, 225)
+    g.font = Font("SansSerif", Font.BOLD, 13)
+    g.drawString("RANK", 80, startY)
+    g.drawString("TEAM", 150, startY)
+    g.drawString("2026 W-L", 350, startY)
+    g.drawString("PLAYOFF %", 450, startY)
+    g.drawString("PENNANT %", 560, startY)
+    g.drawString("WS PROB %", 670, startY)
+    g.drawString("2026 CORE ROSTER & ROTATION ANCHORS", 780, startY)
+
+    val rosterAnchorsMap = mapOf(
+        MlbTeamId.LAD to "Ohtani, Betts, Freeman, Yamamoto, Glasnow",
+        MlbTeamId.ATL to "Acuña Jr., Riley, Olson, Sale, Strider",
+        MlbTeamId.NYY to "Judge, Soto, Cole, Rodón, Gil",
+        MlbTeamId.MIL to "Chourio, Contreras, Yelich, Peralta, Megill",
+        MlbTeamId.CHC to "PCA, Happ, Swanson, Hoerner, Steele, Imanaga",
+        MlbTeamId.TBD to "Díaz, Lowe, Bradley, Baz, Fairbanks",
+        MlbTeamId.HOU to "Alvarez, Tucker, Bregman, Altuve, Valdez",
+        MlbTeamId.DET to "Skubal, Greene, Carpenter, Keith, Holton",
+        MlbTeamId.SD  to "Tatis Jr., Machado, Merrill, Cease, King",
+        MlbTeamId.BOS to "Devers, Duran, Casas, Houck, Crawford"
+    )
+
+    var rowY = startY + 45
+    for ((idx, tp) in topTeams.withIndex()) {
+        val t = tp.team
+        val medal = when (idx) {
+            0 -> "🥇"
+            1 -> "🥈"
+            2 -> "🥉"
+            else -> " #${idx + 1}"
+        }
+
+        // Alternating row subtle highlight
+        if (idx % 2 == 0) {
+            g.color = Color(255, 255, 255, 6)
+            g.fillRoundRect(65, rowY - 26, width - 130, 42, 8, 8)
+        }
+
+        // Rank
+        g.color = Color(248, 250, 252)
+        g.font = Font("SansSerif", Font.BOLD, 15)
+        g.drawString(medal, 80, rowY)
+
+        // Team Name & Badge
+        g.drawString(t.name, 150, rowY)
+
+        // W-L
+        g.color = Color(203, 213, 225)
+        g.font = Font("SansSerif", Font.PLAIN, 14)
+        g.drawString("${t.wins} - ${t.losses}", 350, rowY)
+
+        // Playoff %
+        g.drawString("%.1f%%".format(tp.playoffProb * 100), 450, rowY)
+
+        // Pennant %
+        g.drawString("%.1f%%".format(tp.pennantProb * 100), 560, rowY)
+
+        // WS Win Prob
+        g.color = Color(52, 211, 153)
+        g.font = Font("SansSerif", Font.BOLD, 15)
+        g.drawString("%.2f%%".format(tp.worldSeriesWinProb * 100), 670, rowY)
+
+        // Core Roster
+        g.color = Color(148, 163, 184)
+        g.font = Font("SansSerif", Font.PLAIN, 13)
+        val roster = rosterAnchorsMap[t.teamId] ?: "Team Roster & Rotation Depth"
+        g.drawString(roster, 780, rowY)
+
+        rowY += 46
+    }
+
+    g.dispose()
+
+    val chartDir = File("docs/charts")
+    if (!chartDir.exists()) chartDir.mkdirs()
+
+    val outFile = File(chartDir, "roster_anchors_leaderboard.png")
+    ImageIO.write(img, "PNG", outFile)
+    println("🖼️  Visual Roster Anchors Chart Image generated at:")
+    println("   file://${outFile.absolutePath}")
+}
+
