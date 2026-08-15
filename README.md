@@ -186,20 +186,17 @@ where:
 
 ### 3. **Bayesian Luck Shrinkage, Accelerated Recency & Hot Streak Momentum**
 
-To eliminate 1-run game luck distortions while capturing late-season momentum, we apply three core econometric estimators with proper spacing and line breaks:
+To eliminate 1-run game luck distortions while capturing late-season momentum, we apply Bayesian shrinkage to regress observed win totals toward Pythagorean expectations, weight recent rolling performance, and apply an unbiased momentum multiplier:
 
-- **Bayesian Luck Shrinkage** ($\varepsilon_{\text{luck}, i}$):
-  $$\varepsilon_{\text{luck}, i} = \text{Pythagorean Win\%}_i - \text{Actual Win\%}_i$$
-  $$W_{\text{Bayes}, i} = \frac{N_i \cdot \text{Actual Win\%}_i + 40.0 \cdot \text{Pythagorean Win\%}_i}{N_i + 40.0}$$
+$$\varepsilon_{\text{luck}, i} = \text{Pythagorean Win \%}_i - \text{Actual Win \%}_i$$
 
-- **Accelerated Recency Weighting** ($W_{\text{recency}, i}$):
-  $$W_{\text{recency}, i} = 0.25 \cdot \text{Last10 Win\%}_i + 0.35 \cdot \text{Actual Win\%}_i + 0.40 \cdot W_{\text{Bayes}, i}$$
+$$W_{\text{Bayes}, i} = \frac{N_i \cdot \text{Actual Win \%}_i + 40.0 \cdot \text{Pythagorean Win \%}_i}{N_i + 40.0}$$
 
-- **Unbiased Hot Streak Momentum Multiplier** ($\text{Momentum}_i$):
-  $$\text{Momentum}_i = 1.0 + 0.040 \cdot \tanh\left(\frac{\text{z-score}_{\text{Form}, i}}{1.5}\right)$$
+$$W_{\text{recency}, i} = 0.25 \cdot \text{Last10 Win \%}_i + 0.35 \cdot \text{Actual Win \%}_i + 0.40 \cdot W_{\text{Bayes}, i}$$
 
-- **Four-Pillar Whole-Season Consistency** ($\text{Consistency}_i$):
-  $$\text{Consistency}_i = 0.30 C_{\text{off}, i} + 0.20 C_{\text{def}, i} + 0.30 C_{\text{pitch}, i} + 0.20 C_{\text{pen}, i}$$
+$$\text{Momentum}_i = 1.0 + 0.040 \cdot \tanh\left(\frac{\text{z-score}_{\text{Form}, i}}{1.5}\right)$$
+
+$$\text{Four-Pillar Consistency}_i = 0.30 C_{\text{off}, i} + 0.20 C_{\text{def}, i} + 0.30 C_{\text{pitch}, i} + 0.20 C_{\text{pen}, i}$$
 
 This anchors projections on empirical completed wins to-date while dynamically accelerating teams experiencing statistically significant late-season momentum (such as the Chicago Cubs' $+3.7\%$ momentum boost for 8–2 form).
 
