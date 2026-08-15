@@ -278,6 +278,7 @@ For complete mathematical proofs, diagnostic matrices, and residual luck tables 
 2. 📈 **Season Trend Checkpoints**: [`docs/charts/team_probability_trends_over_time.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/team_probability_trends_over_time.png)
 3. 📊 **Residual Luck & Bias Decomposition**: [`docs/charts/residual_luck_bias_decomposition.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/residual_luck_bias_decomposition.png)
 4. 🖼️ **2026 Core Roster Anchors**: [`docs/charts/roster_anchors_leaderboard.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/roster_anchors_leaderboard.png)
+5. ⚔️ **Cross-League Matchup Matrix**: [`docs/charts/cross_league_matchup_matrix.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/cross_league_matchup_matrix.png)
 
 ---
 

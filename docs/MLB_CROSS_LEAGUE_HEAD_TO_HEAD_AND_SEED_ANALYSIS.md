@@ -63,6 +63,8 @@ Using the dynamic Log5 formula $P(A \text{ beats } B) = \frac{q_A^{1.45}}{q_A^{1
 | **Milwaukee Brewers (1.134)** | **Houston Astros (1.075)** | **52.1%** | **54.4%** | Brewers bullpen (+3.5 WPA) out-leverages Astros (+2.0 WPA) |
 | **Chicago Cubs (1.118)** | **Houston Astros (1.075)** | **51.5%** | **53.2%** | Cubs' +115 run diff outpaces Astros' -27 regular-season run differential |
 
+![2026 Cross-League World Series Matchup Matrix](docs/charts/cross_league_matchup_matrix.png)
+
 ---
 
 ## 🎯 4. Reassurance & Theoretical Coherence
