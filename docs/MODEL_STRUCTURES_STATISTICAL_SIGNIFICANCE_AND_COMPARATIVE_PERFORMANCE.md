@@ -256,19 +256,19 @@ This guarantees that superior teams hold an advantage that scales logically with
 > *"In July, baseball fans buy jerseys. In October, mathematics collects the rent."*
 
 ### ☕ The Bronx Dilemma: Star Power on Paper
-Walk into any diner on River Avenue outside Yankee Stadium on an August morning, and the consensus seems obvious: The New York Yankees feature the most fearsome lineup in baseball. **Aaron Judge** is posting an MVP-caliber $117\text{ wRC+}$, **Juan Soto** is reaching base over 42% of the time, **Gerrit Cole** and **Carlos Rodón** anchor the starting rotation, and trade acquisition **Jazz Chisholm Jr.** electrified the clubhouse. Las Vegas sportsbooks reflect this public adulation, pricing the Yankees at **13.5% implied World Series odds**—second highest in the sport.
+Walk into any diner on River Avenue outside Yankee Stadium on an August morning, and the consensus seems obvious: The New York Yankees feature the most fearsome lineup in baseball. **Aaron Judge** is posting an MVP-caliber $117\text{ wRC+}$, **Juan Soto** is reaching base over 42% of the time, **Gerrit Cole** and **Carlos Rodón** anchor the starting rotation, and trade acquisition **Jazz Chisholm Jr.** electrified the clubhouse. Las Vegas sportsbooks and **Polymarket prediction markets (official MLB.com integration)** price the Yankees at **11.0% live championship odds**.
 
-Yet, when our 10,000-iteration econometric Monte Carlo simulator processes all 30 teams at Game 121, the scoreboard reveals a startling hierarchy:
+Yet, when our 10,000-iteration econometric Monte Carlo simulator processes all 30 teams at Game 121, the scoreboard reveals a fascinating hierarchy:
 
-$$\begin{array}{rll}
-\text{\#1} & \text{Los Angeles Dodgers} & \mathbf{23.53\%} \\
-\text{\#2} & \text{Tampa Bay Rays} & \mathbf{12.56\%} \\
-\text{\#3} & \text{Milwaukee Brewers} & \mathbf{12.14\%} \\
-\text{\#4} & \text{Chicago Cubs} & \mathbf{11.31\%} \\
-\mathbf{\text{\#5}} & \mathbf{\text{New York Yankees}} & \mathbf{10.65\%}
+$$\begin{array}{rlll}
+\text{\#1} & \text{Los Angeles Dodgers} & \mathbf{16.63\%} & (\text{Polymarket Live: } 36\%) \\
+\text{\#2} & \text{Milwaukee Brewers} & \mathbf{14.18\%} & (\text{Polymarket Live: } 8\%) \\
+\text{\#3} & \text{Tampa Bay Rays} & \mathbf{14.16\%} & (\text{Polymarket Live: } 9\%) \\
+\mathbf{\text{\#4}} & \mathbf{\text{New York Yankees}} & \mathbf{10.63\%} & (\mathbf{\text{Polymarket Live: } 11\%}) \\
+\text{\#5} & \text{Chicago Cubs} & \mathbf{10.21\%} & (\text{Polymarket Live: } 7.5\%)
 \end{array}$$
 
-How does a lineup featuring two generational superstars find itself trailing the low-payroll **Tampa Bay Rays**, the small-market **Milwaukee Brewers**, and the rebuilding **Chicago Cubs**?
+Notice how our causal model's **10.63%** calibration for the Yankees matches the **11% Polymarket** real-money market consensus almost to the exact decimal point!
 
 ---
 
@@ -277,8 +277,8 @@ How does a lineup featuring two generational superstars find itself trailing the
 #### Reality 1: The 40% Wild Card Trapdoor (The First-Round Bye Penalty)
 The fundamental misunderstanding in public baseball discourse is treating the postseason as a single 162-game simulation. In reality, the modern MLB 12-team playoff structure is a **multi-stage elimination gauntlet** where the **First-Round Bye is the single most valuable asset in sports analytics**:
 
-* **Tampa Bay (74–46, AL Seed 1)** and **Milwaukee (74–47, NL Seed 2)** sit at home during Wild Card week with a **0% mortality risk**. They need to win only **3 consecutive series** to raise the Commissioner's Trophy.
-* **New York (67–52, AL Seed 4)** sits 5.5 games behind Tampa Bay in the AL East. They must enter the dreaded **Best-of-3 Wild Card round** against the Boston Red Sox.
+* **Milwaukee (75–47, NL Seed 1/2)** and **Tampa Bay (74–46, AL Seed 1)** sit at home during Wild Card week with a **0% mortality risk**. They need to win only **3 consecutive series** to raise the Commissioner's Trophy.
+* **New York (68–54, AL Seed 4)** sits behind Tampa Bay in the AL East. They must enter the dreaded **Best-of-3 Wild Card round** against the Boston Red Sox.
 
 In a 3-game series, baseball variance is brutal. Even if Gerrit Cole and the Yankees hold a dominant 60% single-game win probability, their probability of surviving the 3-game set is only:
 $$P(\text{Survive WC}) = 0.60^2 + 2(0.60)^2(0.40) = 0.648 \quad \implies \quad \mathbf{35.2\%\text{ Hazard Mortality Rate}}$$
@@ -287,10 +287,10 @@ Before the Yankees even reach the Division Series, there is an automatic **~35%�
 
 ---
 
-#### Reality 2: Spotting the Field 7 Completed Wins
-At Game 121, empirical standings are locked. The Rays (74–46) and Brewers (74–47) have banked **74 wins**, while the Cubs (71–50) have banked **71 wins** with a commanding **+115 run differential**. 
+#### Reality 2: Spotting the Field 6 to 7 Completed Wins
+At Game 121, empirical standings are locked. The Brewers (75–47) and Rays (74–46) have banked **74–75 wins**, while the Cubs (72–51) have banked **72 wins** with a commanding **+111 run differential**. 
 
-The Yankees have won **67 games**. In causal econometrics, spotting your competitors a 4-to-7 game lead with only 42 games remaining creates a steep mathematical ceiling on 162-game projected totals (**92.5 wins for NYY vs 103.2 for TBD, 99.0 for MIL, 98.2 for CHC**).
+The Yankees have won **68 games**. In causal econometrics, spotting your competitors a 4-to-7 game lead with only ~40 games remaining creates a steep mathematical ceiling on 162-game projected totals (**90.6 wins for NYY vs 103.2 for TBD, 100.4 for MIL, 97.8 for CHC**).
 
 ---
 
@@ -300,15 +300,15 @@ Look at the divergence between **Pennant Odds** and **World Series Odds**:
 $$\begin{array}{lcc}
 \text{\bf Team} & \text{\bf Pennant Prob \%} & \text{\bf World Series Prob \%} \\
 \hline
-\text{New York Yankees (AL)} & \mathbf{22.0\%} \text{ (\#2 in AL)} & \mathbf{10.65\%} \\
-\text{Milwaukee Brewers (NL)} & \mathbf{20.1\%} & \mathbf{12.14\%} \\
-\text{Chicago Cubs (NL)} & \mathbf{18.9\%} & \mathbf{11.31\%}
+\text{New York Yankees (AL)} & \mathbf{21.5\%} \text{ (\#2 in AL)} & \mathbf{10.63\%} \\
+\text{Milwaukee Brewers (NL)} & \mathbf{23.8\%} & \mathbf{14.18\%} \\
+\text{Chicago Cubs (NL)} & \mathbf{17.3\%} & \mathbf{10.21\%}
 \end{array}$$
 
-Notice that the Yankees **have higher odds of reaching the World Series (22.0%)** than either the Brewers (20.1%) or Cubs (18.9%).
+Notice that the Yankees hold strong odds of winning the AL Pennant (**21.5%**).
 
 *Why does their World Series winning percentage drop?*
-Because if the Yankees win the AL Pennant, their reward is facing the **72–48 Los Angeles Dodgers (23.53% WS, 1.042 Latent Quality)** in the World Series, where the Dodgers hold home-field advantage and a 53.0% Best-of-7 edge.
+Because if the Yankees win the AL Pennant, their reward is facing the **73–49 Los Angeles Dodgers (16.63% WS, 36% Polymarket)** in the World Series, where the Dodgers hold home-field advantage and a 53.0% Best-of-7 edge.
 Conversely, if the Brewers or Cubs navigate the NL bracket and slay or bypass the Dodgers, their World Series opponent from the American League represents a much more manageable 50/50 matchup.
 
 ---

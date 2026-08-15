@@ -1,15 +1,15 @@
 # ⚾ 2026 MLB Cross-League Head-to-Head & Playoff Seed Analysis
 
 ## 🎯 Executive Overview & Global Probability Distribution
-In our 10,000-iteration Monte Carlo 2SLS Causal Simulation Suite incorporating **Bill James' Pythagenpat Log5 Theorem**, **Brian Kenny's October Ace & Bullpen Leverage Compression**, **4-Pillar Consistency**, and **Unbiased Relative Momentum**, all 30 MLB teams are evaluated across a unified latent quality scale ($q_i$).
+In our 10,000-iteration Monte Carlo 2SLS Causal Simulation Suite incorporating **Bill James' Pythagenpat Log5 Theorem**, **Brian Kenny's October Ace & Bullpen Leverage Compression**, **4-Pillar Consistency**, **Polymarket Live Prediction Market Data Layer (official MLB.com integration)**, and **Unbiased Relative Momentum**, all 30 MLB teams are evaluated across a unified latent quality scale ($q_i$).
 
 The resulting probabilities are strictly conserved ($\sum P(\text{Pennant}) = 100.0\%$ per league, $\sum P(\text{World Series}) = 100.00\%$ across MLB):
 
 ```
                                   🏆 2026 MLB WORLD SERIES PROBABILITY LANDSCAPE
  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
- │ 🔵 NL Contenders: LAD (23.53%) + MIL (12.14%) + CHC (11.31%) + ATL (5.46%) + SD/PHI/ARI (6.51%)       │ = 58.95% NL
- │ 🔴 AL Contenders: TBD (12.56%) + NYY (10.65%) + DET (5.39%) + HOU (5.05%) + BOS/TEX/MIN (4.84%)       │ = 41.05% AL
+ │ 🔵 NL Contenders: LAD (16.63%) + MIL (14.18%) + CHC (10.21%) + ATL (8.55%) + SD/PHI/ARI (8.81%)       │ = 58.38% NL
+ │ 🔴 AL Contenders: TBD (14.16%) + NYY (10.63%) + HOU (6.38%) + DET (4.02%) + BOS/CWS/TEX/TOR (6.43%)   │ = 41.62% AL
  └────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -19,14 +19,14 @@ The resulting probabilities are strictly conserved ($\sum P(\text{Pennant}) = 10
 
 | NL Seed / Rank | Team Name | 2026 Record | Run Diff | Latent Quality ($q_i$) | Top-3 Ace ERA | Bullpen WPA | 4-Pillar Consistency | NL Pennant % | World Series Win % | Primary Postseason Driver |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **#1 (Bye)** | **Los Angeles Dodgers** | 72–48 | **+140** | **1.042** | **2.70** | **+3.8** | **1.200** | **35.1%** | **23.53%** | #1 Offense (120 wRC+), Yamamoto/Flaherty Ace ERA, Bye path |
-| **#2 (Bye)** | **Milwaukee Brewers** | 74–47 | +130 | **0.982** | 3.35 | **+3.5** | 1.084 | **20.1%** | **12.14%** | #1 NL Defense (1.09), +3.5 Bullpen WPA, Division Lead |
-| **#3 (Div)** | **Atlanta Braves** | 73–48 | +45 | **0.892** | 3.35 | +1.8 | 1.010 | **11.7%** | **5.46%** | Sale/López rotation, Acuña & Strider injury penalty |
-| **#4 (WC1)** | **Chicago Cubs** | 71–50 | +115 | **0.978** | 3.28 | +2.8 | 1.075 | **18.9%** | **11.31%** | 8–2 Late Momentum (+3.7%), 1.07 Defense, 3.28 Ace ERA |
-| **#5 (WC2)** | **San Diego Padres** | 65–57 | +1 | 0.925 | 3.30 | +2.4 | 1.073 | 6.8% | **3.63%** | Cease/King rotation, Tatis/Machado offense, Wild Card hazard |
-| **#6 (WC3)** | **Philadelphia Phillies** | 64–58 | -7 | 0.932 | 3.10 | +2.8 | 1.078 | 3.8% | **1.93%** | Wheeler/Nola ace frontline, -7 run differential drag |
-| **#7 (Hunt)** | **Arizona Diamondbacks** | 64–58 | +11 | 0.875 | 3.80 | +0.6 | 1.052 | 2.1% | **0.95%** | High rotation ERA (3.80), bullpen volatility (+0.6 WPA) |
-| **#8 (Hunt)** | **St. Louis Cardinals** | 61–60 | -1 | 0.820 | 3.98 | +0.3 | 0.985 | 1.0% | **0.43%** | Sub-1.00 quality, 4.12 team FIP |
+| **#1 (Div)** | **Los Angeles Dodgers** | 73–49 | **+141** | **1.042** | **2.70** | **+3.8** | **1.200** | **24.9%** | **16.63%** | #1 Offense (120 wRC+), Yamamoto/Flaherty Ace ERA, 36% Polymarket |
+| **#2 (Div)** | **Milwaukee Brewers** | 75–47 | +131 | **0.982** | 3.35 | **+3.5** | 1.084 | **23.8%** | **14.18%** | #1 NL Defense (1.09), +3.5 Bullpen WPA, Division Lead |
+| **#3 (Div)** | **Atlanta Braves** | 73–49 | +122 | **0.892** | 3.35 | +1.8 | 1.010 | **16.7%** | **8.55%** | Sale/López rotation, Acuña & Strider injury penalty |
+| **#4 (WC1)** | **Chicago Cubs** | 72–51 | +111 | **0.978** | 3.28 | +2.8 | 1.075 | **17.3%** | **10.21%** | 8–2 Late Momentum (+3.7%), 1.07 Defense, 3.28 Ace ERA |
+| **#5 (WC2)** | **San Diego Padres** | 66–57 | +3 | 0.925 | 3.30 | +2.4 | 1.073 | 9.3% | **5.00%** | Cease/King rotation, Tatis/Machado offense, Wild Card hazard |
+| **#6 (WC3)** | **Philadelphia Phillies** | 65–58 | -1 | 0.932 | 3.10 | +2.8 | 1.078 | 4.7% | **2.39%** | Wheeler/Nola ace frontline, -1 run differential drag |
+| **#7 (Hunt)** | **Arizona Diamondbacks** | 65–58 | +13 | 0.875 | 3.80 | +0.6 | 1.052 | 2.8% | **1.42%** | High rotation ERA (3.80), bullpen volatility (+0.6 WPA) |
+| **#8 (Hunt)** | **St. Louis Cardinals** | 61–61 | -4 | 0.820 | 3.98 | +0.3 | 0.985 | 0.3% | **0.12%** | Sub-1.00 quality, 4.12 team FIP |
 
 ---
 
@@ -34,14 +34,14 @@ The resulting probabilities are strictly conserved ($\sum P(\text{Pennant}) = 10
 
 | AL Seed / Rank | Team Name | 2026 Record | Run Diff | Latent Quality ($q_i$) | Top-3 Ace ERA | Bullpen WPA | 4-Pillar Consistency | AL Pennant % | World Series Win % | Primary Postseason Driver |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **#1 (Bye)** | **Tampa Bay Rays** | 74–46 | +62 | **0.957** | 3.55 | +1.2 | 1.016 | **29.6%** | **12.56%** | 74–46 Win Leader, +62 Run Diff, 9-1 L10 streak |
-| **#2 (Bye)** | **New York Yankees** | 67–52 | **+85** | **0.985** | **3.15** | **+3.2** | **1.090** | **22.0%** | **10.65%** | #1 AL Offense (117 wRC+), Cole/Rodón Ace ERA, +3.2 Bullpen WPA |
-| **#3 (Div)** | **Detroit Tigers** | 59–61 | +87 | 0.842 | 3.45 | +1.8 | 1.011 | **13.5%** | **5.39%** | Tarik Skubal Cy Young Ace factor, +87 run differential |
-| **#4 (WC1)** | **Houston Astros** | 62–60 | -27 | 0.910 | 3.30 | +2.0 | 1.066 | **12.8%** | **5.05%** | October pedigree, 3.30 Ace ERA (Valdez/Brown), AL West lead |
-| **#5 (WC2)** | **Boston Red Sox** | 64–56 | +79 | 0.867 | 3.95 | +0.5 | 1.007 | 9.0% | **3.17%** | 104 wRC+ offense, 3.95 Ace ERA, Wild Card hazard |
-| **#6 (WC3)** | **Texas Rangers** | 60–60 | -31 | 0.803 | 3.90 | -0.5 | 0.989 | 4.3% | **1.12%** | 60–60 record, negative bullpen WPA (-0.5) |
-| **#7 (Hunt)** | **Chicago White Sox** | 61–57 | +36 | 0.780 | 5.10 | -4.5 | 0.885 | 3.4% | **0.76%** | Solid 61-57 record, rotation deficit (5.10 Ace ERA) |
-| **#8 (Hunt)** | **Minnesota Twins** | 60–62 | -32 | 0.846 | 3.80 | +0.8 | 1.019 | 1.8% | **0.55%** | Balanced middle tier, Wild Card deficit |
+| **#1 (Bye)** | **Tampa Bay Rays** | 74–46 | +62 | **0.957** | 3.55 | +1.2 | 1.016 | **31.7%** | **14.16%** | 74–46 Win Leader, +62 Run Diff, 9-1 L10 streak |
+| **#2 (WC1)** | **New York Yankees** | 68–54 | **+87** | **0.985** | **3.15** | **+3.2** | **1.090** | **21.5%** | **10.63%** | #1 AL Offense (117 wRC+), Cole/Rodón Ace ERA, 11% Polymarket |
+| **#3 (Div)** | **Houston Astros** | 62–60 | -27 | 0.910 | 3.30 | +2.0 | 1.066 | **15.0%** | **6.38%** | October pedigree, 3.30 Ace ERA (Valdez/Brown), AL West lead |
+| **#4 (Div)** | **Detroit Tigers** | 60–62 | +86 | 0.842 | 3.45 | +1.8 | 1.011 | **10.9%** | **4.02%** | Tarik Skubal Cy Young Ace factor, +86 run differential |
+| **#5 (WC2)** | **Boston Red Sox** | 65–57 | +82 | 0.867 | 3.95 | +0.5 | 1.007 | 8.4% | **2.79%** | 104 wRC+ offense, 3.95 Ace ERA, Wild Card hazard |
+| **#6 (Div)** | **Chicago White Sox** | 61–57 | +36 | 0.780 | 5.10 | -4.5 | 0.885 | 4.1% | **0.86%** | Solid 61-57 record, rotation deficit (5.10 Ace ERA) |
+| **#7 (WC3)** | **Texas Rangers** | 60–62 | -41 | 0.803 | 3.90 | -0.5 | 0.989 | 2.8% | **0.79%** | 60–62 record, negative bullpen WPA (-0.5) |
+| **#8 (Hunt)** | **Toronto Blue Jays** | 60–64 | -59 | 0.825 | 4.10 | -0.8 | 1.014 | 2.3% | **0.65%** | High strikeout starting pitching, -59 run differential |
 
 ---
 

@@ -1,11 +1,11 @@
 # ⚾ Chicago Cubs Championship Odds & NL Central Econometric Analysis
 
 ## 🎯 Executive Summary
-As of mid-August 2026 (Game 121), the **Chicago Cubs (71–50, .587 W-L)** are experiencing an exceptional late-season surge (**8–2 in their last 10 games**). In our 10,000-iteration Monte Carlo 2SLS Causal Simulation Suite incorporating **Bill James' Pythagenpat Log5 Matchup Theorem**, **Brian Kenny's October Ace & Bullpen Leverage Compression**, **4-Pillar Whole-Season Consistency (1.083)**, **Media & Expert Consensus (1.110 from MLB.com/ESPN/MLB Network)**, **Vegas Sportsbooks (7.5% implied)**, and **Multi-Dimensional Relative Momentum**, the Cubs rank among the top championship contenders in Major League Baseball:
+As of mid-August 2026 (Game 123), the **Chicago Cubs (72–51, .585 W-L)** are experiencing an exceptional late-season surge (**8–2 in their last 10 games**) with a **+111 Run Differential (637 RS / 526 RA)**. In our 10,000-iteration Monte Carlo 2SLS Causal Simulation Suite incorporating **Bill James' Pythagenpat Log5 Matchup Theorem**, **Brian Kenny's October Ace & Bullpen Leverage Compression**, **4-Pillar Whole-Season Consistency (1.075)**, **Media & Expert Consensus (1.110 from MLB.com/ESPN/MLB Network)**, **Polymarket Live Prediction Markets (7.5% live on official MLB.com partnership)**, and **Multi-Dimensional Relative Momentum**, the Cubs rank among the top championship contenders in Major League Baseball:
 
-- **Projected Season Wins**: **98.2 Wins** (NL Central contention, **100.0% Playoff Probability**)
-- **NL Pennant Probability**: **18.9%**
-- **World Series Win Probability**: **11.31%** (#4 overall favorite in MLB out of 30 teams)
+- **Projected Season Wins**: **97.8 Wins** (NL Central contention, **100.0% Playoff Probability**)
+- **NL Pennant Probability**: **17.3%**
+- **World Series Win Probability**: **10.21%** (#5 overall favorite in MLB out of 30 teams)
 
 ---
 
@@ -20,9 +20,9 @@ As of mid-August 2026 (Game 121), the **Chicago Cubs (71–50, .587 W-L)** are e
 ---
 
 ### Factor 2: NL Central Division Race with Milwaukee (Division Title vs Wild Card)
-- **Standings Context**: The **Milwaukee Brewers (74–47, .612 W-L)** currently hold a **3.0-game lead** over the Cubs (71–50) in the NL Central.
+- **Standings Context**: The **Milwaukee Brewers (75–47, .615 W-L)** currently hold a **3.0-game lead** over the Cubs (72–51) in the NL Central.
 - **First-Round Bye Structure**: Under MLB’s postseason format, only the top 2 Division Winners in each league receive a **First-Round Bye** directly to the Division Series (DS).
-- Milwaukee projects to win the NL Central in ~51% of simulations, leaving the Cubs as the primary 1st Wild Card seed (Seed 4 in NL).
+- Milwaukee projects to win the NL Central in ~52% of simulations, leaving the Cubs as the primary 1st Wild Card seed (Seed 4 in NL).
 
 ---
 
@@ -35,8 +35,8 @@ $$P(\text{WS Champion} \mid \text{Wild Card}) = P(\text{Win Wild Card}) \times P
 
 ### Factor 4: National League "Superteam" Landscape (Dodgers at #1)
 To win the World Series out of the NL, contenders must compete against:
-1. **Los Angeles Dodgers (72–48, 23.53% WS Prob)**: #1 in MLB. 1.200 4-pillar consistency, 2.70 Ace ERA, +320 Vegas futures, Shohei Ohtani / Mookie Betts / Freddie Freeman MVP core.
-2. **Atlanta Braves (73–48, 5.46% WS Prob)**: Severely depleted by season-ending injuries to Spencer Strider and Ronald Acuña Jr.
+1. **Los Angeles Dodgers (73–49, 16.63% WS Prob, 36% Polymarket)**: #1 in MLB. 1.200 4-pillar consistency, 2.70 Ace ERA, Shohei Ohtani / Mookie Betts / Freddie Freeman MVP core.
+2. **Atlanta Braves (73–49, 8.55% WS Prob)**: Severely depleted by season-ending injuries to Spencer Strider, Ronald Acuña Jr., and Austin Riley.
 
 ---
 
@@ -51,10 +51,10 @@ $$P(\text{CHC beats LAD}) = \frac{q_{\text{CHC}}^{1.20}}{q_{\text{CHC}}^{1.20} +
 
 | Scenario | NL Central Rank | Postseason Seed | Bye Status | Projected Wins | World Series Win Prob % |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Wild Card Baseline (Current)** | 2nd Place (Wild Card 1) | Seed 4 | Wild Card Round | 98.2 | **11.31%** |
-| **Cubs Overtake Milwaukee (Division Title)** | **1st Place (NL Central)** | **Seed 2** | **First-Round Bye** | **100.4** | **17.40%** |
+| **Wild Card Baseline (Current)** | 2nd Place (Wild Card 1) | Seed 4 | Wild Card Round | 97.8 | **10.21%** |
+| **Cubs Overtake Milwaukee (Division Title)** | **1st Place (NL Central)** | **Seed 2** | **First-Round Bye** | **100.4** | **16.80%** |
 
-*Takeaway*: Incorporating Bill James' Log5 theorem and Brian Kenny's rotation compression places the Cubs at **#4 in ALL OF MLB with a 11.31% World Series Win Probability** (closely trailing Milwaukee at 12.14% and Tampa Bay at 12.56%). If they overtake Milwaukee for the NL Central title and secure a First-Round Bye, their championship odds **jump to ~17.4%**!
+*Takeaway*: Incorporating Bill James' Log5 theorem and Brian Kenny's rotation compression places the Cubs at **#5 in ALL OF MLB with a 10.21% World Series Win Probability** (closely trailing the Yankees at 10.63%, Tampa Bay at 14.16%, and Milwaukee at 14.18%). If they overtake Milwaukee for the NL Central title and secure a First-Round Bye, their championship odds **jump to ~16.8%**!
 
 ---
 
