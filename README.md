@@ -285,6 +285,7 @@ To rigorously select our architecture over naive alternatives, we benchmarked 4 
 | **Model 4: Selected Model (Ours)** | **Active Roster 2SLS IV + Additive Quality + Log5 ($\gamma=1.20$)** | **48.6** | **94.2** | **102.8** | **0.1604** | ✅ **Optimal AIC/BIC, Zero-Mean Unbiased, Parity Calibrated** |
 
 For complete mathematical proofs, diagnostic matrices, and residual luck tables across all 30 teams, read the detailed documentation:
+- 🧠 **[docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md](docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md)**: Deep Explainer on Model Structures, 2SLS IV Asymptotic Consistency, White $HC_1/HC_3$ Robustness, Heuristic Reasoning & Comparative Performance
 - 📖 **[docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md](docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md)**: 30-Team Econometric Residual & Bias Mitigation Matrix
 - ☁️ **[docs/POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md](docs/POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md)**: PocketHost DB Schema, Hungarian DTOs & Migration Scripts
 - ⚔️ **[docs/MLB_CROSS_LEAGUE_HEAD_TO_HEAD_AND_SEED_ANALYSIS.md](docs/MLB_CROSS_LEAGUE_HEAD_TO_HEAD_AND_SEED_ANALYSIS.md)**: 2026 Cross-League Head-to-Head & Playoff Seed Analysis

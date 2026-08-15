@@ -228,3 +228,14 @@ The suite automatically generates 5 high-resolution visual charts in `docs/chart
 5. **⚔️ Cross-League World Series Matchup Matrix**:
    ![Cross League Matchup Matrix](charts/cross_league_matchup_matrix.png)
    *Pythagenpat Log5 head-to-head single-game and Best-of-7 series win probabilities.*
+
+---
+
+## 🔗 Related Documentation & Theoretical Companions
+
+- 🧠 **[`docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md`](MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md)**: Deep Explainer on All 4 Model Architectures, 2SLS IV Asymptotic Consistency, White $HC_1/HC_3$ Robustness, Heuristic Reasoning & Comparative Performance
+- ☁️ **[`docs/POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md`](POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md)**: PocketHost DB Schema, Real-time SSE Subscriptions & Migration Scripts
+- ⚔️ **[`docs/MLB_CROSS_LEAGUE_HEAD_TO_HEAD_AND_SEED_ANALYSIS.md`](MLB_CROSS_LEAGUE_HEAD_TO_HEAD_AND_SEED_ANALYSIS.md)**: 2026 Cross-League Head-to-Head & Playoff Seed Analysis
+- ⚾ **[`docs/BREWERS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md`](BREWERS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md)**: Milwaukee Brewers Championship Odds & NL Central Analysis
+- ⚾ **[`docs/CUBS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md`](CUBS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md)**: Chicago Cubs & NL Central Division Championship Analysis
+- 📖 **[`README.md`](../README.md)**: Main Repository Documentation & Complete 30-Team Leaderboard
