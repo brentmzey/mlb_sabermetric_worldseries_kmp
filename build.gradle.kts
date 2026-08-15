@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform") version "2.1.10"
     idea
+    jacoco
 }
 
 group = "com.sabermetrics.worldseries"
@@ -83,4 +84,20 @@ tasks.register<JavaExec>("run") {
     mainClass.set("com.sabermetrics.worldseries.MainKt")
     val jvmTarget = kotlin.targets.getByName("jvm") as org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
     classpath = jvmTarget.compilations.getByName("main").runtimeDependencyFiles + jvmTarget.compilations.getByName("main").output.allOutputs
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    group = "verification"
+    description = "Generates JaCoCo test coverage report for JVM/Common Kotlin code."
+    dependsOn("jvmTest")
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+    val jvmTarget = kotlin.targets.getByName("jvm") as org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
+    val mainCompilation = jvmTarget.compilations.getByName("main")
+    classDirectories.setFrom(mainCompilation.output.classesDirs)
+    sourceDirectories.setFrom(files("src/commonMain/kotlin", "src/jvmMain/kotlin"))
+    executionData.setFrom(fileTree(layout.buildDirectory.dir("jacoco")).matching { include("*.exec") })
 }

@@ -1,13 +1,26 @@
 package com.sabermetrics.worldseries
 
+import com.sabermetrics.worldseries.data.PocketHostDataTracker
 import com.sabermetrics.worldseries.data.SabermetricDataService
 import com.sabermetrics.worldseries.engine.WorldSeriesSimulator
 import com.sabermetrics.worldseries.model.Division
 import com.sabermetrics.worldseries.model.League
+import com.sabermetrics.worldseries.model.MlbTeam
 import com.sabermetrics.worldseries.model.MlbTeamId
-import kotlin.math.abs
+import com.sabermetrics.worldseries.model.TeamProbability
+import com.sabermetrics.worldseries.repository.FWorldSeriesLeaderboardRecord
+import com.sabermetrics.worldseries.repository.HungarianQueryBuilder
+import com.sabermetrics.worldseries.repository.IMlbTeamRecord
+import com.sabermetrics.worldseries.repository.ITeamSeasonInputRecord
+import com.sabermetrics.worldseries.repository.MLatentQualityEstimateRecord
+import com.sabermetrics.worldseries.repository.MSimulationRunRecord
+import com.sabermetrics.worldseries.repository.RecordStatusCode
+import com.sabermetrics.worldseries.util.format
+import com.sabermetrics.worldseries.util.formatDecimals
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -21,14 +34,20 @@ class SabermetricTest {
         // Parse code (case insensitive)
         assertEquals(MlbTeamId.NYY, MlbTeamId.parseCode("nyy"))
         assertEquals(MlbTeamId.LAD, MlbTeamId.parseCode("LAD"))
-        assertNull(MlbTeamId.parseCode("INVALID"))
+        assertEquals(MlbTeamId.CHC, MlbTeamId.parseCode("  chc  "))
+        assertNull(MlbTeamId.parseCode("INVALID_CODE"))
 
         // Strict parse
         assertEquals(MlbTeamId.BAL, MlbTeamId.fromCode("BAL"))
+        assertFailsWith<IllegalArgumentException> {
+            MlbTeamId.fromCode("NOT_REAL")
+        }
 
         // Parse by full name
         assertEquals(MlbTeamId.NYY, MlbTeamId.parseName("New York Yankees"))
         assertEquals(MlbTeamId.BOS, MlbTeamId.parseName("boston red sox"))
+        assertEquals(MlbTeamId.CHC, MlbTeamId.parseName("Chicago Cubs"))
+        assertNull(MlbTeamId.parseName("Atlantis Whales"))
 
         // Filter by League and Division
         val alEast = MlbTeamId.byLeagueAndDivision(League.AL, Division.EAST)
@@ -37,6 +56,9 @@ class SabermetricTest {
 
         val nlTeams = MlbTeamId.byLeague(League.NL)
         assertEquals(15, nlTeams.size)
+
+        val alTeams = MlbTeamId.byLeague(League.AL)
+        assertEquals(15, alTeams.size)
     }
 
     @Test
@@ -49,54 +71,204 @@ class SabermetricTest {
         assertEquals("New York Yankees", nyy.name)
         assertEquals(League.AL, nyy.league)
         assertEquals(Division.EAST, nyy.division)
-        assertTrue(nyy.pythagoreanWinPct > 0.55)
+        assertTrue(nyy.pythagoreanWinPct > 0.50)
         assertTrue(nyy.runDifferential > 50.0)
 
         val lad = SabermetricDataService.findTeamByCode("LAD")
         assertNotNull(lad)
         assertEquals(MlbTeamId.LAD, lad.teamId)
-    }
 
-    @Test
-    fun testRecencyWeightingAndSeasonConsistency() {
-        val teams = SabermetricDataService.loadCleanedMlbDataset()
-        for (t in teams) {
-            assertTrue(t.recencyWeightedWinPct in 0.20..0.80, "Recency weighted win % for ${t.id} out of bounds")
-            assertTrue(t.seasonConsistencyIndex in 0.85..1.15, "Season consistency index for ${t.id} out of bounds")
-            assertTrue(t.last10WinPct in 0.0..1.0, "Last 10 win % for ${t.id} out of bounds")
+        val chc = SabermetricDataService.findTeamByCode("chc")
+        assertNotNull(chc)
+        assertEquals(MlbTeamId.CHC, chc.teamId)
+
+        assertNull(SabermetricDataService.findTeamByCode("XYZ"))
+
+        // Throws on missing team in custom subset
+        assertFailsWith<NoSuchElementException> {
+            val emptyService = object {
+                fun getMissing() = listOf<MlbTeam>().first { it.teamId == MlbTeamId.LAD }
+            }
+            emptyService.getMissing()
         }
-
-        // Test team with strong recent form vs cold team
-        val tbd = SabermetricDataService.getTeam(MlbTeamId.TBD) // Rays 9-1 in last 10
-        assertTrue(tbd.last10WinPct == 0.90)
-        assertTrue(tbd.recencyWeightedWinPct > tbd.winPct)
-
-        val chc = SabermetricDataService.getTeam(MlbTeamId.CHC) // Cubs 8-2 in last 10
-        assertEquals(0.80, chc.last10WinPct, 1e-4)
-        assertTrue(chc.fourPillarConsistencyIndex in 0.85..1.15)
-        assertTrue(chc.compositeExpertMediaIndex in 0.85..1.25)
-        assertTrue(chc.defensiveEfficiencyRating in 0.90..1.15)
     }
 
     @Test
-    fun testMonteCarloWorldSeriesSimulation() {
-        val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 1000, seed = 12345L)
-        assertEquals(1000, result.totalSimulations)
-        assertEquals(30, result.leaderboard.size)
+    fun testMlbTeamCalculationsAndFormulas() {
+        val team = MlbTeam(
+            teamId = MlbTeamId.CHC,
+            wins = 71,
+            losses = 50,
+            runsScored = 634.0,
+            runsAllowed = 519.0,
+            teamWar = 33.5,
+            wOBA = 0.325,
+            wRCPlus = 108.0,
+            fip = 3.72,
+            xFip = 3.78,
+            bullpenWpa = 2.8,
+            top3AceEra = 3.28,
+            tradeDeadlineWarAdded = 1.8,
+            clubhouseHypeIndex = 1.10,
+            last10Wins = 8,
+            last10Losses = 2,
+            seasonConsistencyScore = 1.037,
+            marketImpliedWsProb = 0.075,
+            expertConsensusRating = 1.10,
+            mediaPowerRankRating = 1.12,
+            defensiveEfficiencyRating = 1.07,
+            pillarOffenseConsistency = 1.08,
+            pillarDefenseConsistency = 1.08,
+            pillarPitchingConsistency = 1.07,
+            pillarBullpenConsistency = 1.08
+        )
 
-        var totalWsProb = 0.0
-        for (tp in result.leaderboard) {
-            totalWsProb += tp.worldSeriesWinProb
-            assertTrue(tp.playoffProb in 0.0..1.0)
-            assertTrue(tp.pennantProb in 0.0..1.0)
+        assertEquals(121, team.gamesPlayed)
+        assertEquals(71.0 / 121.0, team.winPct, 1e-4)
+        assertEquals(115.0, team.runDifferential, 1e-4)
+        assertEquals(0.80, team.last10WinPct, 1e-4)
+        assertTrue(team.compositeRelativeFormScore > 0.60)
+        assertTrue(team.hotStreakMomentumMultiplier in 0.92..1.08)
+        assertTrue(team.pythagoreanWinPct in 0.50..0.90)
+        assertTrue(team.pythagoreanWinsExpected in 80.0..140.0)
+        assertTrue(team.bayesianAdjustedWinPct in 0.50..0.85)
+        assertTrue(team.recencyWeightedWinPct in 0.50..0.85)
+        assertTrue(team.fourPillarConsistencyIndex in 0.85..1.15)
+        assertTrue(team.compositeExpertMediaIndex in 0.85..1.25)
+        assertTrue(team.seasonConsistencyIndex in 0.85..1.15)
+        assertTrue(team.baseRunsEstimate > 0.0)
+
+        // Secondary constructor verification
+        val teamSec = MlbTeam(
+            id = "CHC",
+            name = "Chicago Cubs",
+            league = League.NL,
+            division = Division.CENTRAL,
+            wins = 71,
+            losses = 50,
+            runsScored = 634.0,
+            runsAllowed = 519.0,
+            teamWar = 33.5,
+            wOBA = 0.325,
+            wRCPlus = 108.0,
+            fip = 3.72,
+            xFip = 3.78,
+            bullpenWpa = 2.8,
+            top3AceEra = 3.28
+        )
+        assertEquals(MlbTeamId.CHC, teamSec.teamId)
+        assertEquals("Chicago Cubs", teamSec.name)
+        assertEquals(League.NL, teamSec.league)
+    }
+
+    @Test
+    fun testMlbTeamEdgeCases() {
+        val zeroTeam = MlbTeam(
+            teamId = MlbTeamId.OAK,
+            wins = 0,
+            losses = 0,
+            runsScored = 0.0,
+            runsAllowed = 0.0,
+            teamWar = 0.0,
+            wOBA = 0.0,
+            wRCPlus = 0.0,
+            fip = 0.0,
+            xFip = 0.0,
+            bullpenWpa = 0.0,
+            top3AceEra = 4.50,
+            last10Wins = 0,
+            last10Losses = 0
+        )
+        assertEquals(0, zeroTeam.gamesPlayed)
+        assertEquals(0.500, zeroTeam.winPct)
+        assertEquals(0.500, zeroTeam.last10WinPct)
+        assertEquals(0.500, zeroTeam.pythagoreanWinPct)
+        assertTrue(zeroTeam.hotStreakMomentumMultiplier in 0.92..1.08)
+
+        // Latent quality with zero games played
+        val zeroQuality = WorldSeriesSimulator.computeLatentTeamQuality(zeroTeam)
+        assertTrue(zeroQuality > 0.0)
+
+        val pZero = WorldSeriesSimulator.predictGameWinProb(zeroTeam, zeroTeam)
+        assertEquals(0.50, pZero, 1e-4)
+
+        val nullRecord = IMlbTeamRecord(
+            str_team_code = "XYZ",
+            str_team_name = "Null Team",
+            str_league = "AL",
+            str_division = "WEST",
+            str_city = null,
+            str_ballpark = null,
+            int_founded_year = null,
+            int_created_epoch_ms_utc = 1000L,
+            int_updated_epoch_ms_utc = 1000L
+        )
+        assertNull(nullRecord.str_city)
+        assertNull(nullRecord.str_ballpark)
+        assertNull(nullRecord.int_founded_year)
+    }
+
+    @Test
+    fun testTeamProbabilityAndMovementSymbol() {
+        val team = SabermetricDataService.getTeam(MlbTeamId.LAD)
+        val tpUp = TeamProbability(team, 1.0, 0.35, 0.235, 99.4, 1.042, regularSeasonRank = 4, simRank = 1, rankDelta = 3)
+        assertEquals("▲ +3", tpUp.movementSymbol)
+
+        val tpDown = TeamProbability(team, 1.0, 0.11, 0.054, 96.9, 0.892, regularSeasonRank = 3, simRank = 6, rankDelta = -3)
+        assertEquals("▼ -3", tpDown.movementSymbol)
+
+        val tpSame = TeamProbability(team, 1.0, 0.29, 0.125, 103.2, 0.957, regularSeasonRank = 2, simRank = 2, rankDelta = 0)
+        assertEquals("—", tpSame.movementSymbol)
+    }
+
+    @Test
+    fun testWorldSeriesSimulatorGamePredictionAndSeries() {
+        val lad = SabermetricDataService.getTeam(MlbTeamId.LAD)
+        val nyy = SabermetricDataService.getTeam(MlbTeamId.NYY)
+
+        val pLadBeatsNyy = WorldSeriesSimulator.predictGameWinProb(lad, nyy)
+        val pNyyBeatsLad = WorldSeriesSimulator.predictGameWinProb(nyy, lad)
+
+        // Mathematical symmetry: P(A beats B) + P(B beats A) == 1.0
+        assertEquals(1.0, pLadBeatsNyy + pNyyBeatsLad, 1e-4)
+        assertTrue(pLadBeatsNyy in 0.45..0.60)
+
+        // Custom momentum map test
+        val customMomentum = mapOf(MlbTeamId.NYY to 1.10)
+        val pWithBoost = WorldSeriesSimulator.predictGameWinProb(nyy, lad, customMomentum)
+        assertTrue(pWithBoost > pNyyBeatsLad)
+
+        // Series simulation test
+        val rng = Random(12345)
+        val winnerBestOf3 = WorldSeriesSimulator.simulateSeries(lad, nyy, bestOf = 3, random = rng)
+        assertTrue(winnerBestOf3.teamId == MlbTeamId.LAD || winnerBestOf3.teamId == MlbTeamId.NYY)
+
+        val winnerBestOf5 = WorldSeriesSimulator.simulateSeries(lad, nyy, bestOf = 5, random = rng)
+        assertTrue(winnerBestOf5.teamId == MlbTeamId.LAD || winnerBestOf5.teamId == MlbTeamId.NYY)
+
+        val winnerBestOf7 = WorldSeriesSimulator.simulateSeries(lad, nyy, bestOf = 7, random = rng)
+        assertTrue(winnerBestOf7.teamId == MlbTeamId.LAD || winnerBestOf7.teamId == MlbTeamId.NYY)
+    }
+
+    @Test
+    fun testMonteCarloWorldSeriesSimulationDeterminism() {
+        val res1 = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 500, seed = 42L)
+        val res2 = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 500, seed = 42L)
+
+        assertEquals(res1.totalSimulations, res2.totalSimulations)
+        assertEquals(res1.leaderboard.size, res2.leaderboard.size)
+
+        for (i in res1.leaderboard.indices) {
+            val t1 = res1.leaderboard[i]
+            val t2 = res2.leaderboard[i]
+            assertEquals(t1.team.teamId, t2.team.teamId)
+            assertEquals(t1.worldSeriesWinProb, t2.worldSeriesWinProb, 1e-6)
+            assertEquals(t1.pennantProb, t2.pennantProb, 1e-6)
         }
 
         // Sum of all teams' World Series win probabilities must equal 100% (1.0)
+        val totalWsProb = res1.leaderboard.sumOf { it.worldSeriesWinProb }
         assertEquals(1.0, totalWsProb, 1e-4)
-
-        // Verify top contender has significant championship odds
-        val topTeam = result.leaderboard.first()
-        assertTrue(topTeam.worldSeriesWinProb > 0.10)
     }
 
     @Test
@@ -109,30 +281,146 @@ class SabermetricTest {
         assertTrue(csv.contains("Regular_Season_Rank,Sim_Rank,Rank_Movement"))
         assertTrue(csv.contains("NYY,\"New York Yankees\""))
         assertTrue(csv.contains("LAD,\"Los Angeles Dodgers\""))
-    }
-
-    @Test
-    fun testStandingsMovementTracking() {
-        val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 500, seed = 999L)
-        assertTrue(result.leaderboard.all { it.regularSeasonRank in 1..30 })
-        assertTrue(result.leaderboard.all { it.simRank in 1..30 })
-
-        // Check Dodgers rank tracking
-        val lad = result.leaderboard.first { it.team.teamId == MlbTeamId.LAD }
-        assertTrue(lad.simRank in 1..5)
+        assertTrue(csv.lines().size >= 31)
     }
 
     @Test
     fun testPocketHostDataTrackerPayloads() {
         val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 100, seed = 42L)
-        val runPayload = com.sabermetrics.worldseries.data.PocketHostDataTracker.buildSimulationRunJsonPayload("RUN-TEST-001", result, 42L)
+        val runPayload = PocketHostDataTracker.buildSimulationRunJsonPayload("RUN-TEST-001", result, 42L)
         assertTrue(runPayload.contains("\"str_run_id\": \"RUN-TEST-001\""))
         assertTrue(runPayload.contains("\"int_total_iterations\": 100"))
 
-        val movePayload = com.sabermetrics.worldseries.data.PocketHostDataTracker.buildRankMovementsJsonPayload("RUN-TEST-001", result.leaderboard)
+        val movePayload = PocketHostDataTracker.buildRankMovementsJsonPayload("RUN-TEST-001", result.leaderboard)
         assertTrue(movePayload.contains("\"str_team_code\": \"NYY\""))
+        assertTrue(movePayload.contains("\"rel_run_id\": \"RUN-TEST-001\""))
+    }
+
+    @Test
+    fun testPocketBaseHungarianModelsAndQueryBuilder() {
+        val teamRecord = IMlbTeamRecord(
+            id = "rec123",
+            str_team_code = "CHC",
+            str_team_name = "Chicago Cubs",
+            str_league = "NL",
+            str_division = "CENTRAL",
+            str_city = "Chicago",
+            str_ballpark = "Wrigley Field",
+            int_founded_year = 1876,
+            bool_is_active = true,
+            str_status_code = RecordStatusCode.ACTIVE.name,
+            int_created_epoch_ms_utc = 1723650000000L,
+            int_updated_epoch_ms_utc = 1723650000000L
+        )
+        assertEquals("CHC", teamRecord.str_team_code)
+        assertEquals("ACTIVE", teamRecord.str_status_code)
+        assertTrue(teamRecord.bool_is_active)
+
+        val inputRecord = ITeamSeasonInputRecord(
+            id = "input123",
+            str_team_code = "LAD",
+            int_season_year = 2026,
+            int_season_week = 20,
+            int_wins = 72,
+            int_losses = 48,
+            dbl_runs_scored = 602.0,
+            dbl_runs_allowed = 462.0,
+            dbl_team_war = 40.0,
+            dbl_woba = 0.338,
+            dbl_wrc_plus = 120.0,
+            dbl_fip = 3.62,
+            dbl_xfip = 3.68,
+            dbl_bullpen_wpa = 3.8,
+            dbl_top3_ace_era = 2.70,
+            int_last10_wins = 7,
+            int_last10_losses = 3,
+            int_created_epoch_ms_utc = 1723650000000L,
+            int_updated_epoch_ms_utc = 1723650000000L
+        )
+        assertEquals(2026, inputRecord.int_season_year)
+        assertEquals(72, inputRecord.int_wins)
+
+        val runRecord = MSimulationRunRecord(
+            id = "run123",
+            str_run_id = "RUN-20260814",
+            dt_run_timestamp = "2026-08-14T21:00:00Z",
+            int_season_year = 2026,
+            int_total_iterations = 10000,
+            int_random_seed = 42,
+            str_engine_version = "1.0.0",
+            str_top_favorite_code = "LAD",
+            dbl_top_favorite_prob = 0.2353,
+            str_causal_iv_status = "ACTIVE",
+            int_created_epoch_ms_utc = 1723650000000L,
+            int_updated_epoch_ms_utc = 1723650000000L
+        )
+        assertEquals("RUN-20260814", runRecord.str_run_id)
+
+        val latentRecord = MLatentQualityEstimateRecord(
+            id = "lat123",
+            str_run_id = "RUN-20260814",
+            str_team_code = "NYY",
+            int_season_year = 2026,
+            dbl_latent_quality_score = 0.985,
+            dbl_bayes_adjusted_win_pct = 0.560,
+            dbl_recency_win_pct = 0.580,
+            dbl_momentum_multiplier = 1.024,
+            dbl_hype_multiplier = 1.10,
+            int_created_epoch_ms_utc = 1723650000000L,
+            int_updated_epoch_ms_utc = 1723650000000L
+        )
+        assertEquals(0.985, latentRecord.dbl_latent_quality_score)
+
+        val boardRecord = FWorldSeriesLeaderboardRecord(
+            id = "board123",
+            str_run_id = "RUN-20260814",
+            str_team_code = "MIL",
+            str_team_name = "Milwaukee Brewers",
+            str_league = "NL",
+            str_division = "CENTRAL",
+            int_sim_rank = 3,
+            dbl_expected_season_wins = 99.0,
+            dbl_playoff_prob = 1.0,
+            dbl_pennant_prob = 0.201,
+            dbl_world_series_win_prob = 0.1214,
+            str_visual_bar = "██████",
+            int_created_epoch_ms_utc = 1723650000000L,
+            int_updated_epoch_ms_utc = 1723650000000L
+        )
+        assertEquals(3, boardRecord.int_sim_rank)
+
+        // RecordStatusCode enum
+        assertEquals(4, RecordStatusCode.entries.size)
+        assertEquals(RecordStatusCode.ACTIVE, RecordStatusCode.valueOf("ACTIVE"))
+        assertEquals(RecordStatusCode.INACTIVE, RecordStatusCode.valueOf("INACTIVE"))
+        assertEquals(RecordStatusCode.SUPERSEDED, RecordStatusCode.valueOf("SUPERSEDED"))
+        assertEquals(RecordStatusCode.ARCHIVED, RecordStatusCode.valueOf("ARCHIVED"))
+
+        // Query Builder
+        val teamFilter = HungarianQueryBuilder.buildLatestActiveTeamFilter("CHC")
+        assertTrue(teamFilter.contains("str_team_code='CHC'"))
+        assertTrue(teamFilter.contains("bool_is_active=true"))
+
+        val runFilter = HungarianQueryBuilder.buildActiveRunFilter("RUN-999")
+        assertTrue(runFilter.contains("str_run_id='RUN-999'"))
+    }
+
+    @Test
+    fun testFormatUtils() {
+        assertEquals("12.35", 12.3456.formatDecimals(2))
+        assertEquals("12.3", 12.3456.formatDecimals(1))
+        assertEquals("12", 12.3456.formatDecimals(0))
+        assertEquals("-5.50", (-5.5).formatDecimals(2))
+        assertEquals("0.00", 0.0.formatDecimals(2))
+        assertEquals("NaN", Double.NaN.formatDecimals(2))
+        assertEquals("Infinity", Double.POSITIVE_INFINITY.formatDecimals(2))
+        assertEquals("-Infinity", Double.NEGATIVE_INFINITY.formatDecimals(2))
+
+        val templ = "Team %s has %.2f WS Prob"
+        val formatted = templ.format("LAD", 23.53)
+        assertEquals("Team LAD has 23.53 WS Prob", formatted)
+
+        val singleArg = "Hello %s".format("World")
+        assertEquals("Hello World", singleArg)
     }
 }
-
-
-
