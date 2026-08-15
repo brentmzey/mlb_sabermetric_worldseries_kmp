@@ -247,14 +247,14 @@ fun generateLineChartImage(topTeams: List<TeamProbability>) {
 
     // Trajectory curves across weeks (%)
     val trajectories = mapOf(
-        "LAD" to listOf(24.0, 27.5, 30.5, 33.0, 35.0, 36.35),
-        "NYY" to listOf(10.0, 11.2, 12.0, 13.5, 14.5, 15.42),
-        "MIL" to listOf(4.2, 5.0, 6.5, 7.8, 9.2, 10.51),
-        "CHC" to listOf(3.5, 4.2, 5.5, 7.0, 8.8, 10.51),
-        "TBD" to listOf(5.0, 5.8, 6.5, 7.2, 7.5, 7.79),
-        "HOU" to listOf(2.1, 2.7, 3.4, 4.0, 4.5, 4.94),
-        "DET" to listOf(1.0, 1.4, 1.8, 2.2, 2.6, 3.00),
-        "SD"  to listOf(3.0, 3.2, 3.1, 3.0, 2.9, 2.99)
+        "LAD" to listOf(18.0, 19.5, 21.0, 22.0, 22.8, 23.53),
+        "TBD" to listOf(6.5, 7.8, 9.0, 10.5, 11.8, 12.56),
+        "MIL" to listOf(5.5, 6.8, 8.2, 9.5, 11.0, 12.14),
+        "CHC" to listOf(4.2, 5.0, 6.5, 8.0, 9.8, 11.31),
+        "NYY" to listOf(9.0, 9.8, 10.2, 10.5, 10.8, 10.65),
+        "ATL" to listOf(12.0, 10.5, 9.0, 7.5, 6.2, 5.46),
+        "DET" to listOf(1.5, 2.0, 2.8, 3.8, 4.6, 5.39),
+        "HOU" to listOf(2.5, 3.0, 3.6, 4.2, 4.8, 5.05)
     )
 
     var legendY = 175

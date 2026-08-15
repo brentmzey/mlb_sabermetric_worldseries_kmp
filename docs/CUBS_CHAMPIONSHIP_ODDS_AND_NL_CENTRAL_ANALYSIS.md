@@ -4,8 +4,8 @@
 As of mid-August 2026 (Game 121), the **Chicago Cubs (71–50, .587 W-L)** are experiencing an exceptional late-season surge (**8–2 in their last 10 games**). In our 10,000-iteration Monte Carlo 2SLS Causal Simulation Suite incorporating **Bill James' Pythagenpat Log5 Matchup Theorem**, **Brian Kenny's October Ace & Bullpen Leverage Compression**, **4-Pillar Whole-Season Consistency (1.083)**, **Media & Expert Consensus (1.110 from MLB.com/ESPN/MLB Network)**, **Vegas Sportsbooks (7.5% implied)**, and **Multi-Dimensional Relative Momentum**, the Cubs rank among the top championship contenders in Major League Baseball:
 
 - **Projected Season Wins**: **98.2 Wins** (NL Central contention, **100.0% Playoff Probability**)
-- **NL Pennant Probability**: **17.3%**
-- **World Series Win Probability**: **10.51%** (#4 overall favorite in MLB out of 30 teams)
+- **NL Pennant Probability**: **18.9%**
+- **World Series Win Probability**: **11.31%** (#4 overall favorite in MLB out of 30 teams)
 
 ---
 
@@ -35,15 +35,15 @@ $$P(\text{WS Champion} \mid \text{Wild Card}) = P(\text{Win Wild Card}) \times P
 
 ### Factor 4: National League "Superteam" Landscape (Dodgers at #1)
 To win the World Series out of the NL, contenders must compete against:
-1. **Los Angeles Dodgers (72–48, 36.35% WS Prob)**: #1 in MLB. 1.200 4-pillar consistency, 2.70 Ace ERA, +320 Vegas futures, Shohei Ohtani / Mookie Betts / Freddie Freeman MVP core.
-2. **Atlanta Braves (73–48, 2.69% WS Prob)**: Severely depleted by season-ending injuries to Spencer Strider and Ronald Acuña Jr.
+1. **Los Angeles Dodgers (72–48, 23.53% WS Prob)**: #1 in MLB. 1.200 4-pillar consistency, 2.70 Ace ERA, +320 Vegas futures, Shohei Ohtani / Mookie Betts / Freddie Freeman MVP core.
+2. **Atlanta Braves (73–48, 5.46% WS Prob)**: Severely depleted by season-ending injuries to Spencer Strider and Ronald Acuña Jr.
 
 ---
 
 ### Factor 5: Postseason Pitching Rotation Compression (Top-3 Ace ERA)
 - The Cubs possess a strong Top-3 Ace ERA (**3.28**) with active starters and an elite bullpen (+2.8 WPA).
 - In short 5-game Division Series, starting Shota Imanaga, Jameson Taillon, and Javier Assad allows the Cubs to match up effectively with elite pitching staffs using Bill James' Pythagenpat Log5 matchup formulation (with injured ace Justin Steele excluded from postseason projections):
-$$P(\text{CHC beats LAD}) = \frac{q_{\text{CHC}}^{1.45}}{q_{\text{CHC}}^{1.45} + q_{\text{LAD}}^{1.45}} \approx 44.8\%$$
+$$P(\text{CHC beats LAD}) = \frac{q_{\text{CHC}}^{1.20}}{q_{\text{CHC}}^{1.20} + q_{\text{LAD}}^{1.20}} \approx 47.1\%$$
 
 ---
 
@@ -51,10 +51,10 @@ $$P(\text{CHC beats LAD}) = \frac{q_{\text{CHC}}^{1.45}}{q_{\text{CHC}}^{1.45} +
 
 | Scenario | NL Central Rank | Postseason Seed | Bye Status | Projected Wins | World Series Win Prob % |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Wild Card Baseline (Current)** | 2nd Place (Wild Card 1) | Seed 4 | Wild Card Round | 98.2 | **10.51%** |
-| **Cubs Overtake Milwaukee (Division Title)** | **1st Place (NL Central)** | **Seed 2** | **First-Round Bye** | **100.4** | **17.80%** |
+| **Wild Card Baseline (Current)** | 2nd Place (Wild Card 1) | Seed 4 | Wild Card Round | 98.2 | **11.31%** |
+| **Cubs Overtake Milwaukee (Division Title)** | **1st Place (NL Central)** | **Seed 2** | **First-Round Bye** | **100.4** | **17.40%** |
 
-*Takeaway*: Incorporating Bill James' Log5 theorem and Brian Kenny's rotation compression places the Cubs at **#4 in ALL OF MLB with a 10.51% World Series Win Probability** (tied with Milwaukee). If they overtake Milwaukee for the NL Central title and secure a First-Round Bye, their championship odds **jump to ~17.8%**!
+*Takeaway*: Incorporating Bill James' Log5 theorem and Brian Kenny's rotation compression places the Cubs at **#4 in ALL OF MLB with a 11.31% World Series Win Probability** (closely trailing Milwaukee at 12.14% and Tampa Bay at 12.56%). If they overtake Milwaukee for the NL Central title and secure a First-Round Bye, their championship odds **jump to ~17.4%**!
 
 ---
 

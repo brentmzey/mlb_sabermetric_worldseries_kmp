@@ -52,35 +52,36 @@ object WorldSeriesSimulator {
         val aceFactor = (3.80 / team.top3AceEra).coerceIn(0.6, 1.4)
         val bullpenFactor = kotlin.math.tanh(team.bullpenWpa / 3.2)
 
-        val baseSkill = 0.24 * recencyWinPct +
-                        0.22 * bayesWinPct +
-                        0.16 * warNorm.coerceIn(0.5, 1.3) +
-                        0.16 * aceFactor +
-                        0.12 * (team.wRCPlus / 100.0) +
-                        0.10 * team.defensiveEfficiencyRating.coerceIn(0.85, 1.15)
+        val baseSkill = 0.28 * recencyWinPct +
+                        0.26 * bayesWinPct +
+                        0.14 * warNorm.coerceIn(0.6, 1.2) +
+                        0.14 * aceFactor +
+                        0.10 * (team.wRCPlus / 100.0) +
+                        0.08 * team.defensiveEfficiencyRating.coerceIn(0.88, 1.12)
 
-        // Linear adjustments for endogenous heuristics to prevent non-linear multiplicative runaway
-        val hypeAdj = 1.0 + 0.30 * (team.clubhouseHypeIndex - 1.0)
-        val consistencyAdj = 1.0 + 0.40 * (team.seasonConsistencyIndex - 1.0)
-        val expertMediaAdj = 1.0 + 0.35 * (team.compositeExpertMediaIndex - 1.0)
-        val momentumMultiplier = customMomentumMap?.get(team.teamId) ?: team.hotStreakMomentumMultiplier
+        // Linear additive adjustments to prevent compounding exponential runaway
+        val hypeAdj = 0.06 * (team.clubhouseHypeIndex - 1.0)
+        val consistencyAdj = 0.08 * (team.seasonConsistencyIndex - 1.0)
+        val expertMediaAdj = 0.08 * (team.compositeExpertMediaIndex - 1.0)
+        val momentumDelta = (customMomentumMap?.get(team.teamId) ?: team.hotStreakMomentumMultiplier) - 1.0
 
-        val mktBoost = 0.05 * (team.marketImpliedWsProb * 3.0)
-        val bullpenClutchBoost = 0.025 * bullpenFactor
-        val tradeBoost = team.tradeDeadlineWarAdded * 0.012
+        val mktBoost = 0.03 * (team.marketImpliedWsProb * 2.0)
+        val bullpenClutchBoost = 0.015 * bullpenFactor
+        val tradeBoost = team.tradeDeadlineWarAdded * 0.006
 
-        return (baseSkill + tradeBoost + bullpenClutchBoost + mktBoost) * hypeAdj * consistencyAdj * expertMediaAdj * momentumMultiplier
+        val latentQuality = baseSkill + tradeBoost + bullpenClutchBoost + mktBoost + hypeAdj + consistencyAdj + expertMediaAdj + momentumDelta
+        return latentQuality.coerceIn(0.50, 1.50)
     }
 
     /**
      * Bill James Pythagenpat Log5 probability of Team A beating Team B in a single game.
-     * P(A beats B) = qA^1.45 / (qA^1.45 + qB^1.45)
+     * P(A beats B) = qA^1.20 / (qA^1.20 + qB^1.20)
      */
     fun predictGameWinProb(teamA: MlbTeam, teamB: MlbTeam, customMomentumMap: Map<MlbTeamId, Double>? = null): Double {
         val qA = computeLatentTeamQuality(teamA, customMomentumMap)
         val qB = computeLatentTeamQuality(teamB, customMomentumMap)
-        val rA = qA.pow(1.45)
-        val rB = qB.pow(1.45)
+        val rA = qA.pow(1.20)
+        val rB = qB.pow(1.20)
         return if (rA + rB > 0) rA / (rA + rB) else 0.50
     }
 
