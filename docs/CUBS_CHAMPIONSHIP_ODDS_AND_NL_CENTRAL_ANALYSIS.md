@@ -59,7 +59,9 @@ $$P(\text{CHC beats LAD}) = \frac{q_{\text{CHC}}^{1.45}}{q_{\text{CHC}}^{1.45} +
 ---
 
 ## 🔗 Related Documentation & Visual Artifacts
+- 📖 **[docs/BREWERS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/BREWERS_CHAMPIONSHIP_ODDS_AND_NL_CENTRAL_ANALYSIS.md)**: Milwaukee Brewers Championship Odds & NL Central Analysis
 - 📖 **[docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md)**: 30-Team Multi-Source Cross-Reference Matrix
 - 🏆 **World Series Win Probabilities**: [`docs/charts/world_series_win_probabilities.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/world_series_win_probabilities.png)
 - 📈 **Season Trend Checkpoints**: [`docs/charts/team_probability_trends_over_time.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/team_probability_trends_over_time.png)
 - 📊 **Residual Luck & Bias Decomposition**: [`docs/charts/residual_luck_bias_decomposition.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/residual_luck_bias_decomposition.png)
+- 🖼️ **2026 Core Roster Anchors**: [`docs/charts/roster_anchors_leaderboard.png`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/charts/roster_anchors_leaderboard.png)
