@@ -82,6 +82,18 @@ All 30 teams have been audited against strictly **2026 mid-season data (Game 121
 
 ![2026 Core Roster & Rotation Anchors](docs/charts/roster_anchors_leaderboard.png)
 
+> [!NOTE]
+> ### 📖 The "Pinstripe Paradox": Why the Yankees (10.65%) Trail Tampa Bay, Milwaukee, and the Cubs
+> **"In July, baseball fans buy jerseys. In October, mathematics collects the rent."**
+> On paper, the **New York Yankees** boast the #2 most talented roster in baseball (Judge, Soto, Cole, Rodón). They hold a **22.0% AL Pennant probability** (higher than Milwaukee's 20.1% or Chicago's 18.9%).
+> 
+> So why are their overall World Series championship odds at **10.65%** compared to **Tampa Bay (12.56%)**, **Milwaukee (12.14%)**, and **Chicago (11.31%)**?
+> 1. **The 40% Wild Card Trapdoor**: Trailing the Rays by 5.5 games, the Yankees enter as Seed 4 with **no First-Round Bye**. In a Best-of-3 Wild Card series against Boston, even a heavy 60% favorite faces a **35.2% hazard mortality rate** of immediate elimination. Teams with a Bye (Rays, Brewers) bypass this mortality trap completely.
+> 2. **The 7-Game Standings Deficit**: At Game 121, Tampa Bay (74–46) and Milwaukee (74–47) have banked 74 wins, while the Cubs (71–50) have banked 71 wins with a +115 run differential. New York has won 67.
+> 3. **The Dodgers Crucible**: If the Yankees win the AL, their final opponent is the powerhouse Dodgers (23.5% WS prob). NL pennant winners have already cleared or avoided the Dodgers.
+> 
+> *Read the full case study: [The Pinstripe Paradox Explainer](docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md#6-the-pinstripe-paradox-why-the-2026-yankees-trail-tampa-bay-milwaukee-and-the-cubs-an-anecdotal-case-study)*
+
 ---
 
 ## 🔄 End-to-End System Architecture & Data Flow
