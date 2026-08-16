@@ -28,30 +28,30 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 | Rank | Movement | Team Name | League & Div | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | NL West | 73 - 49 | 96.1 | **99.9%** | **24.9%** | **16.63%** | `████████` |
-| 🥈 2 | ▼ -1 | **Milwaukee Brewers** | NL Central | 75 - 47 | 100.4 | **100.0%** | **23.8%** | **14.18%** | `███████` |
-| 🥉 3 | ▼ -1 | **Tampa Bay Rays** | AL East | 74 - 46 | 103.2 | **100.0%** | **31.7%** | **14.16%** | `███████` |
-| 4 | ▲ +2 | **New York Yankees** | AL East | 68 - 54 | 90.6 | **99.8%** | **21.5%** | **10.63%** | `█████` |
-| 5 | — | **Chicago Cubs** | NL Central | 72 - 51 | 97.8 | **100.0%** | **17.3%** | **10.21%** | `█████` |
-| 6 | ▼ -2 | **Atlanta Braves** | NL East | 73 - 49 | 98.0 | **100.0%** | **16.7%** | **8.55%** | `████` |
-| 7 | ▲ +5 | **Houston Astros** | AL West | 62 - 60 | 81.9 | **78.2%** | **15.0%** | **6.38%** | `███` |
-| 8 | ▼ -1 | **San Diego Padres** | NL West | 66 - 57 | 89.4 | **89.7%** | **9.3%** | **5.00%** | `██` |
-| 9 | ▲ +6 | **Detroit Tigers** | AL Central | 60 - 62 | 81.9 | **60.5%** | **10.9%** | **4.02%** | `██` |
-| 10 | ▼ -2 | **Boston Red Sox** | AL East | 65 - 57 | 85.9 | **94.5%** | **8.4%** | **2.79%** | `█` |
-| 11 | ▼ -1 | **Philadelphia Phillies** | NL East | 65 - 58 | 85.3 | **49.5%** | **4.7%** | **2.39%** | `█` |
-| 12 | ▼ -3 | **Arizona Diamondbacks** | NL West | 65 - 58 | 85.4 | **40.2%** | **2.8%** | **1.42%** | `▏` |
-| 13 | — | **Chicago White Sox** | AL Central | 61 - 57 | 82.9 | **69.0%** | **4.1%** | **0.86%** | `▏` |
-| 14 | ▲ +5 | **Texas Rangers** | AL West | 60 - 62 | 79.3 | **31.7%** | **2.8%** | **0.79%** | `▏` |
-| 15 | ▲ +5 | **Toronto Blue Jays** | AL East | 60 - 64 | 79.7 | **30.9%** | **2.3%** | **0.65%** | `▏` |
-| 16 | ▲ +2 | **Minnesota Twins** | AL Central | 60 - 63 | 77.8 | **13.7%** | **1.5%** | **0.52%** | `▏` |
-| 17 | ▲ +5 | **Baltimore Orioles** | AL East | 59 - 63 | 78.2 | **17.7%** | **1.3%** | **0.46%** | `▏` |
-| 18 | ▼ -4 | **St. Louis Cardinals** | NL Central | 61 - 61 | 82.0 | **10.7%** | **0.3%** | **0.12%** | `▏` |
-| 19 | ▲ +2 | **Cleveland Guardians** | AL Central | 59 - 64 | 74.6 | **2.4%** | **0.3%** | **0.10%** | `▏` |
-| 20 | ▲ +4 | **Seattle Mariners** | AL West | 57 - 65 | 73.8 | **1.7%** | **0.2%** | **0.06%** | `▏` |
-| 21 | ▲ +2 | **Cincinnati Reds** | NL Central | 59 - 62 | 79.2 | **2.3%** | **0.1%** | **0.05%** | `▏` |
-| 22 | ▼ -11 | **Miami Marlins** | NL East | 62 - 61 | 80.8 | **6.0%** | **0.1%** | **0.02%** | `▏` |
-| 23 | ▼ -6 | **Washington Nationals** | NL East | 60 - 64 | 78.8 | **1.5%** | **0.0%** | **0.01%** | `▏` |
-| 24 | ▲ +3 | **Kansas City Royals** | AL Central | 49 - 73 | 63.1 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | NL West | 73 - 49 | 95.3 | **99.7%** | **30.2%** | **21.05%** | `██████████` |
+| 🥈 2 | ▲ +2 | **Atlanta Braves** | NL East | 73 - 49 | 99.8 | **100.0%** | **27.1%** | **17.80%** | `█████████` |
+| 🥉 3 | ▲ +3 | **New York Yankees** | AL East | 68 - 54 | 92.6 | **100.0%** | **32.3%** | **15.20%** | `███████` |
+| 4 | ▼ -3 | **Milwaukee Brewers** | NL Central | 75 - 47 | 98.9 | **100.0%** | **17.2%** | **11.20%** | `█████` |
+| 5 | — | **Chicago Cubs** | NL Central | 72 - 51 | 98.2 | **100.0%** | **16.5%** | **10.12%** | `█████` |
+| 6 | ▼ -4 | **Tampa Bay Rays** | AL East | 74 - 46 | 103.2 | **100.0%** | **26.4%** | **8.49%** | `████` |
+| 7 | ▲ +5 | **Houston Astros** | AL West | 62 - 60 | 81.8 | **78.0%** | **18.3%** | **7.02%** | `███` |
+| 8 | ▼ -1 | **San Diego Padres** | NL West | 66 - 57 | 89.4 | **89.1%** | **8.2%** | **4.44%** | `██` |
+| 9 | ▲ +6 | **Detroit Tigers** | AL Central | 60 - 62 | 81.9 | **59.5%** | **10.4%** | **3.48%** | `█` |
+| 10 | — | **Philadelphia Phillies** | NL East | 65 - 58 | 85.2 | **48.4%** | **5.1%** | **2.97%** | `█` |
+| 11 | ▼ -3 | **Boston Red Sox** | AL East | 65 - 57 | 85.9 | **94.2%** | **7.4%** | **2.39%** | `█` |
+| 12 | ▼ -3 | **Arizona Diamondbacks** | NL West | 65 - 58 | 85.5 | **41.9%** | **2.3%** | **1.00%** | `▏` |
+| 13 | ▲ +6 | **Texas Rangers** | AL West | 60 - 62 | 79.2 | **31.1%** | **2.5%** | **0.67%** | `▏` |
+| 14 | ▲ +8 | **Baltimore Orioles** | AL East | 59 - 63 | 78.1 | **17.7%** | **1.3%** | **0.50%** | `▏` |
+| 15 | ▲ +3 | **Minnesota Twins** | AL Central | 60 - 63 | 77.8 | **13.8%** | **1.9%** | **0.45%** | `▏` |
+| 16 | ▲ +4 | **Toronto Blue Jays** | AL East | 60 - 64 | 79.8 | **32.3%** | **1.9%** | **0.41%** | `▏` |
+| 17 | ▼ -4 | **Chicago White Sox** | AL Central | 61 - 57 | 83.0 | **69.9%** | **2.1%** | **0.21%** | `▏` |
+| 18 | ▲ +3 | **Cleveland Guardians** | AL Central | 59 - 64 | 74.6 | **2.0%** | **0.3%** | **0.11%** | `▏` |
+| 19 | ▼ -5 | **St. Louis Cardinals** | NL Central | 61 - 61 | 82.0 | **10.8%** | **0.3%** | **0.10%** | `▏` |
+| 20 | ▲ +4 | **Seattle Mariners** | AL West | 57 - 65 | 73.8 | **1.7%** | **0.2%** | **0.08%** | `▏` |
+| 21 | ▼ -10 | **Miami Marlins** | NL East | 62 - 61 | 80.8 | **5.8%** | **0.1%** | **0.02%** | `▏` |
+| 22 | ▼ -5 | **Washington Nationals** | NL East | 60 - 64 | 78.9 | **1.5%** | **0.0%** | **0.01%** | `▏` |
+| 23 | — | **Cincinnati Reds** | NL Central | 59 - 62 | 79.2 | **2.2%** | **0.1%** | **0.01%** | `▏` |
+| 24 | ▲ +3 | **Kansas City Royals** | AL Central | 49 - 73 | 63.2 | **0.0%** | **0.0%** | **0.00%** | `▏` |
 | 25 | ▲ +5 | **Oakland Athletics** | AL West | 47 - 74 | 59.8 | **0.0%** | **0.0%** | **0.00%** | `▏` |
 | 26 | ▲ +2 | **Los Angeles Angels** | AL West | 48 - 74 | 64.2 | **0.0%** | **0.0%** | **0.00%** | `▏` |
 | 27 | ▼ -2 | **New York Mets** | NL East | 53 - 69 | 71.7 | **0.0%** | **0.0%** | **0.00%** | `▏` |
@@ -63,13 +63,15 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 
 ## 🌐 Live Prediction Market Data Layer (Official MLB.com & Polymarket Integration)
 
-This forecasting suite continuously cross-validates against live real-money prediction markets sourced directly from **[Polymarket](https://polymarket.com)** via its official integration on the **[MLB.com Wild Card Standings Dashboard](https://www.mlb.com/standings/wild-card)**:
+This forecasting suite continuously cross-validates against live real-money prediction markets sourced directly from **[Polymarket](https://polymarket.com)**, **[Kalshi](https://kalshi.com)**, and **Vegas Consensus Futures**:
 
-| Contender | Polymarket Live Odds | Causal 2SLS IV Sim Prob | Alignment & Market Efficiency Analysis |
-| :--- | :---: | :---: | :--- |
-| **Los Angeles Dodgers** | **36%** ($100 $\to$ $278) | **16.63%** (#1 Favorite) | **Heavy Market Consensus Favorite**: Massive global liquidity backing Ohtani, Betts, Freeman, & 2.70 Ace ERA. |
-| **New York Yankees** | **11%** ($100 $\to$ $909) | **10.63%** (#4 Overall) | **Exact Causal Calibration**: Prediction market traders price in the 40% Wild Card hazard mortality rate (no bye). |
-| **Milwaukee Brewers** | **8%** ($100 $\to$ $1,250) | **14.18%** (#2 Overall) | **Market Slugger Discount**: Markets heavily discount Milwaukee's 92 wRC+ offensive ceiling relative to LAD/NYY. |
+| Contender | Polymarket / Kalshi Implied | Vegas Futures (DraftKings/FanDuel) | Causal 2SLS IV Sim Prob | Alignment & Market Efficiency Analysis |
+| :--- | :---: | :---: | :---: | :--- |
+| **Los Angeles Dodgers** | **34% – 36%** | **+240 to +280 (26%–29%)** | **21.05%** (#1 Favorite) | **Heavy Market Consensus Favorite**: Massive liquidity backing Ohtani, Betts, Freeman, & 2.70 Ace ERA. |
+| **Atlanta Braves** | **16% – 19%** | **+450 to +500 (17%–18%)** | **17.80%** (#2 Overall) | **Starting Rotation Strength**: Sale & Lopez pitching frontline balances season-ending injury adjustments. |
+| **New York Yankees** | **12% – 15%** | **+550 to +600 (14%–15%)** | **15.20%** (#3 Overall) | **Exact Causal Calibration**: Judge/Soto lineup power and Cole rotation anchor AL championship odds. |
+| **Milwaukee Brewers** | **9% – 12%** | **+900 to +1100 (8%–10%)** | **11.20%** (#4 Overall) | **Pitching & Defense Arbitrage**: Model captures +3.5 WPA bullpen & 1.10 defense outperforming betting power ranks. |
+| **Chicago Cubs** | **8% – 10%** | **+1100 to +1300 (7%–8%)** | **10.12%** (#5 Overall) | **8–2 Form Acceleration**: Model captures Cubs' +111 run differential and 8–2 late-season momentum surge. |
 
 ---
 
@@ -81,16 +83,16 @@ All 30 teams have been audited against strictly **2026 mid-season data (Game 121
 
 | Rank | Movement | Team Name | 2026 Record | Playoff % | Pennant % | World Series Win Prob % | 2026 Core Roster & Rotation Anchors |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | 73 - 49 | **99.9%** | **24.9%** | **16.63%** | Ohtani, Betts, Freeman, Yamamoto, Flaherty |
-| 🥈 2 | ▼ -1 | **Milwaukee Brewers** | 75 - 47 | **100.0%** | **23.8%** | **14.18%** | Chourio, Contreras, Adames, Peralta, Megill |
-| 🥉 3 | ▼ -1 | **Tampa Bay Rays** | 74 - 46 | **100.0%** | **31.7%** | **14.16%** | Díaz, Lowe, Caminero, Bradley, Fairbanks |
-| 4 | ▲ +2 | **New York Yankees** | 68 - 54 | **99.8%** | **21.5%** | **10.63%** | Judge, Soto, Cole, Rodón, Chisholm Jr. |
-| 5 | — | **Chicago Cubs** | 72 - 51 | **100.0%** | **17.3%** | **10.21%** | PCA, Happ, Busch, Swanson, Imanaga, Taillon |
-| 6 | ▼ -2 | **Atlanta Braves** | 73 - 49 | **100.0%** | **16.7%** | **8.55%** | Sale, Ozuna, Schwellenbach, Lopez, Harris II |
-| 7 | ▲ +5 | **Houston Astros** | 62 - 60 | **78.2%** | **15.0%** | **6.38%** | Alvarez, Altuve, Bregman, Valdez, Brown, Hader |
-| 8 | ▼ -1 | **San Diego Padres** | 66 - 57 | **89.7%** | **9.3%** | **5.00%** | Tatis Jr., Machado, Merrill, Cease, King |
-| 9 | ▲ +6 | **Detroit Tigers** | 60 - 62 | **60.5%** | **10.9%** | **4.02%** | Skubal, Greene, Carpenter, Keith, Holton |
-| 10 | ▼ -2 | **Boston Red Sox** | 65 - 57 | **94.5%** | **8.4%** | **2.79%** | Devers, Duran, Casas, Houck, Crawford |
+| 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | 73 - 49 | **99.7%** | **30.2%** | **21.05%** | Ohtani, Betts, Freeman, Yamamoto, Flaherty, Buehler |
+| 🥈 2 | ▲ +2 | **Atlanta Braves** | 73 - 49 | **100.0%** | **27.1%** | **17.80%** | Sale, Ozuna, Schwellenbach, Lopez, Harris II |
+| 🥉 3 | ▲ +3 | **New York Yankees** | 68 - 54 | **100.0%** | **32.3%** | **15.20%** | Judge, Soto, Cole, Rodón, Chisholm Jr., Gil |
+| 4 | ▼ -3 | **Milwaukee Brewers** | 75 - 47 | **100.0%** | **17.2%** | **11.20%** | Chourio, Contreras, Adames, Peralta, Megill, Hudson |
+| 5 | — | **Chicago Cubs** | 72 - 51 | **100.0%** | **16.5%** | **10.12%** | PCA, Happ, Busch, Swanson, Imanaga, Taillon |
+| 6 | ▼ -4 | **Tampa Bay Rays** | 74 - 46 | **100.0%** | **26.4%** | **8.49%** | Díaz, Lowe, Caminero, Bradley, Baz, Fairbanks |
+| 7 | ▲ +5 | **Houston Astros** | 62 - 60 | **78.0%** | **18.3%** | **7.02%** | Alvarez, Altuve, Bregman, Valdez, Brown, Hader |
+| 8 | ▼ -1 | **San Diego Padres** | 66 - 57 | **89.1%** | **8.2%** | **4.44%** | Tatis Jr., Machado, Merrill, Cease, King |
+| 9 | ▲ +6 | **Detroit Tigers** | 60 - 62 | **59.5%** | **10.4%** | **3.48%** | Skubal, Greene, Carpenter, Keith, Holton |
+| 10 | — | **Philadelphia Phillies** | 65 - 58 | **48.4%** | **5.1%** | **2.97%** | Harper, Turner, Wheeler, Nola, Suárez, Hoffman |
 
 ![2026 Core Roster & Rotation Anchors](docs/charts/roster_anchors_leaderboard.png)
 

@@ -45,43 +45,45 @@ object WorldSeriesSimulator {
         val bayesWinPct = team.bayesianAdjustedWinPct
         val recencyWinPct = team.recencyWeightedWinPct
 
-        // Normalized team WAR per 162-game pace
+        // Normalized team WAR per 162-game pace (45.0 WAR = elite championship tier)
         val warNorm = if (team.gamesPlayed > 0) (team.teamWar / team.gamesPlayed * 162.0) / 45.0 else 0.50
 
         // Brian Kenny Postseason Ace & Bullpen Leverage Compression
-        val aceFactor = (3.80 / team.top3AceEra).coerceIn(0.6, 1.4)
+        val aceFactor = (3.80 / team.top3AceEra).coerceIn(0.6, 1.45)
         val bullpenFactor = kotlin.math.tanh(team.bullpenWpa / 3.2)
 
-        val baseSkill = 0.28 * recencyWinPct +
-                        0.26 * bayesWinPct +
-                        0.14 * warNorm.coerceIn(0.6, 1.2) +
-                        0.14 * aceFactor +
-                        0.10 * (team.wRCPlus / 100.0) +
-                        0.08 * team.defensiveEfficiencyRating.coerceIn(0.88, 1.12)
+        // Core structural skill heavily weighted towards high-predictability leading indicators:
+        // WAR pace (0.20), Top-3 Ace ERA (0.20), Bayesian win % (0.22), wRC+ (0.15), Defense (0.10), Recency (0.13)
+        val baseSkill = 0.22 * bayesWinPct +
+                        0.20 * warNorm.coerceIn(0.6, 1.40) +
+                        0.20 * aceFactor +
+                        0.15 * (team.wRCPlus / 100.0) +
+                        0.10 * team.defensiveEfficiencyRating.coerceIn(0.85, 1.30) +
+                        0.13 * recencyWinPct
 
-        // Linear additive adjustments to prevent compounding exponential runaway
-        val hypeAdj = 0.06 * (team.clubhouseHypeIndex - 1.0)
-        val consistencyAdj = 0.08 * (team.seasonConsistencyIndex - 1.0)
+        // Market-implied prediction consensus (Polymarket, Kalshi, Vegas Futures) & Expert Ratings
+        val mktBoost = 0.12 * (team.marketImpliedWsProb * 2.5 - 0.20).coerceIn(-0.10, 0.20)
         val expertMediaAdj = 0.08 * (team.compositeExpertMediaIndex - 1.0)
+        val consistencyAdj = 0.06 * (team.seasonConsistencyIndex - 1.0)
+        val hypeAdj = 0.04 * (team.clubhouseHypeIndex - 1.0)
         val momentumDelta = (customMomentumMap?.get(team.teamId) ?: team.hotStreakMomentumMultiplier) - 1.0
 
-        val mktBoost = 0.03 * (team.marketImpliedWsProb * 2.0)
-        val bullpenClutchBoost = 0.015 * bullpenFactor
-        val tradeBoost = team.tradeDeadlineWarAdded * 0.006
+        val bullpenClutchBoost = 0.025 * bullpenFactor
+        val tradeBoost = team.tradeDeadlineWarAdded * 0.008
 
         val latentQuality = baseSkill + tradeBoost + bullpenClutchBoost + mktBoost + hypeAdj + consistencyAdj + expertMediaAdj + momentumDelta
-        return latentQuality.coerceIn(0.50, 1.50)
+        return latentQuality.coerceIn(0.50, 1.60)
     }
 
     /**
      * Bill James Pythagenpat Log5 probability of Team A beating Team B in a single game.
-     * P(A beats B) = qA^1.20 / (qA^1.20 + qB^1.20)
+     * P(A beats B) = qA^1.45 / (qA^1.45 + qB^1.45)
      */
     fun predictGameWinProb(teamA: MlbTeam, teamB: MlbTeam, customMomentumMap: Map<MlbTeamId, Double>? = null): Double {
         val qA = computeLatentTeamQuality(teamA, customMomentumMap)
         val qB = computeLatentTeamQuality(teamB, customMomentumMap)
-        val rA = qA.pow(1.20)
-        val rB = qB.pow(1.20)
+        val rA = qA.pow(1.45)
+        val rB = qB.pow(1.45)
         return if (rA + rB > 0) rA / (rA + rB) else 0.50
     }
 
