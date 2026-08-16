@@ -206,13 +206,15 @@ with open(CSV_FILE, "r") as f:
 print(f"📊 Read {len(rows)} team records from {CSV_FILE}.")
 
 # Step 5: Simulation Run Metadata (m_simulation_runs)
-run_id = "RUN-2026-08-13-JAMES-KENNY-MC10K"
+current_dt = datetime.datetime.now(datetime.timezone.utc)
+current_year = current_dt.year
+run_id = f"RUN-{current_dt.strftime('%Y%m%d-%H%M%S')}-JAMES-KENNY-MC10K"
 run_payload = {
     "str_run_id": run_id,
-    "dt_run_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-    "int_season_year": 2026,
+    "dt_run_timestamp": current_dt.isoformat(),
+    "int_season_year": current_year,
     "int_total_iterations": 10000,
-    "int_random_seed": 20260803,
+    "int_random_seed": int(current_dt.strftime("%Y%m%d")),
     "str_engine_version": "KMP-MonteCarlo-v2.6-JamesKenny",
     "str_top_favorite_code": "LAD",
     "dbl_top_favorite_prob": 0.2095,
@@ -225,8 +227,8 @@ run_payload = {
 http_post(f"{POCKETHOST_URL}/api/collections/m_simulation_runs/records", run_payload, inner_token=token)
 print(f"✅ Simulation run `{run_id}` recorded in `m_simulation_runs`.")
 
-# Step 6: Ingest 2026 Season Inputs, Model Stats, and Final Leaderboard
-print("📥 Ingesting 2026 Multi-Dimensional Data with Epoch UTC Milliseconds...")
+# Step 6: Ingest Season Inputs, Model Stats, and Final Leaderboard
+print(f"📥 Ingesting {current_year} Multi-Dimensional Data with Epoch UTC Milliseconds...")
 
 for row in rows:
     code = row["Team_ID"]
@@ -257,7 +259,7 @@ for row in rows:
     # i_team_season_inputs
     input_payload = {
         "str_team_code": code,
-        "int_season_year": 2026,
+        "int_season_year": current_year,
         "int_season_week": 18,
         "int_wins": w,
         "int_losses": l,
@@ -282,7 +284,7 @@ for row in rows:
     # i_market_odds_inputs
     market_payload = {
         "str_team_code": code,
-        "int_season_year": 2026,
+        "int_season_year": current_year,
         "str_sportsbook": "Consensus_Sportsbooks",
         "dbl_implied_prob": mkt_prob,
         "str_american_odds": f"+{int(100/mkt_prob - 100)}" if mkt_prob > 0 else "+5000",
@@ -296,7 +298,7 @@ for row in rows:
     # i_expert_media_rankings
     expert_payload = {
         "str_team_code": code,
-        "int_season_year": 2026,
+        "int_season_year": current_year,
         "str_source": "MLB_ESPN_Consensus",
         "int_power_rank": sim_rank,
         "dbl_power_rating": media_rank,
@@ -311,7 +313,7 @@ for row in rows:
     latent_payload = {
         "str_run_id": run_id,
         "str_team_code": code,
-        "int_season_year": 2026,
+        "int_season_year": current_year,
         "dbl_latent_quality_score": 1.233 if code == "LAD" else (1.166 if code == "ATL" else 1.072),
         "dbl_bayes_adjusted_win_pct": float(row.get("Pythagorean_Win_Pct", 0.5)),
         "dbl_recency_win_pct": float(row.get("Recency_Win_Pct", 0.5)),

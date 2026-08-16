@@ -1,5 +1,7 @@
 package com.sabermetrics.worldseries.repository
 
+import com.sabermetrics.worldseries.util.TimeUtils
+
 /**
  * Enumerable record lifecycle status for non-destructive row-level time-series management.
  */
@@ -34,8 +36,8 @@ data class IMlbTeamRecord(
     val int_founded_year: Int? = null,
     override val bool_is_active: Boolean = true,
     override val str_status_code: String = RecordStatusCode.ACTIVE.name,
-    override val int_created_epoch_ms_utc: Long,
-    override val int_updated_epoch_ms_utc: Long
+    override val int_created_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc(),
+    override val int_updated_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc()
 ) : HungarianRecord
 
 /**
@@ -44,8 +46,8 @@ data class IMlbTeamRecord(
 data class ITeamSeasonInputRecord(
     val id: String? = null,
     val str_team_code: String,
-    val int_season_year: Int,
-    val int_season_week: Int,
+    val int_season_year: Int = TimeUtils.currentSeasonYear(),
+    val int_season_week: Int = 18,
     val int_wins: Int,
     val int_losses: Int,
     val dbl_runs_scored: Double,
@@ -61,8 +63,8 @@ data class ITeamSeasonInputRecord(
     val int_last10_losses: Int,
     override val bool_is_active: Boolean = true,
     override val str_status_code: String = RecordStatusCode.ACTIVE.name,
-    override val int_created_epoch_ms_utc: Long,
-    override val int_updated_epoch_ms_utc: Long
+    override val int_created_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc(),
+    override val int_updated_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc()
 ) : HungarianRecord
 
 /**
@@ -71,8 +73,8 @@ data class ITeamSeasonInputRecord(
 data class MSimulationRunRecord(
     val id: String? = null,
     val str_run_id: String,
-    val dt_run_timestamp: String,
-    val int_season_year: Int,
+    val dt_run_timestamp: String = TimeUtils.currentIsoTimestampUtc(),
+    val int_season_year: Int = TimeUtils.currentSeasonYear(),
     val int_total_iterations: Int,
     val int_random_seed: Int,
     val str_engine_version: String,
@@ -81,8 +83,8 @@ data class MSimulationRunRecord(
     val str_causal_iv_status: String,
     override val bool_is_active: Boolean = true,
     override val str_status_code: String = RecordStatusCode.ACTIVE.name,
-    override val int_created_epoch_ms_utc: Long,
-    override val int_updated_epoch_ms_utc: Long
+    override val int_created_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc(),
+    override val int_updated_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc()
 ) : HungarianRecord
 
 /**
@@ -92,7 +94,7 @@ data class MLatentQualityEstimateRecord(
     val id: String? = null,
     val str_run_id: String,
     val str_team_code: String,
-    val int_season_year: Int,
+    val int_season_year: Int = TimeUtils.currentSeasonYear(),
     val dbl_latent_quality_score: Double,
     val dbl_bayes_adjusted_win_pct: Double,
     val dbl_recency_win_pct: Double,
@@ -100,8 +102,8 @@ data class MLatentQualityEstimateRecord(
     val dbl_hype_multiplier: Double,
     override val bool_is_active: Boolean = true,
     override val str_status_code: String = RecordStatusCode.ACTIVE.name,
-    override val int_created_epoch_ms_utc: Long,
-    override val int_updated_epoch_ms_utc: Long
+    override val int_created_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc(),
+    override val int_updated_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc()
 ) : HungarianRecord
 
 /**
@@ -122,8 +124,8 @@ data class FWorldSeriesLeaderboardRecord(
     val str_visual_bar: String? = null,
     override val bool_is_active: Boolean = true,
     override val str_status_code: String = RecordStatusCode.ACTIVE.name,
-    override val int_created_epoch_ms_utc: Long,
-    override val int_updated_epoch_ms_utc: Long
+    override val int_created_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc(),
+    override val int_updated_epoch_ms_utc: Long = TimeUtils.currentTimeMillisUtc()
 ) : HungarianRecord
 
 /**

@@ -18,6 +18,7 @@ import com.sabermetrics.worldseries.repository.RecordStatusCode
 import com.sabermetrics.worldseries.sync.ExponentialBackoffPolicy
 import com.sabermetrics.worldseries.sync.PocketHostConfig
 import com.sabermetrics.worldseries.sync.PocketHostSyncClient
+import com.sabermetrics.worldseries.util.TimeUtils
 import com.sabermetrics.worldseries.util.format
 import com.sabermetrics.worldseries.util.formatDecimals
 import kotlin.random.Random
@@ -551,5 +552,111 @@ class SabermetricTest {
             }
             assertTrue(sFail.isFailure)
         }
+    }
+
+    @Test
+    fun testTimeUtilsCalculations() {
+        val nowMs = TimeUtils.currentTimeMillisUtc()
+        assertTrue(nowMs > 1700000000000L, "Epoch millis must be valid contemporary timestamp")
+        assertEquals(nowMs, TimeUtils.nowEpochMs())
+        assertEquals(nowMs, TimeUtils.currentTimeMillis())
+
+        val isoNow = TimeUtils.currentIsoTimestampUtc()
+        assertTrue(isoNow.endsWith("Z"))
+        assertTrue(isoNow.contains("T"))
+
+        val currentYear = TimeUtils.currentSeasonYear()
+        assertTrue(currentYear >= 2024)
+        assertEquals(currentYear, TimeUtils.getSeasonYear(nowMs))
+
+        // Epoch 0 test (1970-01-01T00:00:00.000Z)
+        assertEquals("1970-01-01T00:00:00.000Z", TimeUtils.formatIsoTimestampUtc(0L))
+        assertEquals("1970-01-01", TimeUtils.formatDateUtc(0L))
+        assertEquals("19700101", TimeUtils.formatCompactDateUtc(0L))
+        assertEquals("19700101-000000", TimeUtils.formatCompactDateTimeUtc(0L))
+        assertEquals(1970, TimeUtils.getSeasonYear(0L))
+
+        // Known arbitrary date test
+        val customEpochMs = TimeUtils.createEpochMsUtc(2026, 8, 15, 7, 57, 35, 123)
+        assertEquals("2026-08-15T07:57:35.123Z", TimeUtils.formatIsoTimestampUtc(customEpochMs))
+        assertEquals("2026-08-15", TimeUtils.formatDateUtc(customEpochMs))
+        assertEquals("20260815", TimeUtils.formatCompactDateUtc(customEpochMs))
+        assertEquals("20260815-075735", TimeUtils.formatCompactDateTimeUtc(customEpochMs))
+        assertEquals(2026, TimeUtils.getSeasonYear(customEpochMs))
+
+        // Bidirectional parse test
+        val parsedMs = TimeUtils.parseIsoTimestampUtc("2026-08-15T07:57:35.123Z")
+        assertEquals(customEpochMs, parsedMs)
+
+        val parsedNoMillis = TimeUtils.parseIsoTimestampUtc("2026-08-15T07:57:35Z")
+        assertEquals("2026-08-15T07:57:35.000Z", TimeUtils.formatIsoTimestampUtc(parsedNoMillis))
+
+        val parsedDateOnly = TimeUtils.parseIsoTimestampUtc("2026-08-15")
+        assertEquals("2026-08-15T00:00:00.000Z", TimeUtils.formatIsoTimestampUtc(parsedDateOnly))
+
+        // Run ID generation
+        val runId = TimeUtils.generateRunId("RUN-MC10K", customEpochMs)
+        assertEquals("RUN-MC10K-20260815-075735", runId)
+
+        // Error handling on invalid ISO strings and components
+        assertFailsWith<IllegalArgumentException> {
+            TimeUtils.parseIsoTimestampUtc("invalid-date")
+        }
+        assertFailsWith<IllegalArgumentException> {
+            TimeUtils.createEpochMsUtc(2026, 13, 1)
+        }
+        assertFailsWith<IllegalArgumentException> {
+            TimeUtils.createEpochMsUtc(2026, 8, 32)
+        }
+        assertFailsWith<IllegalArgumentException> {
+            TimeUtils.createEpochMsUtc(2026, 8, 1, 24, 0, 0)
+        }
+    }
+
+    @Test
+    fun testDynamicHungarianDefaultsAndSerialization() {
+        // Records created without specifying epochMs should dynamically default to current time
+        val teamRecord = IMlbTeamRecord(
+            str_team_code = "BOS",
+            str_team_name = "Boston Red Sox",
+            str_league = "AL",
+            str_division = "EAST"
+        )
+        assertTrue(teamRecord.int_created_epoch_ms_utc > 1700000000000L)
+        assertTrue(teamRecord.int_updated_epoch_ms_utc > 1700000000000L)
+
+        val runRecord = MSimulationRunRecord(
+            str_run_id = "RUN-DYNAMIC-01",
+            int_total_iterations = 10000,
+            int_random_seed = 42,
+            str_engine_version = "2.4.0",
+            str_top_favorite_code = "LAD",
+            dbl_top_favorite_prob = 0.235,
+            str_causal_iv_status = "Active"
+        )
+        assertTrue(runRecord.dt_run_timestamp.endsWith("Z"))
+        assertTrue(runRecord.int_season_year >= 2024)
+        assertTrue(runRecord.int_created_epoch_ms_utc > 1700000000000L)
+
+        val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 100, seed = 42L)
+        val client = PocketHostSyncClient()
+
+        // Test dynamic serialization default
+        val runJsonDynamic = client.serializeSimulationRunRecord("RUN-DYN-01", result, 42L)
+        assertTrue(runJsonDynamic.contains("\"dt_run_timestamp\""))
+        assertTrue(runJsonDynamic.contains("\"int_created_epoch_ms_utc\""))
+
+        // Test explicit epoch override
+        val customEpoch = TimeUtils.createEpochMsUtc(2026, 8, 14, 12, 0, 0, 0)
+        val runJsonOverride = client.serializeSimulationRunRecord("RUN-OVR-01", result, 42L, customEpoch)
+        assertTrue(runJsonOverride.contains("\"int_created_epoch_ms_utc\": $customEpoch"))
+        assertTrue(runJsonOverride.contains("\"dt_run_timestamp\": \"2026-08-14T12:00:00.000Z\""))
+
+        // Test PocketHostDataTracker with dynamic timestamp vs explicit
+        val dataTrackerJsonDynamic = PocketHostDataTracker.buildSimulationRunJsonPayload("RUN-DYN-02", result, 42L)
+        assertTrue(dataTrackerJsonDynamic.contains("\"dt_run_timestamp\""))
+
+        val dataTrackerJsonOverride = PocketHostDataTracker.buildSimulationRunJsonPayload("RUN-DYN-02", result, 42L, customEpoch)
+        assertTrue(dataTrackerJsonOverride.contains("\"dt_run_timestamp\": \"2026-08-14T12:00:00.000Z\""))
     }
 }

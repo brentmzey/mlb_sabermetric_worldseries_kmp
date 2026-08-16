@@ -3,6 +3,7 @@ package com.sabermetrics.worldseries
 import com.sabermetrics.worldseries.engine.WorldSeriesSimulator
 import com.sabermetrics.worldseries.model.MlbTeamId
 import com.sabermetrics.worldseries.model.TeamProbability
+import com.sabermetrics.worldseries.util.TimeUtils
 import java.awt.Color
 import java.awt.Font
 import java.awt.RenderingHints
@@ -11,9 +12,16 @@ import java.io.File
 import javax.imageio.ImageIO
 
 fun main() {
+    val currentEpochMs = TimeUtils.currentTimeMillisUtc()
+    val currentSeasonYear = TimeUtils.getSeasonYear(currentEpochMs)
+    val currentIsoTimestamp = TimeUtils.formatIsoTimestampUtc(currentEpochMs)
+    val dynamicRunId = "run_${currentSeasonYear}_postseason_mc10k_${TimeUtils.formatCompactDateUtc(currentEpochMs)}"
+    val seed = 20260803L
+
     println("=================================================================================================================")
     println(" ⚾ MLB SABERMETRIC WORLD SERIES PREDICTION & CAUSAL ESTIMATION SUITE (KMP Multiplatform)")
     println("    Clean Open-Source Datasets + 10,000-Iteration Postseason Monte Carlo Simulator")
+    println("    Execution Timestamp UTC: $currentIsoTimestamp (Epoch MS: $currentEpochMs)")
     println("=================================================================================================================\n")
 
     println("🧠 ECONOMETRIC THEORY & SABERMETRIC REASONING BEHIND PREDICTIONS:")
@@ -26,8 +34,8 @@ fun main() {
     println("   7. Active Playoff Roster Conditioning: Injured players out for postseason are excluded from rotation & anchor metrics.")
     println("   8. Clubhouse Momentum Index: Team chemistry & trade additions boost non-linear October performance.\n")
 
-    println("⏳ Running 10,000-iteration Monte Carlo playoff simulation...")
-    val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 10000, seed = 20260803L)
+    println("⏳ Running 10,000-iteration Monte Carlo playoff simulation for Season $currentSeasonYear...")
+    val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 10000, seed = seed)
 
     println("\n🏆 MLB WORLD SERIES WIN PROBABILITY LEADERBOARD (10,000 SIMULATIONS):")
     println("---------------------------------------------------------------------------------------------------------------------------------")
@@ -99,36 +107,36 @@ fun main() {
 
     // Sync to PocketHost / PocketBase Cloud DB with Exponential Back-Off
     val syncClient = com.sabermetrics.worldseries.sync.PocketHostSyncClient()
-    val syncReport = syncClient.syncDatabaseWithRetry("run_2026_postseason_mc10k", result, 20260814L)
-    val syncPayloadJson = syncClient.generateFullDatabaseSyncPackage("run_2026_postseason_mc10k", result, 20260814L)
+    val syncReport = syncClient.syncDatabaseWithRetry(dynamicRunId, result, seed, currentEpochMs)
+    val syncPayloadJson = syncClient.generateFullDatabaseSyncPackage(dynamicRunId, result, seed, currentEpochMs)
     val syncPayloadFile = File(outputDir, "pockethost_sync_payload.json")
     syncPayloadFile.writeText(syncPayloadJson)
 
     println("\n☁️  POCKETHOST / POCKETBASE CLOUD DATABASE SYNC STATUS:")
     println("   • Target_Instance: ${syncClient.config.baseUrl}")
-    println("   • Schema_Version: 1.0.0-hungarian (Epoch UTC Millis)")
+    println("   • Schema_Version: 1.0.0-hungarian (Epoch UTC Millis: $currentEpochMs | $currentIsoTimestamp)")
     println("   • Retry_Policy: Exponential Back-Off (Initial: 500ms, Max: 8000ms, Factor: 2.0x, MaxAttempts: 4, Jitter: ±15%)")
     println("   • Total_Records_Synced: ${syncReport.totalRecordsSynced} across ${syncReport.collectionsSynced.size} collections")
     println("   • Sync_Status: ${if (syncReport.isSuccessful) "✅ ALIGNED & SYNCHRONIZED" else "⚠️ RETRY WARNING"}")
     println("   • Synced Collections:")
-    println("       1. [m_simulation_runs] -> 1 Run Record (Seed: 20260814, Iterations: 10,000)")
+    println("       1. [m_simulation_runs] -> 1 Run Record (Run ID: $dynamicRunId, Seed: $seed, Iterations: 10,000)")
     println("       2. [m_latent_quality_estimates] -> 30 Team Quality Records")
     println("       3. [f_world_series_leaderboard] -> 30 Team Leaderboard Records")
     println("   • Cloud Sync Bundle Exported: file://${syncPayloadFile.absolutePath}")
 
     // Generate high-resolution chart graphics
-    generateChartImage(result.leaderboard.take(8))
-    generateLineChartImage(result.leaderboard.take(8))
-    generateLuckResidualChartImage(result.leaderboard)
-    generateRosterAnchorsChartImage(result.leaderboard.take(10))
-    generateCrossLeagueMatchupChartImage()
-    generateCausalSurvivalFrameworkImage()
-    generatePocketHostCloudSyncArchitectureImage()
-    generateOutcomePropensitySamplingChartImage(result.leaderboard.take(8))
+    generateChartImage(result.leaderboard.take(8), currentSeasonYear)
+    generateLineChartImage(result.leaderboard.take(8), currentSeasonYear)
+    generateLuckResidualChartImage(result.leaderboard, currentSeasonYear)
+    generateRosterAnchorsChartImage(result.leaderboard.take(10), currentSeasonYear)
+    generateCrossLeagueMatchupChartImage(currentSeasonYear)
+    generateCausalSurvivalFrameworkImage(currentSeasonYear)
+    generatePocketHostCloudSyncArchitectureImage(seed)
+    generateOutcomePropensitySamplingChartImage(result.leaderboard.take(8), currentSeasonYear)
     println("=================================================================================================================\n")
 }
 
-fun generateChartImage(topTeams: List<TeamProbability>) {
+fun generateChartImage(topTeams: List<TeamProbability>, seasonYear: Int) {
     val width = 1200
     val height = 750
     val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -148,7 +156,7 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
     // Title & Subtitle
     g.color = Color(248, 250, 252)
     g.font = Font("SansSerif", Font.BOLD, 30)
-    g.drawString("⚾ 2026 MLB World Series Winning Probabilities", 70, 92)
+    g.drawString("⚾ $seasonYear MLB World Series Winning Probabilities", 70, 92)
 
     g.color = Color(148, 163, 184)
     g.font = Font("SansSerif", Font.PLAIN, 16)
@@ -233,7 +241,7 @@ fun generateChartImage(topTeams: List<TeamProbability>) {
     println("   file://${outFile.absolutePath}")
 }
 
-fun generateLineChartImage(topTeams: List<TeamProbability>) {
+fun generateLineChartImage(topTeams: List<TeamProbability>, seasonYear: Int) {
     val width = 1200
     val height = 750
     val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -253,7 +261,7 @@ fun generateLineChartImage(topTeams: List<TeamProbability>) {
     // Title & Subtitle
     g.color = Color(248, 250, 252)
     g.font = Font("SansSerif", Font.BOLD, 28)
-    g.drawString("📈 2026 MLB World Series Winning Probability Season Trends", 70, 92)
+    g.drawString("📈 $seasonYear MLB World Series Winning Probability Season Trends", 70, 92)
 
     g.color = Color(148, 163, 184)
     g.font = Font("SansSerif", Font.PLAIN, 16)
@@ -359,7 +367,7 @@ fun generateLineChartImage(topTeams: List<TeamProbability>) {
     println("   file://${outFile.absolutePath}")
 }
 
-fun generateLuckResidualChartImage(topTeams: List<TeamProbability>) {
+fun generateLuckResidualChartImage(topTeams: List<TeamProbability>, seasonYear: Int) {
     val width = 1200
     val height = 780
     val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -379,7 +387,7 @@ fun generateLuckResidualChartImage(topTeams: List<TeamProbability>) {
     // Title & Subtitle
     g.color = Color(248, 250, 252)
     g.font = Font("SansSerif", Font.BOLD, 28)
-    g.drawString("📊 2026 MLB Econometric Residual Luck & Bias Decomposition", 70, 92)
+    g.drawString("📊 $seasonYear MLB Econometric Residual Luck & Bias Decomposition", 70, 92)
 
     g.color = Color(148, 163, 184)
     g.font = Font("SansSerif", Font.PLAIN, 16)
@@ -446,7 +454,7 @@ fun generateLuckResidualChartImage(topTeams: List<TeamProbability>) {
     println("   file://${outFile.absolutePath}")
 }
 
-fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>) {
+fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>, seasonYear: Int) {
     val width = 1200
     val height = 760
     val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -466,11 +474,11 @@ fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>) {
     // Title & Subtitle
     g.color = Color(248, 250, 252)
     g.font = Font("SansSerif", Font.BOLD, 28)
-    g.drawString("⚾ 2026 MLB Championship Contenders & Core Roster Anchors", 70, 88)
+    g.drawString("⚾ $seasonYear MLB Championship Contenders & Core Roster Anchors", 70, 88)
 
     g.color = Color(148, 163, 184)
     g.font = Font("SansSerif", Font.PLAIN, 15)
-    g.drawString("Audited 2026 Active Lineups, Rotation Aces, and World Series Win Probabilities (Injuries Excluded)", 70, 116)
+    g.drawString("Audited $seasonYear Active Lineups, Rotation Aces, and World Series Win Probabilities (Injuries Excluded)", 70, 116)
 
     // Table Header
     val startY = 160
@@ -481,11 +489,11 @@ fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>) {
     g.font = Font("SansSerif", Font.BOLD, 13)
     g.drawString("RANK", 80, startY)
     g.drawString("TEAM", 150, startY)
-    g.drawString("2026 W-L", 350, startY)
+    g.drawString("$seasonYear W-L", 350, startY)
     g.drawString("PLAYOFF %", 450, startY)
     g.drawString("PENNANT %", 560, startY)
     g.drawString("WS PROB %", 670, startY)
-    g.drawString("2026 CORE ROSTER & ROTATION ANCHORS", 780, startY)
+    g.drawString("$seasonYear CORE ROSTER & ROTATION ANCHORS", 780, startY)
 
     val rosterAnchorsMap = mapOf(
         MlbTeamId.LAD to "Ohtani, Betts, Freeman, Yamamoto, Flaherty",
@@ -580,7 +588,7 @@ fun generateRosterAnchorsChartImage(topTeams: List<TeamProbability>) {
     println("   file://${outFile.absolutePath}")
 }
 
-fun generateCrossLeagueMatchupChartImage() {
+fun generateCrossLeagueMatchupChartImage(seasonYear: Int = TimeUtils.currentSeasonYear()) {
     val width = 1280
     val height = 860
     val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -600,7 +608,7 @@ fun generateCrossLeagueMatchupChartImage() {
     // Title & Subtitle
     g.color = Color(248, 250, 252)
     g.font = Font("SansSerif", Font.BOLD, 28)
-    g.drawString("⚔️ 2026 MLB Cross-League World Series Matchup Matrix", 70, 80)
+    g.drawString("⚔️ $seasonYear MLB Cross-League World Series Matchup Matrix", 70, 80)
 
     g.color = Color(148, 163, 184)
     g.font = Font("SansSerif", Font.PLAIN, 15)
@@ -698,7 +706,7 @@ fun generateCrossLeagueMatchupChartImage() {
     println("   file://${outFile.absolutePath}")
 }
 
-fun generateCausalSurvivalFrameworkImage() {
+fun generateCausalSurvivalFrameworkImage(seasonYear: Int = TimeUtils.currentSeasonYear()) {
     val width = 1200
     val height = 750
     val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -792,7 +800,7 @@ fun generateCausalSurvivalFrameworkImage() {
 
     g.color = Color(248, 250, 252)
     g.font = Font("SansSerif", Font.BOLD, 15)
-    g.drawString("🏆 2026 TOP 5 CONTENDERS CAUSAL DECOMPOSITION & HAZARD PROFILE", 50, bY + 30)
+    g.drawString("🏆 $seasonYear TOP 5 CONTENDERS CAUSAL DECOMPOSITION & HAZARD PROFILE", 50, bY + 30)
 
     // Table Header
     val thY = bY + 60
@@ -868,7 +876,7 @@ fun generateCausalSurvivalFrameworkImage() {
     println("   file://${outFile.absolutePath}")
 }
 
-fun generatePocketHostCloudSyncArchitectureImage() {
+fun generatePocketHostCloudSyncArchitectureImage(seed: Long = 20260803L) {
     val width = 1200
     val height = 700
     val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -971,7 +979,7 @@ fun generatePocketHostCloudSyncArchitectureImage() {
 
     val c3Lines = listOf(
         "• m_simulation_runs",
-        "  - 1 Run Record (Seed: 20260814)",
+        "  - 1 Run Record (Seed: $seed)",
         "• m_latent_quality_estimates",
         "  - 30 Team Quality Vectors",
         "• f_world_series_leaderboard",
@@ -1028,7 +1036,7 @@ fun generatePocketHostCloudSyncArchitectureImage() {
     println("   file://${outFile.absolutePath}")
 }
 
-fun generateOutcomePropensitySamplingChartImage(topTeams: List<TeamProbability>) {
+fun generateOutcomePropensitySamplingChartImage(topTeams: List<TeamProbability>, seasonYear: Int = TimeUtils.currentSeasonYear()) {
     val width = 1280
     val height = 860
     val img = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -1176,7 +1184,7 @@ fun generateOutcomePropensitySamplingChartImage(topTeams: List<TeamProbability>)
     g.drawString("⚡ Daily Refresh & Stochastic Sampling Workflow Pipeline:", 90, botY + 30)
 
     val notes = listOf(
-        "1. Ingestion: Pulls clean 2026 Game 121 active season inputs, bullpen WPA, and betting odds via UTC Epoch ms index.",
+        "1. Ingestion: Pulls clean $seasonYear Game 121 active season inputs, bullpen WPA, and betting odds via UTC Epoch ms index.",
         "2. 2SLS IV Causal Engine: Instruments wins with Pyth% & SOS to purge unobserved 1-run game luck residuals.",
         "3. Monte Carlo Resampler: Runs 10,000 postseason iterations using Bill James Log5 single-game probabilities (CLT SE < 0.38%).",
         "4. Auto-Cloud Sync: Results are atomically written to PocketHost Hungarian collections [m_simulation_runs] and [f_world_series_leaderboard]."
@@ -1200,6 +1208,3 @@ fun generateOutcomePropensitySamplingChartImage(topTeams: List<TeamProbability>)
     println("🖼️  Visual Monte Carlo Outcome Propensities Image generated at:")
     println("   file://${outFile.absolutePath}")
 }
-
-
-

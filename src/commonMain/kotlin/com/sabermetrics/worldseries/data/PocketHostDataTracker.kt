@@ -2,6 +2,7 @@ package com.sabermetrics.worldseries.data
 
 import com.sabermetrics.worldseries.model.TeamProbability
 import com.sabermetrics.worldseries.model.WorldSeriesSimulationResult
+import com.sabermetrics.worldseries.util.TimeUtils
 
 /**
  * PocketHost / PocketBase Database Sync Helper for tracking historical simulation runs
@@ -10,15 +11,16 @@ import com.sabermetrics.worldseries.model.WorldSeriesSimulationResult
 object PocketHostDataTracker {
 
     /**
-     * Prepares PocketHost JSON payload for `tbl_simulation_runs` collection.
+     * Prepares PocketHost JSON payload for `tbl_simulation_runs` collection with dynamically calculated UTC timestamp.
      */
     fun buildSimulationRunJsonPayload(
         runId: String,
         result: WorldSeriesSimulationResult,
-        seed: Long
+        seed: Long,
+        epochMs: Long = TimeUtils.currentTimeMillisUtc()
     ): String {
         val topFav = result.leaderboard.first()
-        val timestamp = "2026-08-05T16:00:00.000Z"
+        val timestamp = TimeUtils.formatIsoTimestampUtc(epochMs)
         return """
         {
           "str_run_id": "$runId",

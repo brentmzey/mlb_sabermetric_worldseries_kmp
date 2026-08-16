@@ -162,8 +162,9 @@ for row in rows:
 
 print(f"✅ Teams mapped: {len(teams_by_code)} teams in `tbl_mlb_teams`.")
 
-# Step 4: Populate Multi-Year Historical Panel Data (2021 - 2026)
-seasons = [2021, 2022, 2023, 2024, 2025, 2026]
+# Step 4: Populate Multi-Year Historical Panel Data (2021 - Current Year)
+current_year = datetime.datetime.now(datetime.timezone.utc).year
+seasons = list(range(2021, current_year + 1))
 total_runs = 0
 total_snaps = 0
 total_moves = 0
@@ -171,8 +172,14 @@ total_moves = 0
 print(f"📅 Populating Historical Time Series Panel Data across {len(seasons)} seasons ({seasons[0]} - {seasons[-1]})...")
 
 for yr in seasons:
+    if yr == current_year:
+        dt = datetime.datetime.now(datetime.timezone.utc)
+    else:
+        dt = datetime.datetime(yr, 10, 1, 12, 0, 0, tzinfo=datetime.timezone.utc)
+    timestamp = dt.isoformat()
+    epoch_ms = int(dt.timestamp() * 1000)
+
     run_id = f"RUN-{yr}-SEASON-{int(time.time())}"
-    timestamp = f"{yr}-10-01T12:00:00Z"
     top_fav = next((r for r in rows if r["Sim_Rank"] == "1"), rows[0])
 
     run_payload = {
@@ -180,9 +187,9 @@ for yr in seasons:
         "dt_run_timestamp": timestamp,
         "int_season_year": yr,
         "int_total_iterations": 10000,
-        "int_random_seed": 20260803 + yr,
-        "str_top_favorite_code": "LAD" if yr in [2021, 2024, 2026] else ("HOU" if yr == 2022 else "TEX"),
-        "dbl_top_favorite_prob": 0.2987 if yr == 2026 else (0.245 if yr == 2024 else 0.220),
+        "int_random_seed": int(dt.strftime("%Y%m%d")) + yr,
+        "str_top_favorite_code": "LAD" if yr in [2021, 2024, current_year] else ("HOU" if yr == 2022 else "TEX"),
+        "dbl_top_favorite_prob": 0.2987 if yr == current_year else (0.245 if yr == 2024 else 0.220),
         "str_causal_engine_status": "Active",
         "str_hype_multiplier_note": f"Historical Season Panel Data ({yr})"
     }

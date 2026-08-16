@@ -6,6 +6,7 @@ and season consistency metrics from official MLB Stats API and update Sabermetri
 import urllib.request
 import json
 import re
+import datetime
 
 mapping = {
     108: "LAA", 109: "ARI", 110: "BAL", 111: "BOS", 112: "CHC", 113: "CIN",
@@ -15,7 +16,8 @@ mapping = {
     143: "PHI", 144: "ATL", 145: "CWS", 146: "MIA", 147: "NYY", 158: "MIL"
 }
 
-url = "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=2026"
+current_year = datetime.datetime.now(datetime.timezone.utc).year
+url = f"https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season={current_year}"
 req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
 with urllib.request.urlopen(req) as resp:
     data = json.loads(resp.read().decode("utf-8"))

@@ -113,11 +113,11 @@ object WorldSeriesSimulator {
         val wsCounts = mutableMapOf<MlbTeamId, Int>()
         val simulatedWinsTotal = mutableMapOf<MlbTeamId, Double>()
 
-        for (t in teams) {
-            playoffCounts[t.teamId] = 0
-            pennantCounts[t.teamId] = 0
-            wsCounts[t.teamId] = 0
-            simulatedWinsTotal[t.teamId] = 0.0
+        for ((teamId) in teams) {
+            playoffCounts[teamId] = 0
+            pennantCounts[teamId] = 0
+            wsCounts[teamId] = 0
+            simulatedWinsTotal[teamId] = 0.0
         }
 
         // Group teams by League and Division

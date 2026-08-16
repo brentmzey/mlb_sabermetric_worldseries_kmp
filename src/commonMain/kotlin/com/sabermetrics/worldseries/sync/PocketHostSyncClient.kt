@@ -10,6 +10,7 @@ import com.sabermetrics.worldseries.repository.IMlbTeamRecord
 import com.sabermetrics.worldseries.repository.MLatentQualityEstimateRecord
 import com.sabermetrics.worldseries.repository.MSimulationRunRecord
 import com.sabermetrics.worldseries.repository.RecordStatusCode
+import com.sabermetrics.worldseries.util.TimeUtils
 
 /**
  * PocketHost / PocketBase Cloud Synchronization Configuration.
@@ -41,14 +42,19 @@ class PocketHostSyncClient(
 ) {
 
     /**
-     * Serializes `m_simulation_runs` record to Hungarian JSON string.
+     * Serializes `m_simulation_runs` record to Hungarian JSON string with dynamically calculated UTC timestamp & epoch millis.
      */
-    fun serializeSimulationRunRecord(runId: String, result: WorldSeriesSimulationResult, seed: Long, epochMs: Long = 1786704000000L): String {
+    fun serializeSimulationRunRecord(
+        runId: String,
+        result: WorldSeriesSimulationResult,
+        seed: Long,
+        epochMs: Long = TimeUtils.currentTimeMillisUtc()
+    ): String {
         val top = result.leaderboard.first()
         val record = MSimulationRunRecord(
             str_run_id = runId,
-            dt_run_timestamp = "2026-08-14T22:30:00.000Z",
-            int_season_year = 2026,
+            dt_run_timestamp = TimeUtils.formatIsoTimestampUtc(epochMs),
+            int_season_year = TimeUtils.getSeasonYear(epochMs),
             int_total_iterations = result.totalSimulations,
             int_random_seed = seed.toInt(),
             str_engine_version = "2.4.0-KMP-2SLS",
@@ -80,9 +86,13 @@ class PocketHostSyncClient(
     }
 
     /**
-     * Serializes all 30 teams into `f_world_series_leaderboard` JSON array.
+     * Serializes all 30 teams into `f_world_series_leaderboard` JSON array with dynamic UTC epoch millis.
      */
-    fun serializeLeaderboardRecords(runId: String, leaderboard: List<TeamProbability>, epochMs: Long = 1786704000000L): String {
+    fun serializeLeaderboardRecords(
+        runId: String,
+        leaderboard: List<TeamProbability>,
+        epochMs: Long = TimeUtils.currentTimeMillisUtc()
+    ): String {
         val rows = leaderboard.map { tp ->
             val record = FWorldSeriesLeaderboardRecord(
                 str_run_id = runId,
@@ -125,14 +135,19 @@ class PocketHostSyncClient(
     }
 
     /**
-     * Serializes all 30 teams into `m_latent_quality_estimates` JSON array.
+     * Serializes all 30 teams into `m_latent_quality_estimates` JSON array with dynamic UTC epoch millis.
      */
-    fun serializeLatentQualities(runId: String, leaderboard: List<TeamProbability>, epochMs: Long = 1786704000000L): String {
+    fun serializeLatentQualities(
+        runId: String,
+        leaderboard: List<TeamProbability>,
+        epochMs: Long = TimeUtils.currentTimeMillisUtc()
+    ): String {
+        val seasonYear = TimeUtils.getSeasonYear(epochMs)
         val rows = leaderboard.map { tp ->
             val record = MLatentQualityEstimateRecord(
                 str_run_id = runId,
                 str_team_code = tp.team.id,
-                int_season_year = 2026,
+                int_season_year = seasonYear,
                 dbl_latent_quality_score = tp.latentQualityScore,
                 dbl_bayes_adjusted_win_pct = tp.team.bayesianAdjustedWinPct,
                 dbl_recency_win_pct = tp.team.recencyWeightedWinPct,
@@ -164,10 +179,14 @@ class PocketHostSyncClient(
     }
 
     /**
-     * Generates a complete, multi-collection database sync JSON bundle ready for batch import.
+     * Generates a complete, multi-collection database sync JSON bundle ready for batch import with dynamically calculated UTC timestamp.
      */
-    fun generateFullDatabaseSyncPackage(runId: String, result: WorldSeriesSimulationResult, seed: Long): String {
-        val epochMs = 1786704000000L
+    fun generateFullDatabaseSyncPackage(
+        runId: String,
+        result: WorldSeriesSimulationResult,
+        seed: Long,
+        epochMs: Long = TimeUtils.currentTimeMillisUtc()
+    ): String {
         val runJson = serializeSimulationRunRecord(runId, result, seed, epochMs)
         val leaderboardJson = serializeLeaderboardRecords(runId, result.leaderboard, epochMs)
         val qualitiesJson = serializeLatentQualities(runId, result.leaderboard, epochMs)
@@ -189,21 +208,22 @@ class PocketHostSyncClient(
 
     /**
      * Executes cloud synchronization across all PocketHost collections with Exponential Back-Off.
-     * Uses optional transporter callback or local simulation.
+     * Uses dynamically calculated UTC epoch milliseconds and timestamps.
      */
     fun syncDatabaseWithRetry(
         runId: String,
         result: WorldSeriesSimulationResult,
         seed: Long,
+        epochMs: Long = TimeUtils.currentTimeMillisUtc(),
         transporter: ((collection: String, payloadJson: String) -> Boolean)? = null
     ): PocketHostSyncReport {
         val logs = mutableListOf<String>()
         val collections = listOf("m_simulation_runs", "m_latent_quality_estimates", "f_world_series_leaderboard")
-        val epochMs = 1786704000000L
+        val timestampUtc = TimeUtils.formatIsoTimestampUtc(epochMs)
         var totalRecords = 0
         var allSuccess = true
 
-        logs.add("🚀 Starting PocketHost Cloud Sync to ${config.baseUrl} [Run: $runId]")
+        logs.add("🚀 Starting PocketHost Cloud Sync to ${config.baseUrl} [Run: $runId | Timestamp: $timestampUtc | Epoch: $epochMs ms]")
 
         // 1. Sync Simulation Run Record
         val runPayload = serializeSimulationRunRecord(runId, result, seed, epochMs)
@@ -272,7 +292,7 @@ class PocketHostSyncClient(
 
         return PocketHostSyncReport(
             runId = runId,
-            timestampUtc = "2026-08-14T22:30:00.000Z",
+            timestampUtc = timestampUtc,
             collectionsSynced = collections,
             totalRecordsSynced = totalRecords,
             isSuccessful = allSuccess,

@@ -2,6 +2,7 @@ package com.sabermetrics.worldseries
 
 import com.sabermetrics.worldseries.data.SabermetricDataService
 import com.sabermetrics.worldseries.engine.WorldSeriesSimulator
+import com.sabermetrics.worldseries.util.TimeUtils
 import java.io.File
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -28,7 +29,7 @@ class MainJvmTest {
         assertTrue(syncPayloadFile.exists(), "PocketHost sync payload must exist")
         assertTrue(syncPayloadFile.length() > 500L, "PocketHost sync payload must contain serialized JSON")
 
-        // Verify all 7 chart images exist and are non-empty
+        // Verify all 8 chart images exist and are non-empty
         val chartFiles = listOf(
             File("docs/charts/world_series_win_probabilities.png"),
             File("docs/charts/team_probability_trends_over_time.png"),
@@ -36,7 +37,8 @@ class MainJvmTest {
             File("docs/charts/roster_anchors_leaderboard.png"),
             File("docs/charts/cross_league_matchup_matrix.png"),
             File("docs/charts/causal_vs_correlational_survival_framework.png"),
-            File("docs/charts/pockethost_cloud_sync_architecture.png")
+            File("docs/charts/pockethost_cloud_sync_architecture.png"),
+            File("docs/charts/monte_carlo_outcome_propensities.png")
         )
 
         for (cf in chartFiles) {
@@ -51,14 +53,17 @@ class MainJvmTest {
         assertNotNull(result)
         assertEquals(30, result.leaderboard.size)
 
-        // Test each visual chart generation function
-        generateChartImage(result.leaderboard.take(8))
-        generateLineChartImage(result.leaderboard.take(8))
-        generateLuckResidualChartImage(result.leaderboard)
-        generateRosterAnchorsChartImage(result.leaderboard.take(10))
-        generateCrossLeagueMatchupChartImage()
-        generateCausalSurvivalFrameworkImage()
-        generatePocketHostCloudSyncArchitectureImage()
+        val year = TimeUtils.currentSeasonYear()
+
+        // Test each visual chart generation function with dynamic season year
+        generateChartImage(result.leaderboard.take(8), year)
+        generateLineChartImage(result.leaderboard.take(8), year)
+        generateLuckResidualChartImage(result.leaderboard, year)
+        generateRosterAnchorsChartImage(result.leaderboard.take(10), year)
+        generateCrossLeagueMatchupChartImage(year)
+        generateCausalSurvivalFrameworkImage(year)
+        generatePocketHostCloudSyncArchitectureImage(42L)
+        generateOutcomePropensitySamplingChartImage(result.leaderboard.take(8), year)
 
         val barChart = File("docs/charts/world_series_win_probabilities.png")
         assertTrue(barChart.exists() && barChart.length() > 0)
