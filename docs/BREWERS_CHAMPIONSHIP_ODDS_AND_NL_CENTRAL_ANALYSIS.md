@@ -42,12 +42,12 @@ In contrast, if Milwaukee were to fall into a Wild Card seed (requiring 4 series
 ### Factor 4: Bill James Pythagenpat Log5 Head-to-Head Matchup Matrix
 Using Bill James' dynamic Pythagenpat Log5 formulation ($x = (R + RA)^{0.287} = 1.83$), Milwaukee's head-to-head single-game matchup probabilities against key 2026 postseason contenders are:
 
-$$P(\text{MIL beats } B) = \frac{q_{\text{MIL}}^{1.20}}{q_{\text{MIL}}^{1.20} + q_B^{1.20}}$$
+$$P(\text{MIL beats } B) = \frac{q_{\text{MIL}}^{1.45}}{q_{\text{MIL}}^{1.45} + q_B^{1.45}}$$
 
 | Opponent | Opponent 2026 Record | Opponent Latent Quality ($q_B$) | MIL Latent Quality ($q_{\text{MIL}}$) | Single-Game Win Prob $P(\text{MIL beats } B)$ | Best-of-7 Series Win Prob |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Los Angeles Dodgers** | 73–49 | 1.042 | 0.982 | **48.3%** | **46.2%** |
-| **New York Yankees** | 68–54 | 0.985 | 0.982 | **49.9%** | **49.8%** |
+| **Los Angeles Dodgers** | 73–49 | 1.228 | 1.134 | **46.8%** | **43.5%** |
+| **New York Yankees** | 68–54 | 1.168 | 1.134 | **48.8%** | **47.5%** |
 | **Chicago Cubs** | 72–51 | 0.978 | 0.982 | **50.1%** | **50.3%** |
 | **Tampa Bay Rays** | 74–46 | 0.957 | 0.982 | **50.8%** | **51.8%** |
 | **Atlanta Braves** | 73–49 | 0.892 | 0.982 | **52.9%** | **56.3%** |

@@ -43,7 +43,7 @@ To win the World Series out of the NL, contenders must compete against:
 ### Factor 5: Postseason Pitching Rotation Compression (Top-3 Ace ERA)
 - The Cubs possess a strong Top-3 Ace ERA (**3.28**) with active starters and an elite bullpen (+2.8 WPA).
 - In short 5-game Division Series, starting Shota Imanaga, Jameson Taillon, and Javier Assad allows the Cubs to match up effectively with elite pitching staffs using Bill James' Pythagenpat Log5 matchup formulation (with injured ace Justin Steele excluded from postseason projections):
-$$P(\text{CHC beats LAD}) = \frac{q_{\text{CHC}}^{1.20}}{q_{\text{CHC}}^{1.20} + q_{\text{LAD}}^{1.20}} \approx 47.1\%$$
+$$P(\text{CHC beats LAD}) = \frac{q_{\text{CHC}}^{1.45}}{q_{\text{CHC}}^{1.45} + q_{\text{LAD}}^{1.45}} \approx 46.2\%$$
 
 ---
 
@@ -51,10 +51,10 @@ $$P(\text{CHC beats LAD}) = \frac{q_{\text{CHC}}^{1.20}}{q_{\text{CHC}}^{1.20} +
 
 | Scenario | NL Central Rank | Postseason Seed | Bye Status | Projected Wins | World Series Win Prob % |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Wild Card Baseline (Current)** | 2nd Place (Wild Card 1) | Seed 4 | Wild Card Round | 97.8 | **10.21%** |
+| **Wild Card Baseline (Current)** | 2nd Place (Wild Card 1) | Seed 4 | Wild Card Round | 98.2 | **10.15%** |
 | **Cubs Overtake Milwaukee (Division Title)** | **1st Place (NL Central)** | **Seed 2** | **First-Round Bye** | **100.4** | **16.80%** |
 
-*Takeaway*: Incorporating Bill James' Log5 theorem and Brian Kenny's rotation compression places the Cubs at **#5 in ALL OF MLB with a 10.21% World Series Win Probability** (closely trailing the Yankees at 10.63%, Tampa Bay at 14.16%, and Milwaukee at 14.18%). If they overtake Milwaukee for the NL Central title and secure a First-Round Bye, their championship odds **jump to ~16.8%**!
+*Takeaway*: Incorporating Bill James' Log5 theorem and Brian Kenny's rotation compression places the Cubs at **#5 in ALL OF MLB with a 10.15% World Series Win Probability** (closely trailing Milwaukee at 11.45%, New York at 15.65%, and Atlanta at 17.92%). If they overtake Milwaukee for the NL Central title and secure a First-Round Bye, their championship odds **jump to ~16.8%**!
 
 ---
 

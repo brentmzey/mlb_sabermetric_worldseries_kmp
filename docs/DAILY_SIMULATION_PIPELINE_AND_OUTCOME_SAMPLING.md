@@ -25,15 +25,15 @@ $$\text{95\% Bootstrap Confidence Interval}: \quad \hat{p}_i \pm 1.96 \cdot \tex
 
 | Contender Rank | Team Name | Mean WS Win % ($\hat{p}_i$) | Standard Error (SE) | 95% Bootstrap Confidence Interval | Outcome Propensity Density Spread | Primary Postseason Drivers |
 | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | **Los Angeles Dodgers** | **21.05%** | $\pm 0.408\%$ | **[20.25% – 21.85%]** | `████████████████████` | 120 wRC+, 2.70 Ace ERA, 36% Polymarket, First-Round Bye |
-| 🥈 2 | **Atlanta Braves** | **17.80%** | $\pm 0.383\%$ | **[17.05% – 18.55%]** | `█████████████████` | 3.52 FIP, 3.35 Ace ERA, First-Round Bye |
-| 🥉 3 | **New York Yankees** | **15.20%** | $\pm 0.359\%$ | **[14.50% – 15.90%]** | `███████████████` | 117 wRC+, 3.15 Ace ERA, AL Bye path |
-| 4 | **Milwaukee Brewers** | **11.20%** | $\pm 0.315\%$ | **[10.58% – 11.82%]** | `███████████` | #1 NL Defense (1.10), +3.5 WPA Bullpen |
-| 5 | **Chicago Cubs** | **10.12%** | $\pm 0.302\%$ | **[9.53% – 10.71%]** | `██████████` | +111 Run Diff, 8–2 Hot Streak (+3.7%), 1.10 Defense |
-| 6 | **Tampa Bay Rays** | **8.49%** | $\pm 0.279\%$ | **[7.94% – 9.04%]** | `████████` | 74–46 Win Leader, +62 Run Diff |
-| 7 | **Houston Astros** | **7.02%** | $\pm 0.256\%$ | **[6.52% – 7.52%]** | `███████` | October Pedigree, +2.0 Bullpen WPA, 3.30 Ace ERA |
-| 8 | **San Diego Padres** | **4.44%** | $\pm 0.206\%$ | **[4.04% – 4.84%]** | `████` | Tatis/Machado/Cease/King Wild Card Contender |
-| 9 | **Detroit Tigers** | **3.48%** | $\pm 0.183\%$ | **[3.12% – 3.84%]** | `███` | Tarik Skubal Cy Young Ace Compression |
+| 🥇 1 | **Los Angeles Dodgers** | **20.51%** | $\pm 0.404\%$ | **[19.72% – 21.30%]** | `████████████████████` | 120 wRC+, 2.70 Ace ERA, 36% Polymarket, MLB.com #1 |
+| 🥈 2 | **Atlanta Braves** | **17.92%** | $\pm 0.384\%$ | **[17.17% – 18.67%]** | `█████████████████` | 3.52 FIP, 3.35 Ace ERA, First-Round Bye |
+| 🥉 3 | **New York Yankees** | **15.65%** | $\pm 0.363\%$ | **[14.94% – 16.36%]** | `███████████████` | 117 wRC+, 3.15 Ace ERA, AL Bye path |
+| 4 | **Milwaukee Brewers** | **11.45%** | $\pm 0.318\%$ | **[10.83% – 12.07%]** | `███████████` | #1 NL Defense (1.10), +3.5 WPA Bullpen, MLB.com #2 |
+| 5 | **Chicago Cubs** | **10.15%** | $\pm 0.302\%$ | **[9.56% – 10.74%]** | `██████████` | +111 Run Diff, 8–2 Hot Streak (+3.7%), 1.10 Defense |
+| 6 | **Tampa Bay Rays** | **8.60%** | $\pm 0.280\%$ | **[8.05% – 9.15%]** | `████████` | 74–46 Win Leader, +62 Run Diff, MLB.com #3 |
+| 7 | **Houston Astros** | **6.63%** | $\pm 0.249\%$ | **[6.14% – 7.12%]** | `███████` | October Pedigree, +2.0 Bullpen WPA, 3.30 Ace ERA |
+| 8 | **San Diego Padres** | **4.32%** | $\pm 0.203\%$ | **[3.92% – 4.72%]** | `████` | Tatis/Machado/Cease/King Wild Card Contender |
+| 9 | **Detroit Tigers** | **3.25%** | $\pm 0.177\%$ | **[2.90% – 3.60%]** | `███` | Tarik Skubal Cy Young Ace Compression |
 
 ---
 
