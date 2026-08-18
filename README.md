@@ -81,7 +81,7 @@ All 30 teams have been audited against strictly **2026 mid-season data (Game 121
 
 > **Active Postseason Roster Principle**: Injured players who are out for the playoffs (such as **Justin Steele** for the Cubs, **Spencer Strider** & **Ronald Acuña Jr.** for the Braves, **Tyler Glasnow** for the Dodgers, and **Christian Yelich** for the Brewers) are **strictly excluded** from playoff roster anchor summaries and starting rotation quality metrics (Top-3 Ace ERA). Postseason win expectancy is mathematically conditioned solely on players who are active and available to take the diamond in October.
 
-| Rank | Movement | Team Name | 2026 Record | Playoff % | Pennant % | World Series Win Prob % | 2026 Core Roster & Rotation Anchors |
+| Rank | Movement | Team Name | 2026 Record | Playoff % | Pennant % | World Series Win Prob % | 2026 Audited Core Roster & Rotation Anchors |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
 | 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | 73 - 49 | **99.7%** | **29.8%** | **20.51%** | Ohtani, Betts, Freeman, Yamamoto, Flaherty, Buehler |
 | 🥈 2 | ▲ +2 | **Atlanta Braves** | 73 - 49 | **100.0%** | **27.2%** | **17.92%** | Sale, Olson, Ozuna, Schwellenbach, Lopez, Harris II |
@@ -93,6 +93,26 @@ All 30 teams have been audited against strictly **2026 mid-season data (Game 121
 | 8 | ▼ -1 | **San Diego Padres** | 66 - 57 | **89.4%** | **7.8%** | **4.32%** | Tatis Jr., Machado, Merrill, Cease, King, Suarez |
 | 9 | ▲ +6 | **Detroit Tigers** | 60 - 62 | **59.7%** | **10.3%** | **3.25%** | Skubal, Greene, Carpenter, Keith, Holton, Foley |
 | 10 | — | **Philadelphia Phillies** | 65 - 58 | **49.0%** | **4.7%** | **2.75%** | Harper, Turner, Schwarber, Wheeler, Nola, Sánchez |
+| 11 | ▼ -3 | **Boston Red Sox** | 65 - 57 | **94.3%** | **7.1%** | **2.12%** | Devers, Duran, Casas, Gray, Houck, Crawford |
+| 12 | ▼ -3 | **Arizona Diamondbacks** | 65 - 58 | **41.1%** | **2.0%** | **0.87%** | Marte, Carroll, Arenado, Gallen, Kelly, Sewald |
+| 13 | ▲ +6 | **Texas Rangers** | 60 - 62 | **31.8%** | **2.4%** | **0.55%** | Seager, Semien, Nimmo, Eovaldi, deGrom, Yates |
+| 14 | ▲ +6 | **Toronto Blue Jays** | 60 - 64 | **31.6%** | **1.9%** | **0.53%** | Guerrero Jr., Bichette, Varsho, Gausman, Berríos |
+| 15 | ▲ +3 | **Minnesota Twins** | 60 - 63 | **13.9%** | **1.8%** | **0.53%** | Correa, Lewis, Buxton, López, Ober, Duran |
+| 16 | ▲ +6 | **Baltimore Orioles** | 59 - 63 | **17.5%** | **1.3%** | **0.31%** | Henderson, Rutschman, Santander, Burnes, Rodriguez, Eflin |
+| 17 | ▼ -4 | **Chicago White Sox** | 61 - 57 | **70.3%** | **2.4%** | **0.17%** | Robert Jr., Benintendi, Vaughn, Crochet, Martin, Kuhl |
+| 18 | ▲ +6 | **Seattle Mariners** | 57 - 65 | **1.9%** | **0.4%** | **0.10%** | Rodríguez, Raleigh, Arozarena, Kirby, Gilbert, Muñoz |
+| 19 | ▲ +2 | **Cleveland Guardians** | 59 - 64 | **2.0%** | **0.2%** | **0.09%** | Ramírez, Naylor, Kwan, Bibee, Williams, Clase |
+| 20 | ▼ -6 | **St. Louis Cardinals** | 61 - 61 | **10.9%** | **0.3%** | **0.03%** | Báez, Walker, Donovan, Fedde, Gibson, Helsley |
+| 21 | ▲ +2 | **Cincinnati Reds** | 59 - 62 | **2.1%** | **0.1%** | **0.03%** | De La Cruz, Steer, McLain, Greene, Lodolo, Díaz |
+| 22 | ▼ -5 | **Washington Nationals** | 60 - 64 | **1.5%** | **0.0%** | **0.02%** | Abrams, Wood, Crews, Gore, Parker, Finnegan |
+| 23 | ▼ -12 | **Miami Marlins** | 62 - 61 | **5.8%** | **0.1%** | **0.01%** | Burger, Lopez, Edwards, Cabrera, Faucher, Bender |
+| 24 | ▼ -8 | **Pittsburgh Pirates** | 60 - 64 | **0.3%** | **0.0%** | **0.01%** | Skenes, Keller, Jones, Reynolds, Cruz, Bednar |
+| 25 | ▲ +2 | **Kansas City Royals** | 49 - 73 | **0.0%** | **0.0%** | **0.00%** | Witt Jr., Perez, Pasquantino, Ragans, Lugo, Erceg |
+| 26 | ▲ +4 | **Oakland Athletics** | 47 - 74 | **0.0%** | **0.0%** | **0.00%** | Rooker, Butler, Bleday, Langeliers, Sears, Miller |
+| 27 | ▲ +1 | **Los Angeles Angels** | 48 - 74 | **0.0%** | **0.0%** | **0.00%** | Trout, Neto, O'Hoppe, Ward, Anderson, Joyce |
+| 28 | ▼ -3 | **New York Mets** | 53 - 69 | **0.0%** | **0.0%** | **0.00%** | Lindor, Alonso, Martinez, Senga, Manaea, Díaz |
+| 29 | ▼ -3 | **San Francisco Giants** | 50 - 71 | **0.0%** | **0.0%** | **0.00%** | Chapman, Ramos, Lee, Webb, Ray, Walker |
+| 30 | ▼ -1 | **Colorado Rockies** | 48 - 73 | **0.0%** | **0.0%** | **0.00%** | Tovar, Doyle, McMahon, Jones, Freeland, Kinley |
 
 ![2026 Core Roster & Rotation Anchors](docs/charts/roster_anchors_leaderboard.png)
 
