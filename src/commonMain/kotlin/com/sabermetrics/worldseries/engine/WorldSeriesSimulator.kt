@@ -7,6 +7,7 @@ import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.math.tanh
 import kotlin.random.Random
 
 /**
@@ -28,11 +29,11 @@ object WorldSeriesSimulator {
         val scores = teams.map { it.compositeRelativeFormScore }
         val mean = scores.average()
         val variance = scores.map { (it - mean) * (it - mean) }.average()
-        val stdDev = if (variance > 0) kotlin.math.sqrt(variance) else 1.0
+        val stdDev = if (variance > 0) sqrt(variance) else 1.0
 
         return teams.associate { team ->
             val zScore = (team.compositeRelativeFormScore - mean) / stdDev
-            val momentumMultiplier = (1.0 + 0.04 * kotlin.math.tanh(zScore / 1.5)).coerceIn(0.95, 1.05)
+            val momentumMultiplier = (1.0 + 0.04 * tanh(zScore / 1.5)).coerceIn(0.95, 1.05)
             team.teamId to momentumMultiplier
         }
     }

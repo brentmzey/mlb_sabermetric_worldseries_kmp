@@ -3,6 +3,7 @@ package com.sabermetrics.worldseries
 import com.sabermetrics.worldseries.engine.WorldSeriesSimulator
 import com.sabermetrics.worldseries.model.MlbTeamId
 import com.sabermetrics.worldseries.model.TeamProbability
+import com.sabermetrics.worldseries.sync.PocketHostSyncClient
 import com.sabermetrics.worldseries.util.TimeUtils
 import java.awt.Color
 import java.awt.Font
@@ -106,7 +107,7 @@ fun main() {
     println("   file://${csvFile.absolutePath}")
 
     // Sync to PocketHost / PocketBase Cloud DB with Exponential Back-Off
-    val syncClient = com.sabermetrics.worldseries.sync.PocketHostSyncClient()
+    val syncClient = PocketHostSyncClient()
     val syncReport = syncClient.syncDatabaseWithRetry(dynamicRunId, result, seed, currentEpochMs)
     val syncPayloadJson = syncClient.generateFullDatabaseSyncPackage(dynamicRunId, result, seed, currentEpochMs)
     val syncPayloadFile = File(outputDir, "pockethost_sync_payload.json")
