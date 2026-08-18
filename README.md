@@ -84,15 +84,15 @@ All 30 teams have been audited against strictly **2026 mid-season data (Game 121
 | Rank | Movement | Team Name | 2026 Record | Playoff % | Pennant % | World Series Win Prob % | 2026 Core Roster & Rotation Anchors |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
 | 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | 73 - 49 | **99.7%** | **29.8%** | **20.51%** | Ohtani, Betts, Freeman, Yamamoto, Flaherty, Buehler |
-| 🥈 2 | ▲ +2 | **Atlanta Braves** | 73 - 49 | **100.0%** | **27.2%** | **17.92%** | Sale, Ozuna, Schwellenbach, Lopez, Harris II |
+| 🥈 2 | ▲ +2 | **Atlanta Braves** | 73 - 49 | **100.0%** | **27.2%** | **17.92%** | Sale, Olson, Ozuna, Schwellenbach, Lopez, Harris II |
 | 🥉 3 | ▲ +3 | **New York Yankees** | 68 - 54 | **100.0%** | **33.1%** | **15.65%** | Judge, Soto, Cole, Rodón, Chisholm Jr., Gil |
-| 4 | ▼ -3 | **Milwaukee Brewers** | 75 - 47 | **100.0%** | **17.5%** | **11.45%** | Chourio, Contreras, Adames, Peralta, Megill, Hudson |
-| 5 | — | **Chicago Cubs** | 72 - 51 | **100.0%** | **16.6%** | **10.15%** | PCA, Happ, Busch, Swanson, Imanaga, Taillon |
+| 4 | ▼ -3 | **Milwaukee Brewers** | 75 - 47 | **100.0%** | **17.5%** | **11.45%** | Chourio, Contreras, Frelick, Turang, Peralta, Megill, Hudson |
+| 5 | — | **Chicago Cubs** | 72 - 51 | **100.0%** | **16.6%** | **10.15%** | PCA, Happ, Busch, Swanson, Imanaga, Taillon, Hodge |
 | 6 | ▼ -4 | **Tampa Bay Rays** | 74 - 46 | **100.0%** | **26.6%** | **8.60%** | Díaz, Lowe, Caminero, Bradley, Baz, Fairbanks |
 | 7 | ▲ +5 | **Houston Astros** | 62 - 60 | **77.1%** | **17.3%** | **6.63%** | Alvarez, Altuve, Bregman, Valdez, Brown, Hader |
-| 8 | ▼ -1 | **San Diego Padres** | 66 - 57 | **89.4%** | **7.8%** | **4.32%** | Tatis Jr., Machado, Merrill, Cease, King |
-| 9 | ▲ +6 | **Detroit Tigers** | 60 - 62 | **59.7%** | **10.3%** | **3.25%** | Skubal, Greene, Carpenter, Keith, Holton |
-| 10 | — | **Philadelphia Phillies** | 65 - 58 | **49.0%** | **4.7%** | **2.75%** | Harper, Turner, Wheeler, Nola, Suárez, Hoffman |
+| 8 | ▼ -1 | **San Diego Padres** | 66 - 57 | **89.4%** | **7.8%** | **4.32%** | Tatis Jr., Machado, Merrill, Cease, King, Suarez |
+| 9 | ▲ +6 | **Detroit Tigers** | 60 - 62 | **59.7%** | **10.3%** | **3.25%** | Skubal, Greene, Carpenter, Keith, Holton, Foley |
+| 10 | — | **Philadelphia Phillies** | 65 - 58 | **49.0%** | **4.7%** | **2.75%** | Harper, Turner, Schwarber, Wheeler, Nola, Sánchez |
 
 ![2026 Core Roster & Rotation Anchors](docs/charts/roster_anchors_leaderboard.png)
 
