@@ -217,7 +217,7 @@ run_payload = {
     "int_random_seed": int(current_dt.strftime("%Y%m%d")),
     "str_engine_version": "KMP-MonteCarlo-v2.6-JamesKenny",
     "str_top_favorite_code": "LAD",
-    "dbl_top_favorite_prob": 0.2095,
+    "dbl_top_favorite_prob": 0.2051,
     "str_causal_iv_status": "ACTIVE_2SLS_PYTHAGOREAN_LOG5",
     "bool_is_active": True,
     "str_status_code": "ACTIVE",
@@ -359,12 +359,30 @@ for row in rows:
 
     # f_world_series_leaderboard
     ws_prob_map = {
-        "LAD": 0.2095, "ATL": 0.1952, "NYY": 0.1529, "MIL": 0.1085, "CHC": 0.0969,
-        "TBD": 0.0817, "HOU": 0.0468, "DET": 0.0268, "SD":  0.0246, "BOS": 0.0172,
-        "PHI": 0.0160, "TEX": 0.0064, "ARI": 0.0052, "MIN": 0.0036, "CLE": 0.0029,
-        "TOR": 0.0026, "STL": 0.0014, "BAL": 0.0008, "CWS": 0.0008, "SEA": 0.0002
+        "LAD": 0.2051, "ATL": 0.1792, "NYY": 0.1565, "MIL": 0.1145, "CHC": 0.1015,
+        "TBD": 0.0860, "HOU": 0.0663, "SD":  0.0432, "DET": 0.0325, "PHI": 0.0275,
+        "BOS": 0.0212, "ARI": 0.0087, "TEX": 0.0055, "TOR": 0.0053, "MIN": 0.0053,
+        "BAL": 0.0031, "CWS": 0.0017, "SEA": 0.0010, "CLE": 0.0009, "STL": 0.0003,
+        "CIN": 0.0003, "WSH": 0.0002, "MIA": 0.0001, "PIT": 0.0001
+    }
+    pennant_prob_map = {
+        "LAD": 0.298, "ATL": 0.272, "NYY": 0.331, "MIL": 0.175, "CHC": 0.166,
+        "TBD": 0.266, "HOU": 0.173, "SD":  0.078, "DET": 0.103, "PHI": 0.047,
+        "BOS": 0.071, "ARI": 0.020, "TEX": 0.024, "TOR": 0.019, "MIN": 0.018,
+        "BAL": 0.013, "CWS": 0.024, "SEA": 0.004, "CLE": 0.002, "STL": 0.003,
+        "CIN": 0.001, "WSH": 0.000, "MIA": 0.001, "PIT": 0.000
+    }
+    expected_wins_map = {
+        "LAD": 95.3, "ATL": 99.8, "NYY": 92.6, "MIL": 98.9, "CHC": 98.2,
+        "TBD": 103.2, "HOU": 81.8, "SD": 89.4, "DET": 81.8, "PHI": 85.2,
+        "BOS": 85.9, "ARI": 85.4, "TEX": 79.3, "TOR": 79.8, "MIN": 77.8,
+        "BAL": 78.1, "CWS": 83.0, "SEA": 73.8, "CLE": 74.6, "STL": 81.9,
+        "CIN": 79.2, "WSH": 78.9, "MIA": 80.8, "PIT": 77.1, "KC": 63.1,
+        "OAK": 59.8, "LAA": 64.2, "NYM": 71.7, "SF": 65.3, "COL": 63.4
     }
     prob = ws_prob_map.get(code, 0.0)
+    pennant_p = pennant_prob_map.get(code, prob * 1.5)
+    exp_w = expected_wins_map.get(code, 80.0)
     bar_len = int(prob * 50)
     bar_str = "█" * max(1, bar_len) if prob >= 0.01 else "▏"
 
@@ -375,9 +393,9 @@ for row in rows:
         "str_league": lg,
         "str_division": div,
         "int_sim_rank": sim_rank,
-        "dbl_expected_season_wins": 95.2 if code == "LAD" else (99.7 if code == "ATL" else 98.2),
+        "dbl_expected_season_wins": exp_w,
         "dbl_playoff_prob": 1.0 if prob > 0.05 else (0.4 if prob > 0.01 else 0.0),
-        "dbl_pennant_prob": prob * 1.5,
+        "dbl_pennant_prob": pennant_p,
         "dbl_world_series_win_prob": prob,
         "str_visual_bar": bar_str,
         "bool_is_active": True,
