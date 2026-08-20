@@ -5,7 +5,7 @@ As of mid-August 2026 (Game 123), the **Chicago Cubs (72–51, .585 W-L)** are e
 
 - **Projected Season Wins**: **97.8 Wins** (NL Central contention, **100.0% Playoff Probability**)
 - **NL Pennant Probability**: **17.3%**
-- **World Series Win Probability**: **10.21%** (#5 overall favorite in MLB out of 30 teams)
+- **World Series Win Probability**: **10.37%** (#4 overall favorite in MLB out of 30 teams)
 
 ---
 

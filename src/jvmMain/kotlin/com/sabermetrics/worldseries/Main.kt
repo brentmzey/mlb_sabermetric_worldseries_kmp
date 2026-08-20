@@ -17,7 +17,7 @@ fun main() {
     val currentSeasonYear = TimeUtils.getSeasonYear(currentEpochMs)
     val currentIsoTimestamp = TimeUtils.formatIsoTimestampUtc(currentEpochMs)
     val dynamicRunId = "run_${currentSeasonYear}_postseason_mc10k_${TimeUtils.formatCompactDateUtc(currentEpochMs)}"
-    val seed = 20260803L
+    val seed = 42L
 
     println("=================================================================================================================")
     println(" ⚾ MLB SABERMETRIC WORLD SERIES PREDICTION & CAUSAL ESTIMATION SUITE (KMP Multiplatform)")

@@ -83,34 +83,34 @@ All 30 teams have been audited against strictly **2026 mid-season data (Game 121
 
 | Rank | Movement | Team Name | 2026 Record | Playoff % | Pennant % | World Series Win Prob % | 2026 Audited Core Roster & Rotation Anchors |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | 73 - 49 | **99.7%** | **29.8%** | **20.51%** | Ohtani, Betts, Freeman, Yamamoto, Flaherty, Buehler |
-| 🥈 2 | ▲ +2 | **Atlanta Braves** | 73 - 49 | **100.0%** | **27.2%** | **17.92%** | Sale, Olson, Ozuna, Schwellenbach, Lopez, Harris II |
-| 🥉 3 | ▲ +3 | **New York Yankees** | 68 - 54 | **100.0%** | **33.1%** | **15.65%** | Judge, Soto, Cole, Rodón, Chisholm Jr., Gil |
-| 4 | ▼ -3 | **Milwaukee Brewers** | 75 - 47 | **100.0%** | **17.5%** | **11.45%** | Chourio, Contreras, Frelick, Turang, Peralta, Megill, Hudson |
-| 5 | — | **Chicago Cubs** | 72 - 51 | **100.0%** | **16.6%** | **10.15%** | PCA, Happ, Busch, Swanson, Imanaga, Taillon, Hodge |
-| 6 | ▼ -4 | **Tampa Bay Rays** | 74 - 46 | **100.0%** | **26.6%** | **8.60%** | Díaz, Lowe, Caminero, Bradley, Baz, Fairbanks |
-| 7 | ▲ +5 | **Houston Astros** | 62 - 60 | **77.1%** | **17.3%** | **6.63%** | Alvarez, Altuve, Bregman, Valdez, Brown, Hader |
-| 8 | ▼ -1 | **San Diego Padres** | 66 - 57 | **89.4%** | **7.8%** | **4.32%** | Tatis Jr., Machado, Merrill, Cease, King, Suarez |
-| 9 | ▲ +6 | **Detroit Tigers** | 60 - 62 | **59.7%** | **10.3%** | **3.25%** | Skubal, Greene, Carpenter, Keith, Holton, Foley |
-| 10 | — | **Philadelphia Phillies** | 65 - 58 | **49.0%** | **4.7%** | **2.75%** | Harper, Turner, Schwarber, Wheeler, Nola, Sánchez |
-| 11 | ▼ -3 | **Boston Red Sox** | 65 - 57 | **94.3%** | **7.1%** | **2.12%** | Devers, Duran, Casas, Gray, Houck, Crawford |
-| 12 | ▼ -3 | **Arizona Diamondbacks** | 65 - 58 | **41.1%** | **2.0%** | **0.87%** | Marte, Carroll, Arenado, Gallen, Kelly, Sewald |
-| 13 | ▲ +6 | **Texas Rangers** | 60 - 62 | **31.8%** | **2.4%** | **0.55%** | Seager, Semien, Nimmo, Eovaldi, deGrom, Yates |
-| 14 | ▲ +6 | **Toronto Blue Jays** | 60 - 64 | **31.6%** | **1.9%** | **0.53%** | Guerrero Jr., Bichette, Varsho, Gausman, Berríos |
-| 15 | ▲ +3 | **Minnesota Twins** | 60 - 63 | **13.9%** | **1.8%** | **0.53%** | Correa, Lewis, Buxton, López, Ober, Duran |
-| 16 | ▲ +6 | **Baltimore Orioles** | 59 - 63 | **17.5%** | **1.3%** | **0.31%** | Henderson, Rutschman, Santander, Burnes, Rodriguez, Eflin |
-| 17 | ▼ -4 | **Chicago White Sox** | 61 - 57 | **70.3%** | **2.4%** | **0.17%** | Robert Jr., Benintendi, Vaughn, Crochet, Martin, Kuhl |
-| 18 | ▲ +6 | **Seattle Mariners** | 57 - 65 | **1.9%** | **0.4%** | **0.10%** | Rodríguez, Raleigh, Arozarena, Kirby, Gilbert, Muñoz |
-| 19 | ▲ +2 | **Cleveland Guardians** | 59 - 64 | **2.0%** | **0.2%** | **0.09%** | Ramírez, Naylor, Kwan, Bibee, Williams, Clase |
-| 20 | ▼ -6 | **St. Louis Cardinals** | 61 - 61 | **10.9%** | **0.3%** | **0.03%** | Báez, Walker, Donovan, Fedde, Gibson, Helsley |
-| 21 | ▲ +2 | **Cincinnati Reds** | 59 - 62 | **2.1%** | **0.1%** | **0.03%** | De La Cruz, Steer, McLain, Greene, Lodolo, Díaz |
-| 22 | ▼ -5 | **Washington Nationals** | 60 - 64 | **1.5%** | **0.0%** | **0.02%** | Abrams, Wood, Crews, Gore, Parker, Finnegan |
-| 23 | ▼ -12 | **Miami Marlins** | 62 - 61 | **5.8%** | **0.1%** | **0.01%** | Burger, Lopez, Edwards, Cabrera, Faucher, Bender |
-| 24 | ▼ -8 | **Pittsburgh Pirates** | 60 - 64 | **0.3%** | **0.0%** | **0.01%** | Skenes, Keller, Jones, Reynolds, Cruz, Bednar |
-| 25 | ▲ +2 | **Kansas City Royals** | 49 - 73 | **0.0%** | **0.0%** | **0.00%** | Witt Jr., Perez, Pasquantino, Ragans, Lugo, Erceg |
-| 26 | ▲ +4 | **Oakland Athletics** | 47 - 74 | **0.0%** | **0.0%** | **0.00%** | Rooker, Butler, Bleday, Langeliers, Sears, Miller |
-| 27 | ▲ +1 | **Los Angeles Angels** | 48 - 74 | **0.0%** | **0.0%** | **0.00%** | Trout, Neto, O'Hoppe, Ward, Anderson, Joyce |
-| 28 | ▼ -3 | **New York Mets** | 53 - 69 | **0.0%** | **0.0%** | **0.00%** | Lindor, Alonso, Martinez, Senga, Manaea, Díaz |
+| 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | 73 - 49 | **99.9%** | **28.5%** | **20.55%** | Ohtani, Betts, Freeman, Yamamoto, Flaherty, Buehler |
+| 🥈 2 | — | **Tampa Bay Rays** | 74 - 46 | **100.0%** | **37.1%** | **17.58%** | Díaz, Lowe, Caminero, Bradley, Baz, Fairbanks |
+| 🥉 3 | ▼ -2 | **Milwaukee Brewers** | 75 - 47 | **100.0%** | **23.9%** | **13.91%** | Chourio, Contreras, Frelick, Turang, Peralta, Megill, Hudson |
+| 4 | +1 | **Chicago Cubs** | 72 - 51 | **100.0%** | **17.3%** | **10.37%** | PCA, Happ, Busch, Swanson, Imanaga, Taillon, Hodge |
+| 5 | +1 | **New York Yankees** | 68 - 54 | **99.8%** | **19.8%** | **9.87%** | Judge, Soto, Cole, Rodón, Chisholm Jr., Gil |
+| 6 | ▼ -2 | **Atlanta Braves** | 73 - 49 | **100.0%** | **15.6%** | **7.84%** | Sale, Olson, Ozuna, Schwellenbach, Lopez, Harris II |
+| 7 | ▲ +5 | **Houston Astros** | 62 - 60 | **77.5%** | **17.2%** | **6.95%** | Alvarez, Altuve, Bregman, Valdez, Brown, Hader |
+| 8 | ▼ -1 | **San Diego Padres** | 66 - 57 | **89.4%** | **8.4%** | **4.79%** | Tatis Jr., Machado, Merrill, Cease, King, Suarez |
+| 9 | ▲ +6 | **Detroit Tigers** | 60 - 62 | **60.1%** | **10.5%** | **3.49%** | Skubal, Greene, Carpenter, Keith, Holton, Foley |
+| 10 | — | **Philadelphia Phillies** | 65 - 58 | **49.0%** | **4.6%** | **2.66%** | Harper, Turner, Schwarber, Wheeler, Nola, Sánchez |
+| 11 | ▼ -3 | **Boston Red Sox** | 65 - 57 | **94.4%** | **7.6%** | **2.20%** | Devers, Duran, Casas, Gray, Houck, Crawford |
+| 12 | ▼ -3 | **Arizona Diamondbacks** | 65 - 58 | **40.7%** | **2.0%** | **0.93%** | Marte, Carroll, Arenado, Gallen, Kelly, Sewald |
+| 13 | ▲ +6 | **Texas Rangers** | 60 - 62 | **31.7%** | **2.7%** | **0.68%** | Seager, Semien, Nimmo, Eovaldi, deGrom, Yates |
+| 14 | ▲ +4 | **Minnesota Twins** | 60 - 63 | **13.9%** | **1.8%** | **0.47%** | Correa, Lewis, Buxton, López, Ober, Duran |
+| 15 | ▲ +5 | **Toronto Blue Jays** | 60 - 64 | **31.2%** | **2.0%** | **0.38%** | Guerrero Jr., Bichette, Varsho, Gausman, Berríos |
+| 16 | ▲ +6 | **Baltimore Orioles** | 59 - 63 | **16.9%** | **1.1%** | **0.30%** | Henderson, Rutschman, Santander, Burnes, Rodriguez, Eflin |
+| 17 | ▼ -4 | **Chicago White Sox** | 61 - 57 | **70.4%** | **2.3%** | **0.27%** | Robert Jr., Benintendi, Vaughn, Crochet, Martin, Kuhl |
+| 18 | ▲ +6 | **Seattle Mariners** | 57 - 65 | **1.8%** | **0.4%** | **0.12%** | Rodríguez, Raleigh, Arozarena, Kirby, Gilbert, Muñoz |
+| 19 | ▲ +2 | **Cleveland Guardians** | 59 - 64 | **2.1%** | **0.4%** | **0.09%** | Ramírez, Naylor, Kwan, Bibee, Williams, Clase |
+| 20 | ▼ -6 | **St. Louis Cardinals** | 61 - 61 | **10.9%** | **0.2%** | **0.07%** | Báez, Walker, Donovan, Fedde, Gibson, Helsley |
+| 21 | ▼ -10 | **Miami Marlins** | 62 - 61 | **5.8%** | **0.1%** | **0.02%** | Burger, Lopez, Edwards, Cabrera, Faucher, Bender |
+| 22 | ▲ +1 | **Cincinnati Reds** | 59 - 62 | **2.1%** | **0.1%** | **0.01%** | De La Cruz, Steer, McLain, Greene, Lodolo, Díaz |
+| 23 | ▲ +4 | **Kansas City Royals** | 49 - 73 | **0.0%** | **0.0%** | **0.00%** | Witt Jr., Perez, Pasquantino, Ragans, Lugo, Erceg |
+| 24 | ▲ +6 | **Oakland Athletics** | 47 - 74 | **0.0%** | **0.0%** | **0.00%** | Rooker, Butler, Gelof, Sears, Severino, Miller |
+| 25 | ▲ +3 | **Los Angeles Angels** | 48 - 74 | **0.0%** | **0.0%** | **0.00%** | Trout, Neto, O'Hoppe, Ward, Anderson, Estevez |
+| 26 | ▼ -1 | **New York Mets** | 53 - 69 | **0.0%** | **0.0%** | **0.00%** | Lindor, Alonso, Nimmo, Manaea, Severino, Díaz |
+| 27 | ▼ -10 | **Washington Nationals** | 60 - 64 | **1.8%** | **0.0%** | **0.00%** | Abrams, Wood, Crews, Gore, Parker, Finnegan |
+| 28 | ▼ -12 | **Pittsburgh Pirates** | 60 - 64 | **0.4%** | **0.0%** | **0.00%** | Skenes, Keller, Jones, Reynolds, Cruz, Bednar |
 | 29 | ▼ -3 | **San Francisco Giants** | 50 - 71 | **0.0%** | **0.0%** | **0.00%** | Chapman, Ramos, Lee, Webb, Ray, Walker |
 | 30 | ▼ -1 | **Colorado Rockies** | 48 - 73 | **0.0%** | **0.0%** | **0.00%** | Tovar, Doyle, McMahon, Jones, Freeland, Kinley |
 

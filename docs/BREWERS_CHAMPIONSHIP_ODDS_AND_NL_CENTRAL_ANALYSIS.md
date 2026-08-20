@@ -4,8 +4,8 @@
 As of mid-August 2026 (Game 122), the **Milwaukee Brewers (75–47, .615 W-L)** lead the NL Central with a **+131 Run Differential (597 RS / 466 RA)** and a **3.0-game lead** over the Chicago Cubs (72–51). In our 10,000-iteration Monte Carlo 2SLS Causal Simulation Suite incorporating **Bill James' Pythagenpat Log5 Matchup Theorem**, **Brian Kenny's October Ace & Bullpen Leverage Compression**, **4-Pillar Whole-Season Consistency (1.084)**, **Media & Expert Consensus (1.090 from MLB.com/ESPN/MLB Network)**, **Polymarket Live Prediction Markets (8% live / $100 $\to$ $1,250 on official MLB.com Wild Card dashboard)**, and **Multi-Dimensional Relative Form**, the Brewers project as a premier World Series contender:
 
 - **Projected Season Wins**: **100.4 Wins** (NL Central leaders, **100.0% Playoff Probability**)
-- **NL Pennant Probability**: **23.8%**
-- **World Series Win Probability**: **14.18%** (**#2 overall favorite in MLB** out of 30 teams)
+- **NL Pennant Probability**: **23.9%**
+- **World Series Win Probability**: **13.91%** (**#3 overall favorite in MLB** out of 30 teams)
 
 ---
 
