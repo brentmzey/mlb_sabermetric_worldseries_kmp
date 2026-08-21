@@ -43,21 +43,21 @@ Welcome to the **MLB Sabermetric World Series Prediction Suite**. This open-sour
 | 13 | ▲ +6 | **Texas Rangers** | AL West | 60 - 62 | 79.3 | **31.8%** | **2.4%** | **0.55%** | `▏` |
 | 14 | ▲ +6 | **Toronto Blue Jays** | AL East | 60 - 64 | 79.8 | **31.6%** | **1.9%** | **0.53%** | `▏` |
 | 15 | ▲ +3 | **Minnesota Twins** | AL Central | 60 - 63 | 77.8 | **13.9%** | **1.8%** | **0.53%** | `▏` |
-| 16 | ▲ +6 | **Baltimore Orioles** | AL East | 59 - 63 | 78.1 | **17.5%** | **1.3%** | **0.31%** | `▏` |
-| 17 | ▼ -4 | **Chicago White Sox** | AL Central | 61 - 57 | 83.0 | **70.3%** | **2.4%** | **0.17%** | `▏` |
-| 18 | ▲ +6 | **Seattle Mariners** | AL West | 57 - 65 | 73.8 | **1.9%** | **0.4%** | **0.10%** | `▏` |
-| 19 | ▲ +2 | **Cleveland Guardians** | AL Central | 59 - 64 | 74.6 | **2.0%** | **0.2%** | **0.09%** | `▏` |
-| 20 | ▼ -6 | **St. Louis Cardinals** | NL Central | 61 - 61 | 81.9 | **10.9%** | **0.3%** | **0.03%** | `▏` |
-| 21 | ▲ +2 | **Cincinnati Reds** | NL Central | 59 - 62 | 79.2 | **2.1%** | **0.1%** | **0.03%** | `▏` |
-| 22 | ▼ -5 | **Washington Nationals** | NL East | 60 - 64 | 78.9 | **1.5%** | **0.0%** | **0.02%** | `▏` |
-| 23 | ▼ -12 | **Miami Marlins** | NL East | 62 - 61 | 80.8 | **5.8%** | **0.1%** | **0.01%** | `▏` |
-| 24 | ▼ -8 | **Pittsburgh Pirates** | NL Central | 60 - 64 | 77.1 | **0.3%** | **0.0%** | **0.01%** | `▏` |
-| 25 | ▲ +2 | **Kansas City Royals** | AL Central | 49 - 73 | 63.1 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 26 | ▲ +4 | **Oakland Athletics** | AL West | 47 - 74 | 59.8 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 27 | ▲ +1 | **Los Angeles Angels** | AL West | 48 - 74 | 64.2 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 28 | ▼ -3 | **New York Mets** | NL East | 53 - 69 | 71.7 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 29 | ▼ -3 | **San Francisco Giants** | NL West | 50 - 71 | 65.3 | **0.0%** | **0.0%** | **0.00%** | `▏` |
-| 30 | ▼ -1 | **Colorado Rockies** | NL West | 48 - 73 | 63.4 | **0.0%** | **0.0%** | **0.00%** | `▏`
+| 16 | ▼ -2 | **Chicago White Sox** | AL Central | 61 - 58 | 83.0 | **64.8%** | **3.4%** | **0.46%** | `▏` |
+| 17 | ▼ -3 | **St. Louis Cardinals** | NL Central | 61 - 61 | 83.7 | **23.4%** | **1.0%** | **0.43%** | `▏` |
+| 18 | ▲ +1 | **Cleveland Guardians** | AL Central | 59 - 63 | 76.7 | **6.9%** | **1.0%** | **0.40%** | `▏` |
+| 19 | ▲ +3 | **Baltimore Orioles** | AL East | 58 - 64 | 76.4 | **6.0%** | **0.6%** | **0.19%** | `▏` |
+| 20 | ▼ -9 | **Miami Marlins** | NL East | 62 - 60 | 84.2 | **30.6%** | **0.6%** | **0.18%** | `▏` |
+| 21 | ▲ +3 | **Seattle Mariners** | AL West | 56 - 65 | 73.6 | **1.2%** | **0.2%** | **0.04%** | `▏` |
+| 22 | ▼ -4 | **Washington Nationals** | NL East | 59 - 64 | 77.8 | **0.8%** | **0.0%** | **0.01%** | `▏` |
+| 23 | — | **Cincinnati Reds** | NL Central | 57 - 62 | 78.6 | **1.1%** | **0.0%** | **0.01%** | `▏` |
+| 24 | ▲ +3 | **Kansas City Royals** | AL Central | 49 - 73 | 63.7 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 25 | ▲ +4 | **Oakland Athletics** | AL West | 47 - 75 | 59.8 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 26 | ▲ +4 | **Los Angeles Angels** | AL West | 46 - 75 | 61.6 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 27 | ▼ -2 | **New York Mets** | NL East | 53 - 70 | 71.6 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 28 | ▼ -7 | **Pittsburgh Pirates** | NL Central | 58 - 65 | 74.5 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 29 | ▼ -3 | **San Francisco Giants** | NL West | 50 - 72 | 65.3 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 30 | ▼ -2 | **Colorado Rockies** | NL West | 48 - 74 | 63.5 | **0.0%** | **0.0%** | **0.00%** | `▏` |
 
 ---
 
@@ -81,38 +81,38 @@ All 30 teams have been audited against strictly **2026 mid-season data (Game 121
 
 > **Active Postseason Roster Principle**: Injured players who are out for the playoffs (such as **Justin Steele** for the Cubs, **Spencer Strider** & **Ronald Acuña Jr.** for the Braves, **Tyler Glasnow** for the Dodgers, and **Christian Yelich** for the Brewers) are **strictly excluded** from playoff roster anchor summaries and starting rotation quality metrics (Top-3 Ace ERA). Postseason win expectancy is mathematically conditioned solely on players who are active and available to take the diamond in October.
 
-| Rank | Movement | Team Name | 2026 Record | Playoff % | Pennant % | World Series Win Prob % | 2026 Audited Core Roster & Rotation Anchors |
-| :---: | :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | 73 - 49 | **99.9%** | **28.5%** | **20.55%** | Ohtani, Betts, Freeman, Yamamoto, Flaherty, Buehler |
-| 🥈 2 | — | **Tampa Bay Rays** | 74 - 46 | **100.0%** | **37.1%** | **17.58%** | Díaz, Lowe, Caminero, Bradley, Baz, Fairbanks |
-| 🥉 3 | ▼ -2 | **Milwaukee Brewers** | 75 - 47 | **100.0%** | **23.9%** | **13.91%** | Chourio, Contreras, Frelick, Turang, Peralta, Megill, Hudson |
-| 4 | +1 | **Chicago Cubs** | 72 - 51 | **100.0%** | **17.3%** | **10.37%** | PCA, Happ, Busch, Swanson, Imanaga, Taillon, Hodge |
-| 5 | +1 | **New York Yankees** | 68 - 54 | **99.8%** | **19.8%** | **9.87%** | Judge, Soto, Cole, Rodón, Chisholm Jr., Gil |
-| 6 | ▼ -2 | **Atlanta Braves** | 73 - 49 | **100.0%** | **15.6%** | **7.84%** | Sale, Olson, Ozuna, Schwellenbach, Lopez, Harris II |
-| 7 | ▲ +5 | **Houston Astros** | 62 - 60 | **77.5%** | **17.2%** | **6.95%** | Alvarez, Altuve, Bregman, Valdez, Brown, Hader |
-| 8 | ▼ -1 | **San Diego Padres** | 66 - 57 | **89.4%** | **8.4%** | **4.79%** | Tatis Jr., Machado, Merrill, Cease, King, Suarez |
-| 9 | ▲ +6 | **Detroit Tigers** | 60 - 62 | **60.1%** | **10.5%** | **3.49%** | Skubal, Greene, Carpenter, Keith, Holton, Foley |
-| 10 | — | **Philadelphia Phillies** | 65 - 58 | **49.0%** | **4.6%** | **2.66%** | Harper, Turner, Schwarber, Wheeler, Nola, Sánchez |
-| 11 | ▼ -3 | **Boston Red Sox** | 65 - 57 | **94.4%** | **7.6%** | **2.20%** | Devers, Duran, Casas, Gray, Houck, Crawford |
-| 12 | ▼ -3 | **Arizona Diamondbacks** | 65 - 58 | **40.7%** | **2.0%** | **0.93%** | Marte, Carroll, Arenado, Gallen, Kelly, Sewald |
-| 13 | ▲ +6 | **Texas Rangers** | 60 - 62 | **31.7%** | **2.7%** | **0.68%** | Seager, Semien, Nimmo, Eovaldi, deGrom, Yates |
-| 14 | ▲ +4 | **Minnesota Twins** | 60 - 63 | **13.9%** | **1.8%** | **0.47%** | Correa, Lewis, Buxton, López, Ober, Duran |
-| 15 | ▲ +5 | **Toronto Blue Jays** | 60 - 64 | **31.2%** | **2.0%** | **0.38%** | Guerrero Jr., Bichette, Varsho, Gausman, Berríos |
-| 16 | ▲ +6 | **Baltimore Orioles** | 59 - 63 | **16.9%** | **1.1%** | **0.30%** | Henderson, Rutschman, Santander, Burnes, Rodriguez, Eflin |
-| 17 | ▼ -4 | **Chicago White Sox** | 61 - 57 | **70.4%** | **2.3%** | **0.27%** | Robert Jr., Benintendi, Vaughn, Crochet, Martin, Kuhl |
-| 18 | ▲ +6 | **Seattle Mariners** | 57 - 65 | **1.8%** | **0.4%** | **0.12%** | Rodríguez, Raleigh, Arozarena, Kirby, Gilbert, Muñoz |
-| 19 | ▲ +2 | **Cleveland Guardians** | 59 - 64 | **2.1%** | **0.4%** | **0.09%** | Ramírez, Naylor, Kwan, Bibee, Williams, Clase |
-| 20 | ▼ -6 | **St. Louis Cardinals** | 61 - 61 | **10.9%** | **0.2%** | **0.07%** | Báez, Walker, Donovan, Fedde, Gibson, Helsley |
-| 21 | ▼ -10 | **Miami Marlins** | 62 - 61 | **5.8%** | **0.1%** | **0.02%** | Burger, Lopez, Edwards, Cabrera, Faucher, Bender |
-| 22 | ▲ +1 | **Cincinnati Reds** | 59 - 62 | **2.1%** | **0.1%** | **0.01%** | De La Cruz, Steer, McLain, Greene, Lodolo, Díaz |
-| 23 | ▲ +4 | **Kansas City Royals** | 49 - 73 | **0.0%** | **0.0%** | **0.00%** | Witt Jr., Perez, Pasquantino, Ragans, Lugo, Erceg |
-| 24 | ▲ +6 | **Oakland Athletics** | 47 - 74 | **0.0%** | **0.0%** | **0.00%** | Rooker, Butler, Gelof, Sears, Severino, Miller |
-| 25 | ▲ +3 | **Los Angeles Angels** | 48 - 74 | **0.0%** | **0.0%** | **0.00%** | Trout, Neto, O'Hoppe, Ward, Anderson, Estevez |
-| 26 | ▼ -1 | **New York Mets** | 53 - 69 | **0.0%** | **0.0%** | **0.00%** | Lindor, Alonso, Nimmo, Manaea, Severino, Díaz |
-| 27 | ▼ -10 | **Washington Nationals** | 60 - 64 | **1.8%** | **0.0%** | **0.00%** | Abrams, Wood, Crews, Gore, Parker, Finnegan |
-| 28 | ▼ -12 | **Pittsburgh Pirates** | 60 - 64 | **0.4%** | **0.0%** | **0.00%** | Skenes, Keller, Jones, Reynolds, Cruz, Bednar |
-| 29 | ▼ -3 | **San Francisco Giants** | 50 - 71 | **0.0%** | **0.0%** | **0.00%** | Chapman, Ramos, Lee, Webb, Ray, Walker |
-| 30 | ▼ -1 | **Colorado Rockies** | 48 - 73 | **0.0%** | **0.0%** | **0.00%** | Tovar, Doyle, McMahon, Jones, Freeland, Kinley |
+| Rank | Movement | Team Name | League & Div | Record | Expected Wins | Playoff % | Pennant % | World Series Win Prob % | Visual Bar |
+| :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| 🥇 1 | ▲ +2 | **Los Angeles Dodgers** | NL West | 73 - 49 | 95.3 | **99.7%** | **29.8%** | **20.51%** | `██████████` |
+| 🥈 2 | ▲ +2 | **Atlanta Braves** | NL East | 73 - 49 | 99.8 | **100.0%** | **27.2%** | **17.92%** | `█████████` |
+| 🥉 3 | ▲ +3 | **New York Yankees** | AL East | 68 - 54 | 92.6 | **100.0%** | **33.1%** | **15.65%** | `████████` |
+| 4 | ▼ -3 | **Milwaukee Brewers** | NL Central | 75 - 47 | 98.9 | **100.0%** | **17.5%** | **11.45%** | `██████` |
+| 5 | — | **Chicago Cubs** | NL Central | 72 - 51 | 98.2 | **100.0%** | **16.6%** | **10.15%** | `█████` |
+| 6 | ▼ -4 | **Tampa Bay Rays** | AL East | 74 - 46 | 103.2 | **100.0%** | **26.6%** | **8.60%** | `████` |
+| 7 | ▲ +5 | **Houston Astros** | AL West | 62 - 60 | 81.8 | **77.1%** | **17.3%** | **6.63%** | `███` |
+| 8 | ▼ -1 | **San Diego Padres** | NL West | 66 - 57 | 89.4 | **89.4%** | **7.8%** | **4.32%** | `██` |
+| 9 | ▲ +6 | **Detroit Tigers** | AL Central | 60 - 62 | 81.8 | **59.7%** | **10.3%** | **3.25%** | `██` |
+| 10 | — | **Philadelphia Phillies** | NL East | 65 - 58 | 85.2 | **49.0%** | **4.7%** | **2.75%** | `█` |
+| 11 | ▼ -3 | **Boston Red Sox** | AL East | 65 - 57 | 85.9 | **94.3%** | **7.1%** | **2.12%** | `█` |
+| 12 | ▼ -3 | **Arizona Diamondbacks** | NL West | 65 - 58 | 85.4 | **41.1%** | **2.0%** | **0.87%** | `▏` |
+| 13 | ▲ +6 | **Texas Rangers** | AL West | 60 - 62 | 79.3 | **31.8%** | **2.4%** | **0.55%** | `▏` |
+| 14 | ▲ +6 | **Toronto Blue Jays** | AL East | 60 - 64 | 79.8 | **31.6%** | **1.9%** | **0.53%** | `▏` |
+| 15 | ▲ +3 | **Minnesota Twins** | AL Central | 60 - 63 | 77.8 | **13.9%** | **1.8%** | **0.53%** | `▏` |
+| 16 | ▼ -2 | **Chicago White Sox** | AL Central | 61 - 58 | 83.0 | **64.8%** | **3.4%** | **0.46%** | `▏` |
+| 17 | ▼ -3 | **St. Louis Cardinals** | NL Central | 61 - 61 | 83.7 | **23.4%** | **1.0%** | **0.43%** | `▏` |
+| 18 | ▲ +1 | **Cleveland Guardians** | AL Central | 59 - 63 | 76.7 | **6.9%** | **1.0%** | **0.40%** | `▏` |
+| 19 | ▲ +3 | **Baltimore Orioles** | AL East | 58 - 64 | 76.4 | **6.0%** | **0.6%** | **0.19%** | `▏` |
+| 20 | ▼ -9 | **Miami Marlins** | NL East | 62 - 60 | 84.2 | **30.6%** | **0.6%** | **0.18%** | `▏` |
+| 21 | ▲ +3 | **Seattle Mariners** | AL West | 56 - 65 | 73.6 | **1.2%** | **0.2%** | **0.04%** | `▏` |
+| 22 | ▼ -4 | **Washington Nationals** | NL East | 59 - 64 | 77.8 | **0.8%** | **0.0%** | **0.01%** | `▏` |
+| 23 | — | **Cincinnati Reds** | NL Central | 57 - 62 | 78.6 | **1.1%** | **0.0%** | **0.01%** | `▏` |
+| 24 | ▲ +3 | **Kansas City Royals** | AL Central | 49 - 73 | 63.7 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 25 | ▲ +4 | **Oakland Athletics** | AL West | 47 - 75 | 59.8 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 26 | ▲ +4 | **Los Angeles Angels** | AL West | 46 - 75 | 61.6 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 27 | ▼ -2 | **New York Mets** | NL East | 53 - 70 | 71.6 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 28 | ▼ -7 | **Pittsburgh Pirates** | NL Central | 58 - 65 | 74.5 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 29 | ▼ -3 | **San Francisco Giants** | NL West | 50 - 72 | 65.3 | **0.0%** | **0.0%** | **0.00%** | `▏` |
+| 30 | ▼ -2 | **Colorado Rockies** | NL West | 48 - 74 | 63.5 | **0.0%** | **0.0%** | **0.00%** | `▏` |
 
 ![2026 Core Roster & Rotation Anchors](docs/charts/roster_anchors_leaderboard.png)
 
