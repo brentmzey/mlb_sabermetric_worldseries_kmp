@@ -313,8 +313,173 @@ object LocalSqliteDatabaseService {
             conn.commit()
         }
 
-        // Write SQL dump script
+        // Write SQLite SQL dump script
         sqlDumpFile.writeText(sqlBuilder.toString())
+
+        // 7. Generate Idempotent PostgreSQL Seed Script
+        val pgDumpFile = File(outputDir, "local_db_stack_postgres_seed.sql")
+        val pgBuilder = StringBuilder()
+        pgBuilder.append("""
+            -- Auto-generated Idempotent PostgreSQL Seed Script for ~/personal/local-db-stack
+            -- Target: local_postgres (port 15432, user: local_user, db: local_database)
+            
+            CREATE TABLE IF NOT EXISTS i_mlb_teams (
+                id VARCHAR(36) PRIMARY KEY,
+                str_team_code VARCHAR(3) NOT NULL UNIQUE,
+                str_team_name VARCHAR(60) NOT NULL,
+                str_league VARCHAR(2) NOT NULL,
+                str_division VARCHAR(10) NOT NULL,
+                str_city VARCHAR(50) NOT NULL,
+                str_ballpark VARCHAR(80) NOT NULL,
+                int_founded_year INTEGER NOT NULL,
+                int_mlb_api_id INTEGER NOT NULL UNIQUE,
+                bool_is_active BOOLEAN NOT NULL DEFAULT TRUE,
+                str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+                int_created_epoch_ms_utc BIGINT NOT NULL,
+                int_updated_epoch_ms_utc BIGINT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS f_world_series_leaderboard (
+                id VARCHAR(80) PRIMARY KEY,
+                str_run_id VARCHAR(60) NOT NULL,
+                str_team_code VARCHAR(3) NOT NULL REFERENCES i_mlb_teams(str_team_code),
+                str_team_name VARCHAR(60) NOT NULL,
+                str_league VARCHAR(2) NOT NULL,
+                str_division VARCHAR(10) NOT NULL,
+                int_sim_rank INTEGER NOT NULL,
+                dbl_expected_season_wins DOUBLE PRECISION NOT NULL,
+                dbl_playoff_prob DOUBLE PRECISION NOT NULL,
+                dbl_pennant_prob DOUBLE PRECISION NOT NULL,
+                dbl_world_series_win_prob DOUBLE PRECISION NOT NULL,
+                str_visual_bar VARCHAR(20),
+                bool_is_active BOOLEAN NOT NULL DEFAULT TRUE,
+                str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+                int_created_epoch_ms_utc BIGINT NOT NULL,
+                int_updated_epoch_ms_utc BIGINT NOT NULL
+            );
+
+            ALTER TABLE f_world_series_leaderboard ALTER COLUMN id TYPE VARCHAR(80);
+            TRUNCATE TABLE f_world_series_leaderboard CASCADE;
+
+        """.trimIndent()).append("\n\n")
+
+        for (t in teams) {
+            pgBuilder.append("INSERT INTO i_mlb_teams (id, str_team_code, str_team_name, str_league, str_division, str_city, str_ballpark, int_founded_year, int_mlb_api_id, bool_is_active, str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc) VALUES ('${t.teamId.name}', '${t.teamId.name}', '${t.name.replace("'", "''")}', '${t.league.name}', '${t.division.name}', '${t.teamId.city.replace("'", "''")}', '${t.teamId.ballpark.replace("'", "''")}', ${t.teamId.foundedYear}, ${t.teamId.mlbApiId}, TRUE, 'ACTIVE', $epochTimestampMs, $epochTimestampMs) ON CONFLICT (str_team_code) DO UPDATE SET str_team_name = EXCLUDED.str_team_name, int_updated_epoch_ms_utc = EXCLUDED.int_updated_epoch_ms_utc;\n")
+        }
+        pgBuilder.append("\n")
+
+        for (tp in result.leaderboard) {
+            val lId = "lead_${runId}_${tp.team.teamId.name.lowercase()}"
+            pgBuilder.append("INSERT INTO f_world_series_leaderboard (id, str_run_id, str_team_code, str_team_name, str_league, str_division, int_sim_rank, dbl_expected_season_wins, dbl_playoff_prob, dbl_pennant_prob, dbl_world_series_win_prob, str_visual_bar, bool_is_active, str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc) VALUES ('$lId', '$runId', '${tp.team.teamId.name}', '${tp.team.name.replace("'", "''")}', '${tp.team.league.name}', '${tp.team.division.name}', ${tp.simRank}, ${tp.expectedSeasonWins}, ${tp.playoffProb}, ${tp.pennantProb}, ${tp.worldSeriesWinProb}, '${tp.movementSymbol}', TRUE, 'ACTIVE', $epochTimestampMs, $epochTimestampMs) ON CONFLICT (id) DO UPDATE SET dbl_world_series_win_prob = EXCLUDED.dbl_world_series_win_prob, int_updated_epoch_ms_utc = EXCLUDED.int_updated_epoch_ms_utc;\n")
+        }
+
+        pgBuilder.append("""
+
+            CREATE OR REPLACE VIEW vw_latest_active_world_series_leaderboard AS
+            SELECT 
+                l.int_sim_rank AS sim_rank,
+                l.str_team_code AS team_code,
+                l.str_team_name AS team_name,
+                l.str_league AS league,
+                l.str_division AS division,
+                t.str_ballpark AS ballpark,
+                t.str_city AS city,
+                l.dbl_expected_season_wins AS expected_wins,
+                l.dbl_playoff_prob AS playoff_prob,
+                l.dbl_pennant_prob AS pennant_prob,
+                l.dbl_world_series_win_prob AS world_series_win_prob,
+                l.str_visual_bar AS visual_bar,
+                to_timestamp(l.int_created_epoch_ms_utc / 1000.0) AT TIME ZONE 'America/Chicago' AS updated_local
+            FROM f_world_series_leaderboard l
+            JOIN i_mlb_teams t ON l.str_team_code = t.str_team_code
+            WHERE l.bool_is_active = TRUE
+            ORDER BY l.int_sim_rank ASC;
+        """.trimIndent())
+        pgDumpFile.writeText(pgBuilder.toString())
+
+        // 8. Generate Idempotent MySQL Seed Script
+        val mysqlDumpFile = File(outputDir, "local_db_stack_mysql_seed.sql")
+        val mysqlBuilder = StringBuilder()
+        mysqlBuilder.append("""
+            -- Auto-generated Idempotent MySQL Seed Script for ~/personal/local-db-stack
+            -- Target: local_mysql (port 13306, user: local_user, db: local_database)
+            
+            USE local_database;
+
+            CREATE TABLE IF NOT EXISTS i_mlb_teams (
+                id VARCHAR(36) PRIMARY KEY,
+                str_team_code VARCHAR(3) NOT NULL UNIQUE,
+                str_team_name VARCHAR(60) NOT NULL,
+                str_league VARCHAR(2) NOT NULL,
+                str_division VARCHAR(10) NOT NULL,
+                str_city VARCHAR(50) NOT NULL,
+                str_ballpark VARCHAR(80) NOT NULL,
+                int_founded_year INT NOT NULL,
+                int_mlb_api_id INT NOT NULL UNIQUE,
+                bool_is_active BOOLEAN NOT NULL DEFAULT TRUE,
+                str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+                int_created_epoch_ms_utc BIGINT NOT NULL,
+                int_updated_epoch_ms_utc BIGINT NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS f_world_series_leaderboard (
+                id VARCHAR(80) PRIMARY KEY,
+                str_run_id VARCHAR(60) NOT NULL,
+                str_team_code VARCHAR(3) NOT NULL,
+                str_team_name VARCHAR(60) NOT NULL,
+                str_league VARCHAR(2) NOT NULL,
+                str_division VARCHAR(10) NOT NULL,
+                int_sim_rank INT NOT NULL,
+                dbl_expected_season_wins DOUBLE NOT NULL,
+                dbl_playoff_prob DOUBLE NOT NULL,
+                dbl_pennant_prob DOUBLE NOT NULL,
+                dbl_world_series_win_prob DOUBLE NOT NULL,
+                str_visual_bar VARCHAR(20),
+                bool_is_active BOOLEAN NOT NULL DEFAULT TRUE,
+                str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+                int_created_epoch_ms_utc BIGINT NOT NULL,
+                int_updated_epoch_ms_utc BIGINT NOT NULL,
+                FOREIGN KEY (str_team_code) REFERENCES i_mlb_teams(str_team_code)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            ALTER TABLE f_world_series_leaderboard MODIFY id VARCHAR(80);
+            DELETE FROM f_world_series_leaderboard;
+
+        """.trimIndent()).append("\n\n")
+
+        for (t in teams) {
+            mysqlBuilder.append("INSERT INTO i_mlb_teams (id, str_team_code, str_team_name, str_league, str_division, str_city, str_ballpark, int_founded_year, int_mlb_api_id, bool_is_active, str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc) VALUES ('${t.teamId.name}', '${t.teamId.name}', '${t.name.replace("'", "''")}', '${t.league.name}', '${t.division.name}', '${t.teamId.city.replace("'", "''")}', '${t.teamId.ballpark.replace("'", "''")}', ${t.teamId.foundedYear}, ${t.teamId.mlbApiId}, TRUE, 'ACTIVE', $epochTimestampMs, $epochTimestampMs) ON DUPLICATE KEY UPDATE str_team_name = VALUES(str_team_name), int_updated_epoch_ms_utc = VALUES(int_updated_epoch_ms_utc);\n")
+        }
+        mysqlBuilder.append("\n")
+
+        for (tp in result.leaderboard) {
+            val lId = "lead_${runId}_${tp.team.teamId.name.lowercase()}"
+            mysqlBuilder.append("INSERT INTO f_world_series_leaderboard (id, str_run_id, str_team_code, str_team_name, str_league, str_division, int_sim_rank, dbl_expected_season_wins, dbl_playoff_prob, dbl_pennant_prob, dbl_world_series_win_prob, str_visual_bar, bool_is_active, str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc) VALUES ('$lId', '$runId', '${tp.team.teamId.name}', '${tp.team.name.replace("'", "''")}', '${tp.team.league.name}', '${tp.team.division.name}', ${tp.simRank}, ${tp.expectedSeasonWins}, ${tp.playoffProb}, ${tp.pennantProb}, ${tp.worldSeriesWinProb}, '${tp.movementSymbol}', TRUE, 'ACTIVE', $epochTimestampMs, $epochTimestampMs) ON DUPLICATE KEY UPDATE dbl_world_series_win_prob = VALUES(dbl_world_series_win_prob), int_updated_epoch_ms_utc = VALUES(int_updated_epoch_ms_utc);\n")
+        }
+
+        mysqlBuilder.append("""
+
+            CREATE OR REPLACE VIEW vw_latest_active_world_series_leaderboard AS
+            SELECT 
+                l.int_sim_rank AS sim_rank,
+                l.str_team_code AS team_code,
+                l.str_team_name AS team_name,
+                l.str_league AS league,
+                l.str_division AS division,
+                t.str_ballpark AS ballpark,
+                t.str_city AS city,
+                l.dbl_expected_season_wins AS expected_wins,
+                l.dbl_playoff_prob AS playoff_prob,
+                l.dbl_pennant_prob AS pennant_prob,
+                l.dbl_world_series_win_prob AS world_series_win_prob,
+                l.str_visual_bar AS visual_bar,
+                FROM_UNIXTIME(l.int_created_epoch_ms_utc / 1000) AS updated_local
+            FROM f_world_series_leaderboard l
+            JOIN i_mlb_teams t ON l.str_team_code = t.str_team_code
+            WHERE l.bool_is_active = TRUE
+            ORDER BY l.int_sim_rank ASC;
+        """.trimIndent())
+        mysqlDumpFile.writeText(mysqlBuilder.toString())
 
         // Automatically sync artifacts to ~/personal/local-db-stack/sqlite and ~/.local-db-stack/data/sqlite if present
         val userHome = System.getProperty("user.home") ?: ""
@@ -328,6 +493,8 @@ object LocalSqliteDatabaseService {
                 if (!targetDir.exists()) targetDir.mkdirs()
                 sqliteFile.copyTo(File(targetDir, sqliteFile.name), overwrite = true)
                 sqlDumpFile.copyTo(File(targetDir, sqlDumpFile.name), overwrite = true)
+                pgDumpFile.copyTo(File(targetDir, pgDumpFile.name), overwrite = true)
+                mysqlDumpFile.copyTo(File(targetDir, mysqlDumpFile.name), overwrite = true)
                 val payloadFile = File(outputDir, "pockethost_sync_payload.json")
                 if (payloadFile.exists()) {
                     payloadFile.copyTo(File(targetDir, payloadFile.name), overwrite = true)
