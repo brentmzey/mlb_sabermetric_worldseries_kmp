@@ -125,6 +125,21 @@ fun main() {
     println("       3. [f_world_series_leaderboard] -> 30 Team Leaderboard Records")
     println("   • Cloud Sync Bundle Exported: file://${syncPayloadFile.absolutePath}")
 
+    // Export to Local SQLite Database & Local PocketBase Stack
+    val localDbReport = com.sabermetrics.worldseries.sync.LocalSqliteDatabaseService.exportToLocalSqliteDatabase(
+        runId = dynamicRunId,
+        result = result,
+        epochTimestampMs = currentEpochMs,
+        outputDir = outputDir
+    )
+
+    println("\n💾  LOCAL DATABASE STACK (SQLITE & LOCAL POCKETBASE DUMP):")
+    println("   • SQLite_Database_File: file://${localDbReport.sqliteFile.absolutePath}")
+    println("   • SQL_Full_Dump_Script: file://${localDbReport.sqlDumpFile.absolutePath}")
+    println("   • Tables_Created: ${localDbReport.totalTablesCreated} (m_simulation_runs, i_mlb_teams, i_team_season_inputs, m_latent_quality_estimates, f_world_series_leaderboard)")
+    println("   • Rows_Inserted: ${localDbReport.totalRowsInserted} rows in ${localDbReport.executionTimeMs}ms")
+    println("   • Local_Stack_Status: ✅ COMPLETE & READY FOR LOCAL SQL QUERYING")
+
     // Generate high-resolution chart graphics
     generateChartImage(result.leaderboard.take(8), currentSeasonYear)
     generateLineChartImage(result.leaderboard.take(8), currentSeasonYear)

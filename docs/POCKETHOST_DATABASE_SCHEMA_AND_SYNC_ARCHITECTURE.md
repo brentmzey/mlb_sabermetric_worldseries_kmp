@@ -313,8 +313,41 @@ migrate((db) => {
 
 ---
 
+## 💾 3. Local Database Stack (Offline SQLite & SQL Dump Synchronization)
+
+To ensure zero-dependency local operation, offline analytics, and continuous integration testing, the application automatically exports the full database stack locally on every simulation run alongside cloud synchronization:
+
+### 3.1 Local Artifacts Generated in `output_datasets/`
+1. 🗄️ **SQLite Relational Database**: [`output_datasets/mlb_sabermetrics_local.sqlite`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/output_datasets/mlb_sabermetrics_local.sqlite)
+   - Native SQLite binary database with full indexes (`idx_f_leaderboard_ws`, `idx_m_latent_quality`, `idx_i_team_inputs_run`).
+   - Queryable with standard CLI tools (`sqlite3`), GUI clients (DBeaver, TablePlus, JetBrains DataGrip), or Python/Node.js/Go scripts.
+2. 📜 **Full SQL DDL & DML Dump**: [`output_datasets/mlb_sabermetrics_local_dump.sql`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/output_datasets/mlb_sabermetrics_local_dump.sql)
+   - Complete standard SQL script to recreate tables and insert all 121 records into PostgreSQL, MySQL, SQLite, or DuckDB.
+3. 📦 **PocketHost Multi-Collection JSON Bundle**: [`output_datasets/pockethost_sync_payload.json`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/output_datasets/pockethost_sync_payload.json)
+   - Hungarian JSON payload package containing all 30 team records across `m_simulation_runs`, `m_latent_quality_estimates`, and `f_world_series_leaderboard`.
+
+### 3.2 Example SQL Queries for Local Database
+```sql
+-- Query Top 10 World Series Favorites from Local SQLite DB
+SELECT 
+    simulated_rank,
+    team_id,
+    rank_movement_indicator,
+    printf('%.2f%%', world_series_win_probability * 100) AS ws_prob,
+    printf('%.2f%%', pennant_win_probability * 100) AS pennant_prob,
+    printf('%.1f', projected_season_wins) AS proj_wins
+FROM f_world_series_leaderboard
+ORDER BY simulated_rank ASC
+LIMIT 10;
+```
+
+---
+
 ## 🔗 Related Documentation & Visual Artifacts
 - 📖 **[`README.md`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/README.md)**: Main Econometric Architecture & Leaderboard
 - 📖 **[`docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/MODEL_BIAS_AND_ECONOMETRIC_RESIDUALS.md)**: Econometric Residuals & 2SLS IV Diagnostics
+- 🧠 **[`docs/CAUSAL_SURVIVAL_THEORY_AND_OCTOBER_PREDICTIONS.md`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/CAUSAL_SURVIVAL_THEORY_AND_OCTOBER_PREDICTIONS.md)**: Causal Survival Theory & October Predictions
 - 📁 **JSON Schema Definitions**: [`docs/schema/pockethost_hungarian_schema.json`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/schema/pockethost_hungarian_schema.json)
 - 📁 **SQL DDL Scripts**: [`docs/schema/pockethost_schema.sql`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/schema/pockethost_schema.sql)
+- 💾 **Local SQLite Database**: [`output_datasets/mlb_sabermetrics_local.sqlite`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/output_datasets/mlb_sabermetrics_local.sqlite)
+- 📜 **Local SQL Dump**: [`output_datasets/mlb_sabermetrics_local_dump.sql`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/output_datasets/mlb_sabermetrics_local_dump.sql)

@@ -29,6 +29,15 @@ class MainJvmTest {
         assertTrue(syncPayloadFile.exists(), "PocketHost sync payload must exist")
         assertTrue(syncPayloadFile.length() > 500L, "PocketHost sync payload must contain serialized JSON")
 
+        // Verify Local SQLite Database and SQL Dump exist
+        val sqliteDbFile = File("output_datasets/mlb_sabermetrics_local.sqlite")
+        assertTrue(sqliteDbFile.exists(), "Local SQLite Database file must exist")
+        assertTrue(sqliteDbFile.length() > 1000L, "Local SQLite Database file must be non-empty (> 1KB)")
+
+        val sqlDumpFile = File("output_datasets/mlb_sabermetrics_local_dump.sql")
+        assertTrue(sqlDumpFile.exists(), "Local SQL dump script must exist")
+        assertTrue(sqlDumpFile.length() > 1000L, "Local SQL dump script must be non-empty (> 1KB)")
+
         // Verify all 8 chart images exist and are non-empty
         val chartFiles = listOf(
             File("docs/charts/world_series_win_probabilities.png"),
@@ -67,5 +76,26 @@ class MainJvmTest {
 
         val barChart = File("docs/charts/world_series_win_probabilities.png")
         assertTrue(barChart.exists() && barChart.length() > 0)
+    }
+
+    @Test
+    fun testLocalSqliteDatabaseExport() {
+        val result = WorldSeriesSimulator.runWorldSeriesSimulation(iterations = 500, seed = 42L)
+        val tempDir = File("build/tmp/test_local_db")
+        if (tempDir.exists()) tempDir.deleteRecursively()
+        tempDir.mkdirs()
+
+        val report = com.sabermetrics.worldseries.sync.LocalSqliteDatabaseService.exportToLocalSqliteDatabase(
+            runId = "test_run_sqlite_001",
+            result = result,
+            epochTimestampMs = 1787390000000L,
+            outputDir = tempDir
+        )
+
+        assertTrue(report.isSuccessful, "Local database export must succeed")
+        assertEquals(5, report.totalTablesCreated, "5 tables must be created")
+        assertTrue(report.totalRowsInserted >= 90, "At least 90 rows must be inserted")
+        assertTrue(report.sqliteFile.exists() && report.sqliteFile.length() > 0, "SQLite file must exist")
+        assertTrue(report.sqlDumpFile.exists() && report.sqlDumpFile.length() > 0, "SQL dump file must exist")
     }
 }
