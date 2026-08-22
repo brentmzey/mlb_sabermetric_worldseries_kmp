@@ -115,10 +115,9 @@ $$\sum_{p \in \text{Pillars}} \text{Weight}_p = 0.25 + 0.15 + 0.35 + 0.25 = 1.00
 
 ---
 
-## 4. Cross-Language Usage Examples
+## 4. Cross-Language Usage & Code Generation Specifications
 
-### Kotlin Multiplatform Usage
-
+### 🅺 Kotlin Multiplatform (KMP)
 ```kotlin
 import com.sabermetrics.worldseries.model.MlbTeamId
 import com.sabermetrics.worldseries.model.StatPillarType
@@ -137,8 +136,9 @@ val wsRound = PostseasonRound.WORLD_SERIES
 println("Series: ${wsRound.displayName}, Best of: ${wsRound.bestOf}")
 ```
 
-### Python 3.10+ Usage
+---
 
+### 🐍 Python 3.10+
 ```python
 from domain_registry import MLB_REGISTRY, MlbTeamCode, StatPillarType, PostseasonRound
 
@@ -157,9 +157,130 @@ print(f"Round: {ws.name}, Games: {ws.best_of}, Format: {ws.home_field_format}")
 
 ---
 
-## 5. Automated Validation & Test Suite
+### ☕ Java (JDK 17+) & Scala 3
+```java
+import com.sabermetrics.worldseries.model.MlbTeamId;
+import com.sabermetrics.worldseries.model.StatPillarType;
+import com.sabermetrics.worldseries.model.PostseasonRound;
 
-The cross-language registry is verified continuously in the CI/CD pipeline across both test runners:
+public class PolyglotDomainConsumer {
+    public static void main(String[] args) {
+        MlbTeamId team = MlbTeamId.Companion.fromCode("NYY");
+        System.out.printf("Team: %s, Ballpark: %s, League: %s\n",
+            team.getFullName(), team.getBallpark(), team.getLeague());
+            
+        StatPillarType sp = StatPillarType.Companion.fromCode("STARTING_PITCHING");
+        System.out.printf("Pillar: %s (Weight: %.2f)\n", sp.getDisplayName(), sp.getWeight());
+    }
+}
+```
 
-* **Kotlin Test Suite**: [`src/commonTest/kotlin/com/sabermetrics/worldseries/SabermetricTest.kt`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/src/commonTest/kotlin/com/sabermetrics/worldseries/SabermetricTest.kt) (`testMlbTeamIdEnumAndParsing`, `testCrossLanguageDomainRegistryEnums`).
-* **Python Test Suite**: [`tests/test_domain_registry.py`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/tests/test_domain_registry.py) (`test_franchise_counts_and_lookups`, `test_stat_pillar_weights_conservation`, `test_postseason_rounds`).
+---
+
+### 🔷 TypeScript / JavaScript (Web Frontend)
+```typescript
+import { MlbTeamCode, League, StatPillarType, TeamFranchiseMetadata } from "./schema/mlb_domain_types";
+
+export function renderTeamCard(meta: TeamFranchiseMetadata): string {
+  return `<div class="card">
+    <h3>${meta.fullName} (${meta.code})</h3>
+    <p>${meta.league} ${meta.division} • ${meta.ballpark}</p>
+  </div>`;
+}
+```
+
+---
+
+### 🍎 Swift (iOS / macOS Target)
+```swift
+import Foundation
+
+public enum League: String, Codable {
+    case al = "AL"
+    case nl = "NL"
+}
+
+public enum MlbTeamCode: String, Codable, CaseIterable {
+    case nyy = "NYY", bal = "BAL", bos = "BOS", tbd = "TBD", tor = "TOR"
+    case cle = "CLE", kc = "KC",  det = "DET", min = "MIN", cws = "CWS"
+    case hou = "HOU", sea = "SEA", tex = "TEX", oak = "OAK", laa = "LAA"
+    case phi = "PHI", atl = "ATL", nym = "NYM", wsh = "WSH", mia = "MIA"
+    case mil = "MIL", chc = "CHC", stl = "STL", cin = "CIN", pit = "PIT"
+    case lad = "LAD", sd = "SD",  ari = "ARI", sf = "SF",  col = "COL"
+}
+```
+
+---
+
+### 🦀 Rust (High-Performance Sim Worker)
+```rust
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum League {
+    AL,
+    NL,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum StatPillarType {
+    OFFENSE,
+    DEFENSE,
+    #[serde(rename = "STARTING_PITCHING")]
+    StartingPitching,
+    #[serde(rename = "BULLPEN_LEVERAGE")]
+    BullpenLeverage,
+}
+```
+
+---
+
+## 5. SQL & Database Query Language Mapping
+
+The schema enforces strict domain validation across SQLite, PostgreSQL, PocketBase, and GraphQL:
+
+### A. Strict SQL DDL & Check Constraints (`docs/schema/mlb_domain_schema.sql`)
+```sql
+CREATE TABLE IF NOT EXISTS i_mlb_teams (
+    id VARCHAR(36) PRIMARY KEY,
+    str_team_code VARCHAR(3) NOT NULL UNIQUE,
+    str_team_name VARCHAR(60) NOT NULL,
+    str_league VARCHAR(2) NOT NULL CHECK (str_league IN ('AL', 'NL')),
+    str_division VARCHAR(10) NOT NULL CHECK (str_division IN ('EAST', 'CENTRAL', 'WEST')),
+    int_mlb_api_id INTEGER NOT NULL UNIQUE,
+    bool_is_active INTEGER NOT NULL DEFAULT 1 CHECK (bool_is_active IN (0, 1)),
+    str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' 
+        CHECK (str_status_code IN ('ACTIVE', 'INACTIVE', 'SUPERSEDED', 'ARCHIVED'))
+);
+```
+
+### B. High-Performance SQL View
+```sql
+CREATE VIEW IF NOT EXISTS vw_latest_active_world_series_leaderboard AS
+SELECT 
+    l.int_sim_rank AS sim_rank,
+    l.str_team_code AS team_code,
+    l.str_team_name AS team_name,
+    l.str_league AS league,
+    l.dbl_world_series_win_prob AS world_series_win_prob,
+    l.str_visual_bar AS visual_bar
+FROM f_world_series_leaderboard l
+WHERE l.bool_is_active = 1
+ORDER BY l.int_sim_rank ASC;
+```
+
+### C. PocketBase / REST Query Filter Dialect
+```
+GET /api/collections/f_world_series_leaderboard/records?filter=(str_team_code='CHC' && bool_is_active=true)&sort=-int_updated_epoch_ms_utc&limit=1
+```
+
+---
+
+## 6. Automated Validation & Test Suite
+
+The cross-language registry is verified continuously in the CI/CD pipeline across all language runners:
+
+* **Kotlin Multiplatform Test Runner**: [`src/commonTest/kotlin/com/sabermetrics/worldseries/SabermetricTest.kt`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/src/commonTest/kotlin/com/sabermetrics/worldseries/SabermetricTest.kt) (`testMlbTeamIdEnumAndParsing`, `testCrossLanguageDomainRegistryEnums`).
+* **Python 3.10+ Test Runner**: [`tests/test_domain_registry.py`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/tests/test_domain_registry.py) (`test_franchise_counts_and_lookups`, `test_stat_pillar_weights_conservation`, `test_postseason_rounds`).
+* **SQL DDL Syntax Validation**: Verified against in-memory SQLite schema engine via `docs/schema/mlb_domain_schema.sql`.
+
