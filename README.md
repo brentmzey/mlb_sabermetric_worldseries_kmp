@@ -5,6 +5,7 @@
 [![Test Coverage](https://img.shields.io/badge/Coverage-99.56%25_Line_(914%2F918)-brightgreen.svg)]()
 [![Unit Tests](https://img.shields.io/badge/Tests-100%25_Passing-success.svg)]()
 [![Domain Registry](https://img.shields.io/badge/Domain_Registry-Cross--Language_Enums-teal.svg)](docs/CROSS_LANGUAGE_DOMAIN_REGISTRY.md)
+[![Econometric Theory](https://img.shields.io/badge/Econometrics-Davidson_%26_MacKinnon_ETM-blue.svg)](docs/ECONOMETRIC_THEORY_AND_METHODS_WALKTHROUGH.md)
 [![PocketHost DB](https://img.shields.io/badge/PocketHost-PocketBase_Schema-blue.svg)](docs/POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md)
 [![Query & Backup](https://img.shields.io/badge/PocketBase-Query_&_Backup-green.svg)](docs/POCKETBASE_QUERYING_BACKUP_AND_LOCAL_DEPLOYMENT.md)
 [![Local DB Stack](https://img.shields.io/badge/Local_DB_Stack-Postgres_|_SQLite-purple.svg)](docs/POCKETBASE_QUERYING_BACKUP_AND_LOCAL_DEPLOYMENT.md)
@@ -546,6 +547,33 @@ To maintain structural parity and type safety across both the **Kotlin Multiplat
 | **Playoff Rounds** | `PostseasonRound` | `PostseasonRound`, `PostseasonRoundDefinition` | `"postseason_rounds"` | `WILD_CARD` $\dots$ `WORLD_SERIES` |
 | **Hungarian DB** | `HungarianCollectionPrefix` | `HungarianCollectionPrefix` | `"hungarian_prefixes"` | `i_`, `m_`, `s_`, `o_`, `f_` |
 | **Record Status** | `RecordStatusCode` | `RecordStatusCode` | `"record_status_codes"` | `ACTIVE`, `INACTIVE`, `SUPERSEDED`, `ARCHIVED` |
+
+---
+
+## 📐 Econometric Foundations: *Econometric Theory and Methods* (Davidson & MacKinnon)
+
+The modeling pipeline rigorously implements the graduate-level econometric framework established in **"Econometric Theory and Methods" (ETM)** by Russell Davidson & James G. MacKinnon (Oxford University Press, 2004):
+
+* 📖 **Full Mathematical Walkthrough**: [`docs/ECONOMETRIC_THEORY_AND_METHODS_WALKTHROUGH.md`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/ECONOMETRIC_THEORY_AND_METHODS_WALKTHROUGH.md)
+* 🔬 **Causal Survival Framework**: [`docs/CAUSAL_SURVIVAL_FRAMEWORK.md`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/CAUSAL_SURVIVAL_FRAMEWORK.md)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                           DAVIDSON & MACKINNON (ETM) BLUEPRINT                              │
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│  1. Orthogonal Projections & Frisch-Waugh-Lovell (FWL) Theorem (Chapter 2)                  │
+│     Purges unrepeatable 1-run luck & sequencing variance via the annihilator matrix M_Z.   │
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│  2. Generalized Instrumental Variables (2SLS / IV) (Chapter 8)                              │
+│     Estimates Latent True Quality (q_i) using exogenous park-neutral leading instruments.   │
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│  3. Binary Choice & Multinomial Logit Link Functions (Chapter 11)                           │
+│     Transforms latent quality indices into head-to-head Log5 game win probabilities.        │
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│  4. Monte Carlo Finite-Sample Simulation & Asymptotics (Chapters 4 & 9)                     │
+│     Simulates 10,000 tournament brackets to calculate exact championship probabilities.    │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
