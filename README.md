@@ -6,6 +6,8 @@
 [![Unit Tests](https://img.shields.io/badge/Tests-100%25_Passing-success.svg)]()
 [![Domain Registry](https://img.shields.io/badge/Domain_Registry-Cross--Language_Enums-teal.svg)](docs/CROSS_LANGUAGE_DOMAIN_REGISTRY.md)
 [![PocketHost DB](https://img.shields.io/badge/PocketHost-PocketBase_Schema-blue.svg)](docs/POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md)
+[![Query & Backup](https://img.shields.io/badge/PocketBase-Query_&_Backup-green.svg)](docs/POCKETBASE_QUERYING_BACKUP_AND_LOCAL_DEPLOYMENT.md)
+[![Local DB Stack](https://img.shields.io/badge/Local_DB_Stack-Postgres_|_SQLite-purple.svg)](docs/POCKETBASE_QUERYING_BACKUP_AND_LOCAL_DEPLOYMENT.md)
 [![JVM](https://img.shields.io/badge/JVM-17%2B-red.svg)](https://www.oracle.com/java/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -635,6 +637,37 @@ object ScalaMlbSimulator {
     }
   }
 }
+```
+
+---
+
+## 🗄️ PocketHost / PocketBase Querying, Automated Backup, & Local DB Stack Integration
+
+The repository features comprehensive utilities to **query live cloud data**, **automate database backups**, and **replicate datasets to local SQLite, PostgreSQL, and local-db-stack (`~/personal/local-db-stack`)**:
+
+* 📖 **Full Architectural & Querying Guide**: [`docs/POCKETBASE_QUERYING_BACKUP_AND_LOCAL_DEPLOYMENT.md`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/POCKETBASE_QUERYING_BACKUP_AND_LOCAL_DEPLOYMENT.md)
+* 🔍 **Programmatic Live Query Utility**: [`scripts/query_latest_pockethost_data.py`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/scripts/query_latest_pockethost_data.py)
+* 💾 **Automated Database Backup & JSON Dump**: [`scripts/backup_and_export_pockethost.py`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/scripts/backup_and_export_pockethost.py)
+* 🚀 **Local DB Stack Replicator & PostgreSQL Bridge**: [`scripts/sync_to_local_db_stack.py`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/scripts/sync_to_local_db_stack.py)
+* 🐘 **Generated PostgreSQL Container Seed**: [`output_datasets/local_db_stack_postgres_seed.sql`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/output_datasets/local_db_stack_postgres_seed.sql)
+
+### ⚡ Quick-Run Local Database Commands
+
+```bash
+# 1. Query live PocketHost 4-pillar sabermetric data and simulation runs
+python3 scripts/query_latest_pockethost_data.py
+
+# 2. Export full timestamped JSON backup archive & rebuild local SQLite database
+python3 scripts/backup_and_export_pockethost.py
+
+# 3. Synchronize with local-db-stack (~/personal/local-db-stack)
+python3 scripts/sync_to_local_db_stack.py
+
+# 4. Seed local PostgreSQL container in local-db-stack:
+docker exec -i local_postgres psql -U local_user -d local_database < output_datasets/local_db_stack_postgres_seed.sql
+
+# 5. Query local zero-dependency SQLite analytical database:
+sqlite3 output_datasets/mlb_sabermetric_local.db "SELECT * FROM vw_latest_active_world_series_leaderboard LIMIT 10;"
 ```
 
 ---

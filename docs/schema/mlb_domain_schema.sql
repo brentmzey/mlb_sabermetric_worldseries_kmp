@@ -13,14 +13,14 @@ CREATE TABLE IF NOT EXISTS i_mlb_teams (
     id VARCHAR(36) PRIMARY KEY,
     str_team_code VARCHAR(3) NOT NULL UNIQUE,
     str_team_name VARCHAR(60) NOT NULL,
-    str_league VARCHAR(2) NOT NULL CHECK (str_league IN ('AL', 'NL')),
-    str_division VARCHAR(10) NOT NULL CHECK (str_division IN ('EAST', 'CENTRAL', 'WEST')),
+    str_league VARCHAR(2) NOT NULL CHECK (UPPER(str_league) IN ('AL', 'NL')),
+    str_division VARCHAR(10) NOT NULL CHECK (UPPER(str_division) IN ('EAST', 'CENTRAL', 'WEST')),
     str_city VARCHAR(50) NOT NULL,
     str_ballpark VARCHAR(80) NOT NULL,
     int_founded_year INTEGER NOT NULL CHECK (int_founded_year >= 1850 AND int_founded_year <= 2100),
     int_mlb_api_id INTEGER NOT NULL UNIQUE,
     bool_is_active INTEGER NOT NULL DEFAULT 1 CHECK (bool_is_active IN (0, 1)),
-    str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (str_status_code IN ('ACTIVE', 'INACTIVE', 'SUPERSEDED', 'ARCHIVED')),
+    str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (UPPER(str_status_code) IN ('ACTIVE', 'INACTIVE', 'SUPERSEDED', 'ARCHIVED')),
     int_created_epoch_ms_utc BIGINT NOT NULL,
     int_updated_epoch_ms_utc BIGINT NOT NULL
 );
@@ -132,8 +132,8 @@ CREATE TABLE IF NOT EXISTS f_world_series_leaderboard (
     str_run_id VARCHAR(60) NOT NULL REFERENCES m_simulation_runs(str_run_id) ON DELETE CASCADE,
     str_team_code VARCHAR(3) NOT NULL REFERENCES i_mlb_teams(str_team_code) ON DELETE RESTRICT,
     str_team_name VARCHAR(60) NOT NULL,
-    str_league VARCHAR(2) NOT NULL CHECK (str_league IN ('AL', 'NL')),
-    str_division VARCHAR(10) NOT NULL CHECK (str_division IN ('EAST', 'CENTRAL', 'WEST')),
+    str_league VARCHAR(2) NOT NULL CHECK (UPPER(str_league) IN ('AL', 'NL')),
+    str_division VARCHAR(10) NOT NULL CHECK (UPPER(str_division) IN ('EAST', 'CENTRAL', 'WEST')),
     int_sim_rank INTEGER NOT NULL CHECK (int_sim_rank >= 1 AND int_sim_rank <= 30),
     dbl_expected_season_wins DOUBLE PRECISION NOT NULL CHECK (dbl_expected_season_wins >= 30.0 AND dbl_expected_season_wins <= 130.0),
     dbl_playoff_prob DOUBLE PRECISION NOT NULL CHECK (dbl_playoff_prob >= 0.0 AND dbl_playoff_prob <= 1.0),
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS f_world_series_leaderboard (
     dbl_world_series_win_prob DOUBLE PRECISION NOT NULL CHECK (dbl_world_series_win_prob >= 0.0 AND dbl_world_series_win_prob <= 1.0),
     str_visual_bar VARCHAR(20),
     bool_is_active INTEGER NOT NULL DEFAULT 1 CHECK (bool_is_active IN (0, 1)),
-    str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (str_status_code IN ('ACTIVE', 'INACTIVE', 'SUPERSEDED', 'ARCHIVED')),
+    str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE' CHECK (UPPER(str_status_code) IN ('ACTIVE', 'INACTIVE', 'SUPERSEDED', 'ARCHIVED')),
     int_created_epoch_ms_utc BIGINT NOT NULL,
     int_updated_epoch_ms_utc BIGINT NOT NULL,
     CONSTRAINT uq_leaderboard_run_team UNIQUE (str_run_id, str_team_code)
@@ -172,4 +172,14 @@ SELECT
 FROM f_world_series_leaderboard l
 JOIN i_mlb_teams t ON l.str_team_code = t.str_team_code
 WHERE l.bool_is_active = 1
+  AND (
+    l.str_run_id = (
+      SELECT m.str_run_id 
+      FROM m_simulation_runs m 
+      WHERE m.bool_is_active = 1 
+      ORDER BY m.int_updated_epoch_ms_utc DESC 
+      LIMIT 1
+    )
+    OR NOT EXISTS (SELECT 1 FROM m_simulation_runs)
+  )
 ORDER BY l.int_sim_rank ASC;
