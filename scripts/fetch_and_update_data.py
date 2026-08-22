@@ -110,6 +110,69 @@ TEAM_ID_TO_CODE: Final[Mapping[int, str]] = {
 }
 
 
+def _calculate_season_consistency(wins: int, losses: int, runs_scored: float, runs_allowed: float) -> float:
+    """Computes a team's season consistency score based on actual vs Pythagorean win percentage variance."""
+    pyth_denom: float = (runs_scored ** 1.83) + (runs_allowed ** 1.83)
+    pyth_pct: float = ((runs_scored ** 1.83) / pyth_denom) if pyth_denom > 0 else 0.500
+    total_games: int = wins + losses
+    actual_pct: float = (wins / total_games) if total_games > 0 else 0.500
+    luck_diff: float = abs(actual_pct - pyth_pct)
+    consistency_adj: float = max(-0.08, min(0.08, 0.04 - luck_diff * 0.8))
+    return round(1.0 + consistency_adj, 3)
+
+
+def _extract_last10_record(splits_container: Optional[MlbSplitRecordsContainerJson]) -> tuple[int, int]:
+    """Extracts (wins, losses) for the last 10 games from an MLB split records container."""
+    splits: List[MlbSplitRecordJson] = splits_container.get("splitRecords", []) if splits_container else []
+    last10: Optional[MlbSplitRecordJson] = next((s for s in splits if s.get("type") == "lastTen"), None)
+    l10_w: int = int(last10.get("wins", 5)) if last10 else 5
+    l10_l: int = int(last10.get("losses", 5)) if last10 else 5
+    return l10_w, l10_l
+
+
+def _parse_single_team_record(tr: MlbTeamRecordEntryJson) -> Optional[LiveTeamRecord]:
+    """Parses an individual team record entry from the MLB Stats API JSON."""
+    team_ref: Optional[MlbTeamReferenceJson] = tr.get("team")
+    t_id: int = int(team_ref.get("id", 0)) if team_ref else 0
+    code: Optional[str] = TEAM_ID_TO_CODE.get(t_id)
+    if not code:
+        return None
+
+    wins: int = int(tr.get("wins", 0))
+    losses: int = int(tr.get("losses", 0))
+    rs: float = float(tr.get("runsScored", 0.0))
+    ra: float = float(tr.get("runsAllowed", 0.0))
+    
+    splits_container: Optional[MlbSplitRecordsContainerJson] = tr.get("records")
+    l10_w, l10_l = _extract_last10_record(splits_container)
+    consistency: float = _calculate_season_consistency(wins, losses, rs, ra)
+
+    return LiveTeamRecord(
+        code=code,
+        wins=wins,
+        losses=losses,
+        runs_scored=rs,
+        runs_allowed=ra,
+        last10_wins=l10_w,
+        last10_losses=l10_l,
+        consistency_score=consistency
+    )
+
+
+def _parse_all_standings_records(records: Sequence[MlbDivisionStandingsRecordJson]) -> Dict[str, LiveTeamRecord]:
+    """Parses a sequence of division standings into a map of team codes to LiveTeamRecord objects."""
+    records_map: Dict[str, LiveTeamRecord] = {}
+    record: MlbDivisionStandingsRecordJson
+    for record in records:
+        team_records: List[MlbTeamRecordEntryJson] = record.get("teamRecords", [])
+        tr: MlbTeamRecordEntryJson
+        for tr in team_records:
+            parsed_team: Optional[LiveTeamRecord] = _parse_single_team_record(tr)
+            if parsed_team:
+                records_map[parsed_team.code] = parsed_team
+    return records_map
+
+
 def fetch_live_standings(season_year: int) -> Dict[str, LiveTeamRecord]:
     """Fetches live regular season standings and recency splits from MLB Stats API."""
     url: str = f"https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season={season_year}"
@@ -127,52 +190,40 @@ def fetch_live_standings(season_year: int) -> Dict[str, LiveTeamRecord]:
         print(f"⚠️ Warning: Could not fetch from MLB Stats API: {err_msg}")
         return {}
 
-    records_map: Dict[str, LiveTeamRecord] = {}
     records: List[MlbDivisionStandingsRecordJson] = data.get("records", [])
+    return _parse_all_standings_records(records)
 
-    record: MlbDivisionStandingsRecordJson
-    for record in records:
-        team_records: List[MlbTeamRecordEntryJson] = record.get("teamRecords", [])
-        tr: MlbTeamRecordEntryJson
-        for tr in team_records:
-            team_ref: Optional[MlbTeamReferenceJson] = tr.get("team")
-            t_id: int = int(team_ref.get("id", 0)) if team_ref else 0
-            code: Optional[str] = TEAM_ID_TO_CODE.get(t_id)
-            if not code:
-                continue
 
-            wins: int = int(tr.get("wins", 0))
-            losses: int = int(tr.get("losses", 0))
-            rs: float = float(tr.get("runsScored", 0.0))
-            ra: float = float(tr.get("runsAllowed", 0.0))
-            
-            splits_container: Optional[MlbSplitRecordsContainerJson] = tr.get("records")
-            splits: List[MlbSplitRecordJson] = splits_container.get("splitRecords", []) if splits_container else []
-            last10: Optional[MlbSplitRecordJson] = next((s for s in splits if s.get("type") == "lastTen"), None)
-            l10_w: int = int(last10.get("wins", 5)) if last10 else 5
-            l10_l: int = int(last10.get("losses", 5)) if last10 else 5
+def _reconstruct_team_args(code: str, raw_args: str, live_data: Mapping[str, LiveTeamRecord]) -> str:
+    """Reconstructs the Kotlin MlbTeam(...) arguments string preserving analytical parameters."""
+    if code not in live_data:
+        return f"MlbTeam(MlbTeamId.{code}, {raw_args})"
 
-            pyth_denom: float = (rs ** 1.83) + (ra ** 1.83)
-            pyth_pct: float = ((rs ** 1.83) / pyth_denom) if pyth_denom > 0 else 0.500
-            total_games: int = wins + losses
-            actual_pct: float = (wins / total_games) if total_games > 0 else 0.500
-            luck_diff: float = abs(actual_pct - pyth_pct)
-            consistency_adj: float = max(-0.08, min(0.08, 0.04 - luck_diff * 0.8))
-            consistency: float = round(1.0 + consistency_adj, 3)
+    ld: LiveTeamRecord = live_data[code]
+    parts: List[str] = [p.strip() for p in raw_args.split(",") if p.strip()]
 
-            live_record: LiveTeamRecord = LiveTeamRecord(
-                code=code,
-                wins=wins,
-                losses=losses,
-                runs_scored=rs,
-                runs_allowed=ra,
-                last10_wins=l10_w,
-                last10_losses=l10_l,
-                consistency_score=consistency
-            )
-            records_map[code] = live_record
+    # parts structure in MlbTeam(...):
+    # 0: wins, 1: losses, 2: rs, 3: ra,
+    # 4..12: teamWar, wOBA, wRCPlus, fip, xFip, bullpenWpa, top3AceEra, tradeDeadlineWarAdded, clubhouseHypeIndex (9 params)
+    # 13: last10Wins, 14: last10Losses, 15: seasonConsistencyScore
+    # 16+: remaining analytical pillar params (marketImpliedWsProb, expertConsensusRating, etc.)
+    if len(parts) >= 16:
+        middle_params: List[str] = parts[4:13]
+        trailing_params: List[str] = parts[16:]
+        reconstructed_parts: List[str] = (
+            [str(ld.wins), str(ld.losses), f"{ld.runs_scored:.1f}", f"{ld.runs_allowed:.1f}"]
+            + middle_params
+            + [str(ld.last10_wins), str(ld.last10_losses), f"{ld.consistency_score:.3f}"]
+            + trailing_params
+        )
+        joined_params: str = ", ".join(reconstructed_parts)
+        return f"MlbTeam(MlbTeamId.{code}, {joined_params})"
+    elif len(parts) >= 4:
+        middle_params_fallback: List[str] = parts[4:]
+        joined_fallback: str = ", ".join(middle_params_fallback)
+        return f"MlbTeam(MlbTeamId.{code}, {ld.wins}, {ld.losses}, {ld.runs_scored:.1f}, {ld.runs_allowed:.1f}, {joined_fallback})"
 
-    return records_map
+    return f"MlbTeam(MlbTeamId.{code}, {raw_args})"
 
 
 def update_sabermetric_data_service(kt_file_path: str, live_data: Mapping[str, LiveTeamRecord]) -> bool:
@@ -189,33 +240,8 @@ def update_sabermetric_data_service(kt_file_path: str, live_data: Mapping[str, L
 
     def replace_team_entry(match: Match[str]) -> str:
         code: str = match.group(1)
-        if code in live_data:
-            ld: LiveTeamRecord = live_data[code]
-            raw_args: str = match.group(2).strip()
-            parts: List[str] = [p.strip() for p in raw_args.split(",") if p.strip()]
-            
-            # parts structure in MlbTeam(...):
-            # 0: wins, 1: losses, 2: rs, 3: ra,
-            # 4..12: teamWar, wOBA, wRCPlus, fip, xFip, bullpenWpa, top3AceEra, tradeDeadlineWarAdded, clubhouseHypeIndex (9 params)
-            # 13: last10Wins, 14: last10Losses, 15: seasonConsistencyScore
-            # 16+: remaining analytical pillar params (marketImpliedWsProb, expertConsensusRating, etc.)
-            if len(parts) >= 16:
-                middle_params: List[str] = parts[4:13]
-                trailing_params: List[str] = parts[16:]
-                reconstructed_parts: List[str] = (
-                    [str(ld.wins), str(ld.losses), f"{ld.runs_scored:.1f}", f"{ld.runs_allowed:.1f}"]
-                    + middle_params
-                    + [str(ld.last10_wins), str(ld.last10_losses), f"{ld.consistency_score:.3f}"]
-                    + trailing_params
-                )
-                joined_params: str = ", ".join(reconstructed_parts)
-                return f"MlbTeam(MlbTeamId.{code}, {joined_params})"
-            elif len(parts) >= 4:
-                middle_params_fallback: List[str] = parts[4:]
-                joined_fallback: str = ", ".join(middle_params_fallback)
-                return f"MlbTeam(MlbTeamId.{code}, {ld.wins}, {ld.losses}, {ld.runs_scored:.1f}, {ld.runs_allowed:.1f}, {joined_fallback})"
-        original_matched: str = match.group(0)
-        return original_matched
+        raw_args: str = match.group(2).strip()
+        return _reconstruct_team_args(code, raw_args, live_data)
 
     pattern: re.Pattern[str] = re.compile(r'MlbTeam\(MlbTeamId\.([A-Z]+),\s*(.*?)\)')
     new_content: str = pattern.sub(replace_team_entry, content)
@@ -257,5 +283,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
 

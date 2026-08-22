@@ -167,6 +167,39 @@ def build_pipeline_steps(proj_dir: str) -> Sequence[PipelineStep]:
     return steps
 
 
+def _print_pipeline_header(proj_dir: str, summary: PipelineRunSummary) -> None:
+    """Prints the formatted start banner for the daily refresh pipeline."""
+    print("================================================================================")
+    print(" ⚾ MLB 2026 DAILY FULL DATA REFRESH, STOCHASTIC SIMULATION & SYNC PIPELINE")
+    print(f"    Target Directory: {proj_dir}")
+    print(f"    Start Timestamp UTC: {summary.start_utc} ({summary.start_epoch_ms} ms)")
+    print("================================================================================")
+
+
+def _execute_pipeline_sequence(steps: Sequence[PipelineStep], summary: PipelineRunSummary) -> None:
+    """Executes each pipeline step sequentially and aborts if a critical step fails."""
+    step: PipelineStep
+    for step in steps:
+        result: StepExecutionResult = run_pipeline_step(step)
+        summary.step_results.append(result)
+        if not result.is_success and step.is_critical:
+            print(f"\n🛑 Pipeline aborted due to failure in critical step: '{step.name}'")
+            sys.exit(result.return_code)
+
+
+def _print_pipeline_completion(summary: PipelineRunSummary) -> None:
+    """Prints the completion summary and lists all generated artifacts."""
+    print("\n================================================================================")
+    print(" 🏁 DAILY FULL REFRESH & SIMULATION PIPELINE COMPLETE")
+    print(f"    Completion Timestamp UTC: {summary.completion_utc} ({summary.completion_epoch_ms} ms)")
+    print(f"    Total Pipeline Execution Time: {summary.total_elapsed_seconds:.2f}s")
+    print("    Artifacts Updated:")
+    artifact_item: str
+    for artifact_item in summary.artifacts:
+        print(f"      • 📁 {artifact_item}")
+    print("================================================================================\n")
+
+
 def main() -> None:
     """Main entrypoint for the daily automated sabermetric pipeline."""
     script_dir: str = os.path.dirname(__file__)
@@ -191,36 +224,16 @@ def main() -> None:
         artifacts=artifact_paths
     )
 
-    print("================================================================================")
-    print(" ⚾ MLB 2026 DAILY FULL DATA REFRESH, STOCHASTIC SIMULATION & SYNC PIPELINE")
-    print(f"    Target Directory: {proj_dir}")
-    print(f"    Start Timestamp UTC: {summary.start_utc} ({summary.start_epoch_ms} ms)")
-    print("================================================================================")
-
+    _print_pipeline_header(proj_dir, summary)
     steps: Sequence[PipelineStep] = build_pipeline_steps(proj_dir)
-
-    step: PipelineStep
-    for step in steps:
-        result: StepExecutionResult = run_pipeline_step(step)
-        summary.step_results.append(result)
-        if not result.is_success and step.is_critical:
-            print(f"\n🛑 Pipeline aborted due to failure in critical step: '{step.name}'")
-            sys.exit(result.return_code)
+    _execute_pipeline_sequence(steps, summary)
 
     summary.completion_utc = get_utc_iso()
     summary.completion_epoch_ms = get_utc_epoch_ms()
-
-    print("\n================================================================================")
-    print(" 🏁 DAILY FULL REFRESH & SIMULATION PIPELINE COMPLETE")
-    print(f"    Completion Timestamp UTC: {summary.completion_utc} ({summary.completion_epoch_ms} ms)")
-    print(f"    Total Pipeline Execution Time: {summary.total_elapsed_seconds:.2f}s")
-    print("    Artifacts Updated:")
-    artifact_item: str
-    for artifact_item in summary.artifacts:
-        print(f"      • 📁 {artifact_item}")
-    print("================================================================================\n")
+    _print_pipeline_completion(summary)
 
 
 if __name__ == "__main__":
     main()
+
 
