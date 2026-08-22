@@ -4,7 +4,7 @@ PocketHost Hungarian Relational Database Migration & Multi-Dimensional Sabermetr
 Deploys 13 Hungarian-prefixed relational collections (i_, m_, s_, o_, f_), sets up indices for instantaneous
 latest-active index scans, and populates comprehensive traceable time-series and simulation data with
 explicit Epoch Milliseconds in UTC (int_created_epoch_ms_utc and int_updated_epoch_ms_utc).
-Strongly typed using Python 3.10+ dataclasses, type annotations, and structured schemas.
+Strongly typed using Python 3.10+ dataclasses, TypedDict schemas, and explicit type annotations for all variables.
 """
 from __future__ import annotations
 
@@ -17,7 +17,20 @@ import datetime
 import urllib.request
 import urllib.error
 from dataclasses import dataclass, field
-from typing import Any, Dict, Final, List, Mapping, Optional, Sequence, Tuple
+from typing import (
+    Any,
+    Dict,
+    Final,
+    List,
+    Mapping,
+    Optional,
+    Sequence,
+    TextIO,
+    Tuple,
+    TypedDict,
+    Union,
+    cast
+)
 
 
 POCKETHOST_URL: Final[str] = "https://mlb-sabermetric-worldseries.pockethost.io"
@@ -27,19 +40,25 @@ SCHEMA_FILE: Final[str] = os.path.join(os.path.dirname(__file__), "..", "docs", 
 CSV_FILE: Final[str] = os.path.join(os.path.dirname(__file__), "..", "output_datasets", "mlb_sabermetric_clean_dataset.csv")
 
 # Load .env credentials
+env_loc: str
 for env_loc in [os.path.join(os.path.dirname(__file__), "..", ".env"), os.path.expanduser("~/.env")]:
-    if os.path.exists(env_loc):
-        with open(env_loc, "r") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    k, v = line.split("=", 1)
-                    k = k.strip()
-                    v = v.strip().strip('"').strip("'")
-                    if k == "POCKETHOST_ADMIN_EMAIL" and not ADMIN_EMAIL:
-                        ADMIN_EMAIL = v
-                    elif k == "POCKETHOST_ADMIN_PASSWORD" and not ADMIN_PASSWORD:
-                        ADMIN_PASSWORD = v
+    env_exists: bool = os.path.exists(env_loc)
+    if env_exists:
+        f_env: TextIO
+        with open(env_loc, "r", encoding="utf-8") as f_env:
+            line: str
+            for line in f_env:
+                stripped_line: str = line.strip()
+                if stripped_line and not stripped_line.startswith("#") and "=" in stripped_line:
+                    k: str
+                    v: str
+                    k, v = stripped_line.split("=", 1)
+                    k_clean: str = k.strip()
+                    v_clean: str = v.strip().strip('"').strip("'")
+                    if k_clean == "POCKETHOST_ADMIN_EMAIL" and not ADMIN_EMAIL:
+                        ADMIN_EMAIL = v_clean
+                    elif k_clean == "POCKETHOST_ADMIN_PASSWORD" and not ADMIN_PASSWORD:
+                        ADMIN_PASSWORD = v_clean
 
 print("================================================================================")
 print(" 🚀 POCKETHOST HUNGARIAN RELATIONAL DATABASE MIGRATION & DATA INGESTION ENGINE")
@@ -50,6 +69,77 @@ if not ADMIN_EMAIL or not ADMIN_PASSWORD:
     print("❌ Error: Missing admin credentials in ~/.env or .env.")
     sys.exit(1)
 
+
+# ==============================================================================
+# TypedDict Definitions for PocketHost Hungarian Schemas & Payloads
+# ==============================================================================
+
+class HungarianFieldSchemaJson(TypedDict, total=False):
+    system: bool
+    id: str
+    name: str
+    type: str
+    required: bool
+    presentable: bool
+    unique: bool
+    options: Dict[str, Any]
+
+
+class HungarianCollectionSchemaJson(TypedDict, total=False):
+    id: str
+    name: str
+    type: str
+    system: bool
+    schema: List[HungarianFieldSchemaJson]
+    indexes: List[str]
+    listRule: Optional[str]
+    viewRule: Optional[str]
+    createRule: Optional[str]
+    updateRule: Optional[str]
+    deleteRule: Optional[str]
+
+
+class PocketHostListResponseJson(TypedDict, total=False):
+    page: int
+    perPage: int
+    totalItems: int
+    totalPages: int
+    items: List[Dict[str, Any]]
+
+
+class MlbCleanCsvRow(TypedDict, total=False):
+    Team_ID: str
+    Team_Name: str
+    League: str
+    Division: str
+    Wins: str
+    Losses: str
+    Runs_Scored: str
+    Runs_Allowed: str
+    Team_WAR: str
+    wOBA: str
+    wRC_Plus: str
+    FIP: str
+    xFIP: str
+    Bullpen_WPA: str
+    Top3_Ace_ERA: str
+    Last10_Wins: str
+    Last10_Losses: str
+    Defensive_Efficiency: str
+    Media_Power_Rank_Index: str
+    Market_Futures_Prob: str
+    Four_Pillar_Consistency: str
+    Regular_Season_Rank: str
+    Sim_Rank: str
+    Rank_Movement: str
+    Pythagorean_Win_Pct: str
+    Recency_Win_Pct: str
+    Clubhouse_Hype_Index: str
+
+
+# ==============================================================================
+# Domain Model Dataclasses
+# ==============================================================================
 
 @dataclass(frozen=True)
 class TeamMetadata:
@@ -104,7 +194,9 @@ class CubsScenarioConfig:
 
 def get_current_epoch_ms_utc() -> int:
     """Returns the current timestamp in Epoch Milliseconds UTC as a 64-bit integer."""
-    return int(datetime.datetime.now(datetime.timezone.utc).timestamp() * 1000)
+    now_utc_dt: datetime.datetime = datetime.datetime.now(datetime.timezone.utc)
+    epoch_sec: float = now_utc_dt.timestamp()
+    return int(epoch_sec * 1000)
 
 
 def http_post(url: str, data_dict: Dict[str, Any], inner_token: Optional[str] = None) -> Optional[Dict[str, Any]]:
@@ -115,20 +207,26 @@ def http_post(url: str, data_dict: Dict[str, Any], inner_token: Optional[str] = 
     }
     if inner_token:
         headers["Authorization"] = inner_token
+        
+    attempt: int
     for attempt in range(4):
         try:
+            json_bytes: bytes = json.dumps(data_dict).encode("utf-8")
             req: urllib.request.Request = urllib.request.Request(
                 url,
-                data=json.dumps(data_dict).encode("utf-8"),
+                data=json_bytes,
                 headers=headers,
                 method="POST"
             )
             with urllib.request.urlopen(req, timeout=15) as resp:
-                body: str = resp.read().decode("utf-8")
-                return json.loads(body) if body.strip() else {}
-        except urllib.error.HTTPError as e:
-            if e.code == 429 or e.code >= 500:
-                time.sleep(1.0 * (attempt + 1))
+                resp_bytes: bytes = resp.read()
+                resp_str: str = resp_bytes.decode("utf-8")
+                return cast(Dict[str, Any], json.loads(resp_str)) if resp_str.strip() else {}
+        except urllib.error.HTTPError as http_err:
+            err_code: int = http_err.code
+            if err_code == 429 or err_code >= 500:
+                backoff_sec: float = 1.0 * (attempt + 1)
+                time.sleep(backoff_sec)
                 continue
             return None
         except Exception:
@@ -146,12 +244,16 @@ def http_get(url: str, token: Optional[str] = None) -> Optional[Dict[str, Any]]:
     }
     if token:
         headers["Authorization"] = token
+        
+    attempt: int
     for attempt in range(3):
         try:
             req: urllib.request.Request = urllib.request.Request(url, headers=headers, method="GET")
             with urllib.request.urlopen(req, timeout=15) as resp:
-                parsed: Any = json.loads(resp.read().decode("utf-8"))
-                return parsed if isinstance(parsed, dict) else {"items": parsed}
+                resp_bytes: bytes = resp.read()
+                resp_str: str = resp_bytes.decode("utf-8")
+                parsed: Any = json.loads(resp_str)
+                return cast(Dict[str, Any], parsed) if isinstance(parsed, dict) else {"items": parsed}
         except Exception:
             time.sleep(1.0)
     return None
@@ -161,10 +263,13 @@ def authenticate_admin(email: str, password: str) -> str:
     """Authenticates admin credentials against PocketHost and returns the Bearer token."""
     print("🔐 Authenticating Admin account with PocketHost...")
     token: Optional[str] = None
+    attempt: int
     for attempt in range(6):
+        auth_ep: str
         for auth_ep in ["/api/collections/_superusers/auth-with-password", "/api/admins/auth-with-password"]:
             try:
-                res: Optional[Dict[str, Any]] = http_post(f"{POCKETHOST_URL}{auth_ep}", {"identity": email, "password": password})
+                auth_payload: Dict[str, str] = {"identity": email, "password": password}
+                res: Optional[Dict[str, Any]] = http_post(f"{POCKETHOST_URL}{auth_ep}", auth_payload)
                 if isinstance(res, dict) and res.get("token"):
                     token = str(res["token"])
                     print(f"✅ Admin authenticated successfully via `{auth_ep}`.")
@@ -185,31 +290,45 @@ def authenticate_admin(email: str, password: str) -> str:
 
 def deploy_hungarian_schema(token: str) -> None:
     """Deploys or patches the 13 Hungarian-prefixed collections in PocketHost."""
-    with open(SCHEMA_FILE, "r") as f:
-        schema_collections: List[Dict[str, Any]] = json.load(f)
+    schema_collections: List[HungarianCollectionSchemaJson]
+    f_schema: TextIO
+    with open(SCHEMA_FILE, "r", encoding="utf-8") as f_schema:
+        schema_collections = cast(List[HungarianCollectionSchemaJson], json.load(f_schema))
 
     print("📦 Fetching existing collections from PocketHost...")
     existing_cols: Optional[Dict[str, Any]] = http_get(f"{POCKETHOST_URL}/api/collections", token=token)
     existing_items: Sequence[Any] = existing_cols.get("items", []) if isinstance(existing_cols, dict) else []
-    existing_names: Dict[str, str] = {c["name"]: c["id"] for c in existing_items if isinstance(c, dict) and "name" in c and "id" in c}
+    existing_names: Dict[str, str] = {
+        str(c["name"]): str(c["id"])
+        for c in existing_items
+        if isinstance(c, dict) and "name" in c and "id" in c
+    }
 
-    print(f"   Found {len(existing_names)} existing collections.")
+    found_count: int = len(existing_names)
+    print(f"   Found {found_count} existing collections.")
     print("📦 Updating/Deploying 13 Hungarian-Prefixed Collections with Epoch Milliseconds UTC...")
 
+    col: HungarianCollectionSchemaJson
     for col in schema_collections:
-        cname: str = col["name"]
+        cname: str = str(col.get("name", ""))
         if cname in existing_names:
             print(f"   • Updating collection `{cname}` schema & indexes...")
             col_id: str = existing_names[cname]
             try:
                 headers: Dict[str, str] = {"Content-Type": "application/json", "Authorization": token, "User-Agent": "Mozilla/5.0"}
-                req: urllib.request.Request = urllib.request.Request(f"{POCKETHOST_URL}/api/collections/{col_id}", data=json.dumps(col).encode("utf-8"), headers=headers, method="PATCH")
+                patch_bytes: bytes = json.dumps(col).encode("utf-8")
+                req: urllib.request.Request = urllib.request.Request(
+                    f"{POCKETHOST_URL}/api/collections/{col_id}",
+                    data=patch_bytes,
+                    headers=headers,
+                    method="PATCH"
+                )
                 urllib.request.urlopen(req, timeout=15)
             except Exception:
                 pass
         else:
             print(f"   • Creating collection `{cname}`...")
-            http_post(f"{POCKETHOST_URL}/api/collections", col, inner_token=token)
+            http_post(f"{POCKETHOST_URL}/api/collections", cast(Dict[str, Any], col), inner_token=token)
         time.sleep(0.1)
 
     print("✅ All 13 Hungarian collections verified and synchronized with UTC Epoch Milliseconds.")
@@ -258,6 +377,7 @@ def get_all_teams_metadata() -> Sequence[TeamMetadata]:
 def ingest_team_master_registry(token: str, current_ms: int) -> None:
     """Ingests all 30 teams into `i_mlb_teams`."""
     print("⚾ Ingesting Team Master Registry into `i_mlb_teams`...")
+    tm: TeamMetadata
     for tm in get_all_teams_metadata():
         team_payload: Dict[str, Any] = {
             "str_team_code": tm.code,
@@ -288,22 +408,28 @@ def main() -> None:
     ingest_team_master_registry(token, current_ms)
 
     # Step 4: Parse Clean Dataset CSV
-    with open(CSV_FILE, "r") as f:
-        reader: csv.DictReader = csv.DictReader(f)
-        rows: List[Dict[str, str]] = list(reader)
+    rows: List[MlbCleanCsvRow]
+    f_csv: TextIO
+    with open(CSV_FILE, "r", encoding="utf-8") as f_csv:
+        reader: csv.DictReader[str] = csv.DictReader(f_csv)
+        rows = [cast(MlbCleanCsvRow, r) for r in reader]
 
-    print(f"📊 Read {len(rows)} team records from {CSV_FILE}.")
+    row_count: int = len(rows)
+    print(f"📊 Read {row_count} team records from {CSV_FILE}.")
 
     # Step 5: Simulation Run Metadata (m_simulation_runs)
     current_dt: datetime.datetime = datetime.datetime.now(datetime.timezone.utc)
     current_year: int = current_dt.year
-    run_id: str = f"RUN-{current_dt.strftime('%Y%m%d-%H%M%S')}-JAMES-KENNY-MC10K"
+    date_str: str = current_dt.strftime('%Y%m%d-%H%M%S')
+    run_id: str = f"RUN-{date_str}-JAMES-KENNY-MC10K"
+    run_seed: int = int(current_dt.strftime("%Y%m%d"))
+    
     run_payload: Dict[str, Any] = {
         "str_run_id": run_id,
         "dt_run_timestamp": current_dt.isoformat(),
         "int_season_year": current_year,
         "int_total_iterations": 10000,
-        "int_random_seed": int(current_dt.strftime("%Y%m%d")),
+        "int_random_seed": run_seed,
         "str_engine_version": "KMP-MonteCarlo-v2.6-JamesKenny",
         "str_top_favorite_code": "LAD",
         "dbl_top_favorite_prob": 0.2051,
@@ -342,31 +468,32 @@ def main() -> None:
         "OAK": 59.8, "LAA": 64.2, "NYM": 71.7, "SF": 65.3, "COL": 63.4
     }
 
+    row: MlbCleanCsvRow
     for row in rows:
-        code: str = row["Team_ID"]
-        name: str = row["Team_Name"]
-        lg: str = row["League"]
-        div: str = row["Division"]
-        w: int = int(row["Wins"])
-        l: int = int(row["Losses"])
-        rs: float = float(row["Runs_Scored"])
-        ra: float = float(row["Runs_Allowed"])
-        war: float = float(row["Team_WAR"])
-        woba: float = float(row["wOBA"])
-        wrc: float = float(row["wRC_Plus"])
-        fip: float = float(row["FIP"])
-        xfip: float = float(row["xFIP"])
-        wpa: float = float(row["Bullpen_WPA"])
-        ace_era: float = float(row["Top3_Ace_ERA"])
-        l10_w: int = int(row["Last10_Wins"])
-        l10_l: int = int(row["Last10_Losses"])
-        def_eff: float = float(row.get("Defensive_Efficiency", 1.0))
-        media_rank: float = float(row.get("Media_Power_Rank_Index", 1.0))
-        mkt_prob: float = float(row.get("Market_Futures_Prob", 0.03))
-        four_pillar: float = float(row.get("Four_Pillar_Consistency", 1.0))
-        reg_rank: int = int(row.get("Regular_Season_Rank", 15))
-        sim_rank: int = int(row.get("Sim_Rank", 15))
-        movement: str = row.get("Rank_Movement", "—")
+        code: str = str(row.get("Team_ID", ""))
+        name: str = str(row.get("Team_Name", ""))
+        lg: str = str(row.get("League", ""))
+        div: str = str(row.get("Division", ""))
+        w: int = int(row.get("Wins", 0))
+        l: int = int(row.get("Losses", 0))
+        rs: float = float(row.get("Runs_Scored", 0.0))
+        ra: float = float(row.get("Runs_Allowed", 0.0))
+        war: float = float(row.get("Team_WAR", 0.0))
+        woba: float = float(row.get("wOBA", 0.0))
+        wrc: float = float(row.get("wRC_Plus", 0.0))
+        fip: float = float(row.get("FIP", 0.0))
+        xfip: float = float(row.get("xFIP", 0.0))
+        wpa: float = float(row.get("Bullpen_WPA", 0.0))
+        ace_era: float = float(row.get("Top3_Ace_ERA", 0.0))
+        l10_w: int = int(row.get("Last10_Wins", 5))
+        l10_l: int = int(row.get("Last10_Losses", 5))
+        def_eff: float = float(row.get("Defensive_Efficiency", "1.0"))
+        media_rank: float = float(row.get("Media_Power_Rank_Index", "1.0"))
+        mkt_prob: float = float(row.get("Market_Futures_Prob", "0.03"))
+        four_pillar: float = float(row.get("Four_Pillar_Consistency", "1.0"))
+        reg_rank: int = int(row.get("Regular_Season_Rank", "15"))
+        sim_rank: int = int(row.get("Sim_Rank", "15"))
+        movement: str = str(row.get("Rank_Movement", "—"))
 
         # i_team_season_inputs
         input_payload: Dict[str, Any] = {
@@ -394,12 +521,13 @@ def main() -> None:
         http_post(f"{POCKETHOST_URL}/api/collections/i_team_season_inputs/records", input_payload, inner_token=token)
 
         # i_market_odds_inputs
+        odds_calc: int = int(100 / mkt_prob - 100) if mkt_prob > 0 else 5000
         market_payload: Dict[str, Any] = {
             "str_team_code": code,
             "int_season_year": current_year,
             "str_sportsbook": "Consensus_Sportsbooks",
             "dbl_implied_prob": mkt_prob,
-            "str_american_odds": f"+{int(100/mkt_prob - 100)}" if mkt_prob > 0 else "+5000",
+            "str_american_odds": f"+{odds_calc}",
             "bool_is_active": True,
             "str_status_code": "ACTIVE",
             "int_created_epoch_ms_utc": current_ms,
@@ -422,15 +550,17 @@ def main() -> None:
         http_post(f"{POCKETHOST_URL}/api/collections/i_expert_media_rankings/records", expert_payload, inner_token=token)
 
         # m_latent_quality_estimates
+        latent_q: float = 1.228 if code == "LAD" else (1.205 if code == "ATL" else (1.168 if code == "NYY" else (1.134 if code == "MIL" else (1.118 if code == "CHC" else 1.0))))
+        momentum_mult: float = 1.04 if l10_w >= 7 else (0.96 if l10_w <= 3 else 1.00)
         latent_payload: Dict[str, Any] = {
             "str_run_id": run_id,
             "str_team_code": code,
             "int_season_year": current_year,
-            "dbl_latent_quality_score": 1.228 if code == "LAD" else (1.205 if code == "ATL" else (1.168 if code == "NYY" else (1.134 if code == "MIL" else (1.118 if code == "CHC" else 1.0)))),
-            "dbl_bayes_adjusted_win_pct": float(row.get("Pythagorean_Win_Pct", 0.5)),
-            "dbl_recency_win_pct": float(row.get("Recency_Win_Pct", 0.5)),
-            "dbl_momentum_multiplier": 1.04 if l10_w >= 7 else (0.96 if l10_w <= 3 else 1.00),
-            "dbl_hype_multiplier": float(row.get("Clubhouse_Hype_Index", 1.0)),
+            "dbl_latent_quality_score": latent_q,
+            "dbl_bayes_adjusted_win_pct": float(row.get("Pythagorean_Win_Pct", "0.5")),
+            "dbl_recency_win_pct": float(row.get("Recency_Win_Pct", "0.5")),
+            "dbl_momentum_multiplier": momentum_mult,
+            "dbl_hype_multiplier": float(row.get("Clubhouse_Hype_Index", "1.0")),
             "bool_is_active": True,
             "str_status_code": "ACTIVE",
             "int_created_epoch_ms_utc": current_ms,
@@ -439,13 +569,16 @@ def main() -> None:
         http_post(f"{POCKETHOST_URL}/api/collections/m_latent_quality_estimates/records", latent_payload, inner_token=token)
 
         # m_four_pillar_metrics
+        offense_cons: float = 1.08 if code in ["CHC", "LAD", "NYY"] else 1.00
+        rotation_q: float = 3.80 / ace_era if ace_era > 0 else 1.0
+        bullpen_rel: float = 1.08 if code in ["CHC", "MIL", "LAD"] else 1.00
         pillar_payload: Dict[str, Any] = {
             "str_run_id": run_id,
             "str_team_code": code,
-            "dbl_offense_consistency": 1.08 if code in ["CHC", "LAD", "NYY"] else 1.00,
+            "dbl_offense_consistency": offense_cons,
             "dbl_defense_efficiency": def_eff,
-            "dbl_pitching_rotation_quality": 3.80 / ace_era if ace_era > 0 else 1.0,
-            "dbl_bullpen_leverage_reliability": 1.08 if code in ["CHC", "MIL", "LAD"] else 1.00,
+            "dbl_pitching_rotation_quality": rotation_q,
+            "dbl_bullpen_leverage_reliability": bullpen_rel,
             "dbl_composite_pillar_index": four_pillar,
             "bool_is_active": True,
             "str_status_code": "ACTIVE",
@@ -455,12 +588,13 @@ def main() -> None:
         http_post(f"{POCKETHOST_URL}/api/collections/m_four_pillar_metrics/records", pillar_payload, inner_token=token)
 
         # o_rank_movements
+        rank_delta_val: int = reg_rank - sim_rank
         move_payload: Dict[str, Any] = {
             "str_run_id": run_id,
             "str_team_code": code,
             "int_regular_season_rank": reg_rank,
             "int_sim_rank": sim_rank,
-            "int_rank_delta": reg_rank - sim_rank,
+            "int_rank_delta": rank_delta_val,
             "str_rank_movement_symbol": movement,
             "bool_is_active": True,
             "str_status_code": "ACTIVE",
@@ -475,6 +609,7 @@ def main() -> None:
         exp_w: float = expected_wins_map.get(code, 80.0)
         bar_len: int = int(prob * 50)
         bar_str: str = "█" * max(1, bar_len) if prob >= 0.01 else "▏"
+        playoff_p: float = 1.0 if prob > 0.05 else (0.4 if prob > 0.01 else 0.0)
 
         final_payload: Dict[str, Any] = {
             "str_run_id": run_id,
@@ -484,7 +619,7 @@ def main() -> None:
             "str_division": div,
             "int_sim_rank": sim_rank,
             "dbl_expected_season_wins": exp_w,
-            "dbl_playoff_prob": 1.0 if prob > 0.05 else (0.4 if prob > 0.01 else 0.0),
+            "dbl_playoff_prob": playoff_p,
             "dbl_pennant_prob": pennant_p,
             "dbl_world_series_win_prob": prob,
             "str_visual_bar": bar_str,
@@ -506,14 +641,15 @@ def main() -> None:
         DivisionSummaryConfig(league="NL", division="West", leader_code="LAD", leader_prob=0.68, total_wins=470.0)
     ]
 
-    for d in divisions_list:
+    d_cfg: DivisionSummaryConfig
+    for d_cfg in divisions_list:
         div_payload: Dict[str, Any] = {
             "str_run_id": run_id,
-            "str_league": d.league,
-            "str_division": d.division,
-            "str_division_leader_code": d.leader_code,
-            "dbl_division_leader_prob": d.leader_prob,
-            "dbl_total_division_wins": d.total_wins,
+            "str_league": d_cfg.league,
+            "str_division": d_cfg.division,
+            "str_division_leader_code": d_cfg.leader_code,
+            "dbl_division_leader_prob": d_cfg.leader_prob,
+            "dbl_total_division_wins": d_cfg.total_wins,
             "bool_is_active": True,
             "str_status_code": "ACTIVE",
             "int_created_epoch_ms_utc": current_ms,
@@ -527,13 +663,14 @@ def main() -> None:
         LeagueSummaryConfig(league="NL", mean_latent_quality=1.015, pennant_favorite_prob=0.298, pennant_favorite_code="LAD")
     ]
 
-    for lgc in leagues_list:
+    lg_cfg: LeagueSummaryConfig
+    for lg_cfg in leagues_list:
         lg_payload: Dict[str, Any] = {
             "str_run_id": run_id,
-            "str_league": lgc.league,
-            "dbl_mean_latent_quality": lgc.mean_latent_quality,
-            "dbl_pennant_favorite_prob": lgc.pennant_favorite_prob,
-            "str_pennant_favorite_code": lgc.pennant_favorite_code,
+            "str_league": lg_cfg.league,
+            "dbl_mean_latent_quality": lg_cfg.mean_latent_quality,
+            "dbl_pennant_favorite_prob": lg_cfg.pennant_favorite_prob,
+            "str_pennant_favorite_code": lg_cfg.pennant_favorite_code,
             "bool_is_active": True,
             "str_status_code": "ACTIVE",
             "int_created_epoch_ms_utc": current_ms,
@@ -553,14 +690,15 @@ def main() -> None:
         SeriesSimulationConfig(round_name="WORLD_SERIES", team_a_code="LAD", team_b_code="NYY", team_a_win_prob=0.538, expected_games=5.88)
     ]
 
-    for s in series_list:
+    s_cfg: SeriesSimulationConfig
+    for s_cfg in series_list:
         series_payload: Dict[str, Any] = {
             "str_run_id": run_id,
-            "str_round_name": s.round_name,
-            "str_team_a_code": s.team_a_code,
-            "str_team_b_code": s.team_b_code,
-            "dbl_team_a_win_prob": s.team_a_win_prob,
-            "dbl_expected_games": s.expected_games,
+            "str_round_name": s_cfg.round_name,
+            "str_team_a_code": s_cfg.team_a_code,
+            "str_team_b_code": s_cfg.team_b_code,
+            "dbl_team_a_win_prob": s_cfg.team_a_win_prob,
+            "dbl_expected_games": s_cfg.expected_games,
             "bool_is_active": True,
             "str_status_code": "ACTIVE",
             "int_created_epoch_ms_utc": current_ms,
@@ -587,14 +725,15 @@ def main() -> None:
         )
     ]
 
-    for c in cubs_scenarios:
+    c_cfg: CubsScenarioConfig
+    for c_cfg in cubs_scenarios:
         cubs_payload: Dict[str, Any] = {
             "str_run_id": run_id,
-            "str_scenario_name": c.scenario_name,
-            "str_seed_designation": c.seed_designation,
-            "dbl_expected_wins": c.expected_wins,
-            "dbl_world_series_win_prob": c.world_series_win_prob,
-            "str_strategic_takeaway": c.strategic_takeaway,
+            "str_scenario_name": c_cfg.scenario_name,
+            "str_seed_designation": c_cfg.seed_designation,
+            "dbl_expected_wins": c_cfg.expected_wins,
+            "dbl_world_series_win_prob": c_cfg.world_series_win_prob,
+            "str_strategic_takeaway": c_cfg.strategic_takeaway,
             "bool_is_active": True,
             "str_status_code": "ACTIVE",
             "int_created_epoch_ms_utc": current_ms,
@@ -609,12 +748,18 @@ def main() -> None:
     query_res: Optional[Dict[str, Any]] = http_get(query_url, token=token)
     if query_res and "items" in query_res and isinstance(query_res["items"], list) and len(query_res["items"]) > 0:
         latest_item: Dict[str, Any] = query_res["items"][0]
-        print(f"✅ Latest-Active Query Succeeded!")
-        print(f"   Team: {latest_item.get('str_team_name')} ({latest_item.get('str_team_code')})")
-        print(f"   Status: {latest_item.get('str_status_code')}")
-        print(f"   Updated UTC Epoch MS: {latest_item.get('int_updated_epoch_ms_utc')}")
+        team_display_name: str = str(latest_item.get('str_team_name', ''))
+        team_display_code: str = str(latest_item.get('str_team_code', ''))
+        status_str: str = str(latest_item.get('str_status_code', ''))
+        updated_epoch: int = int(latest_item.get('int_updated_epoch_ms_utc', 0))
         prob_val: float = float(latest_item.get("dbl_world_series_win_prob", 0.0))
-        print(f"   WS Win Prob: {prob_val * 100:.2f}%")
+        prob_pct_display: float = prob_val * 100.0
+        
+        print(f"✅ Latest-Active Query Succeeded!")
+        print(f"   Team: {team_display_name} ({team_display_code})")
+        print(f"   Status: {status_str}")
+        print(f"   Updated UTC Epoch MS: {updated_epoch}")
+        print(f"   WS Win Prob: {prob_pct_display:.2f}%")
 
     print("================================================================================")
     print(" 🎉 SUCCESS! Hungarian Relational Collections updated with UTC Epoch Milliseconds!")
@@ -623,4 +768,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 

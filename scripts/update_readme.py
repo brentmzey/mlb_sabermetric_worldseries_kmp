@@ -8,7 +8,7 @@ from __future__ import annotations
 import os
 import re
 from dataclasses import dataclass
-from typing import Final, List, Optional, Sequence
+from typing import Final, List, Match, Optional, Sequence, TextIO
 
 
 @dataclass(frozen=True)
@@ -74,6 +74,7 @@ SAMPLE_LEADERBOARD_ROWS: Final[Sequence[LeaderboardTableRow]] = [
 def generate_markdown_table(rows: Sequence[LeaderboardTableRow]) -> str:
     """Serializes structured leaderboard rows into markdown table format."""
     lines: List[str] = [TABLE_HEADER]
+    row: LeaderboardTableRow
     for row in rows:
         lines.append(row.to_markdown())
     return "\n".join(lines)
@@ -81,15 +82,19 @@ def generate_markdown_table(rows: Sequence[LeaderboardTableRow]) -> str:
 
 def update_readme_table(readme_path: str, new_table_str: str) -> bool:
     """Replaces the markdown table in README.md with the latest calibrated table."""
-    if not os.path.exists(readme_path):
+    file_exists: bool = os.path.exists(readme_path)
+    if not file_exists:
         print(f"❌ Error: README file not found at {readme_path}")
         return False
 
+    content: str
+    f: TextIO
     with open(readme_path, "r", encoding="utf-8") as f:
-        content: str = f.read()
+        content = f.read()
 
     pattern: re.Pattern[str] = re.compile(r"\| Rank \| Movement \| Team Name \|.*?\| 30 \|.*?\n", re.DOTALL)
-    if not pattern.search(content):
+    search_match: Optional[Match[str]] = pattern.search(content)
+    if not search_match:
         print("⚠️ Warning: Table pattern not matched in README.md.")
         return False
 
@@ -111,4 +116,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 

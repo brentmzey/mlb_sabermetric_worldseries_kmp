@@ -2,7 +2,7 @@
 """
 Fetch freshest live 2026 MLB standings, run differentials, recency trends,
 and season consistency metrics from official MLB Stats API and update SabermetricDataService.kt.
-Strongly typed using Python 3.10+ dataclasses, type annotations, and structured API payload parsing.
+Strongly typed using Python 3.10+ dataclasses, TypedDict schemas, and explicit type annotations for every variable.
 """
 from __future__ import annotations
 
@@ -13,8 +13,68 @@ import json
 import urllib.request
 import datetime
 from dataclasses import dataclass
-from typing import Any, Dict, Final, List, Mapping, Match, Optional, Sequence
+from typing import (
+    Any,
+    Dict,
+    Final,
+    List,
+    Mapping,
+    Match,
+    Optional,
+    Sequence,
+    TextIO,
+    TypedDict,
+    Union,
+    cast
+)
 
+
+# ==============================================================================
+# TypedDict Definitions for MLB Stats API Schema
+# ==============================================================================
+
+class MlbTeamReferenceJson(TypedDict, total=False):
+    id: int
+    name: str
+    link: str
+
+
+class MlbSplitRecordJson(TypedDict, total=False):
+    type: str
+    wins: int
+    losses: int
+    pct: str
+
+
+class MlbSplitRecordsContainerJson(TypedDict, total=False):
+    splitRecords: List[MlbSplitRecordJson]
+
+
+class MlbTeamRecordEntryJson(TypedDict, total=False):
+    team: MlbTeamReferenceJson
+    season: str
+    wins: int
+    losses: int
+    runsScored: Union[int, float]
+    runsAllowed: Union[int, float]
+    records: MlbSplitRecordsContainerJson
+
+
+class MlbDivisionStandingsRecordJson(TypedDict, total=False):
+    standingsType: str
+    league: Dict[str, Any]
+    division: Dict[str, Any]
+    teamRecords: List[MlbTeamRecordEntryJson]
+
+
+class MlbStandingsApiResponseJson(TypedDict, total=False):
+    copyright: str
+    records: List[MlbDivisionStandingsRecordJson]
+
+
+# ==============================================================================
+# Domain Model Dataclasses
+# ==============================================================================
 
 @dataclass(frozen=True)
 class LiveTeamRecord:
@@ -53,22 +113,30 @@ TEAM_ID_TO_CODE: Final[Mapping[int, str]] = {
 def fetch_live_standings(season_year: int) -> Dict[str, LiveTeamRecord]:
     """Fetches live regular season standings and recency splits from MLB Stats API."""
     url: str = f"https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season={season_year}"
-    req: urllib.request.Request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"})
+    headers_dict: Dict[str, str] = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"}
+    req: urllib.request.Request = urllib.request.Request(url, headers=headers_dict)
     
+    data: MlbStandingsApiResponseJson
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
-            data: Dict[str, Any] = json.loads(resp.read().decode("utf-8"))
+            raw_bytes: bytes = resp.read()
+            raw_text: str = raw_bytes.decode("utf-8")
+            data = cast(MlbStandingsApiResponseJson, json.loads(raw_text))
     except Exception as err:
-        print(f"⚠️ Warning: Could not fetch from MLB Stats API: {err}")
+        err_msg: str = str(err)
+        print(f"⚠️ Warning: Could not fetch from MLB Stats API: {err_msg}")
         return {}
 
     records_map: Dict[str, LiveTeamRecord] = {}
-    records: Sequence[Dict[str, Any]] = data.get("records", [])
+    records: List[MlbDivisionStandingsRecordJson] = data.get("records", [])
 
+    record: MlbDivisionStandingsRecordJson
     for record in records:
-        team_records: Sequence[Dict[str, Any]] = record.get("teamRecords", [])
+        team_records: List[MlbTeamRecordEntryJson] = record.get("teamRecords", [])
+        tr: MlbTeamRecordEntryJson
         for tr in team_records:
-            t_id: int = tr.get("team", {}).get("id", 0)
+            team_ref: Optional[MlbTeamReferenceJson] = tr.get("team")
+            t_id: int = int(team_ref.get("id", 0)) if team_ref else 0
             code: Optional[str] = TEAM_ID_TO_CODE.get(t_id)
             if not code:
                 continue
@@ -78,17 +146,21 @@ def fetch_live_standings(season_year: int) -> Dict[str, LiveTeamRecord]:
             rs: float = float(tr.get("runsScored", 0.0))
             ra: float = float(tr.get("runsAllowed", 0.0))
             
-            splits: Sequence[Dict[str, Any]] = tr.get("records", {}).get("splitRecords", [])
-            last10: Dict[str, Any] = next((s for s in splits if s.get("type") == "lastTen"), {})
-            l10_w: int = int(last10.get("wins", 5))
-            l10_l: int = int(last10.get("losses", 5))
+            splits_container: Optional[MlbSplitRecordsContainerJson] = tr.get("records")
+            splits: List[MlbSplitRecordJson] = splits_container.get("splitRecords", []) if splits_container else []
+            last10: Optional[MlbSplitRecordJson] = next((s for s in splits if s.get("type") == "lastTen"), None)
+            l10_w: int = int(last10.get("wins", 5)) if last10 else 5
+            l10_l: int = int(last10.get("losses", 5)) if last10 else 5
 
-            pyth_pct: float = (rs ** 1.83) / (rs ** 1.83 + ra ** 1.83) if (rs > 0 or ra > 0) else 0.500
-            actual_pct: float = wins / (wins + losses) if (wins + losses) > 0 else 0.500
+            pyth_denom: float = (rs ** 1.83) + (ra ** 1.83)
+            pyth_pct: float = ((rs ** 1.83) / pyth_denom) if pyth_denom > 0 else 0.500
+            total_games: int = wins + losses
+            actual_pct: float = (wins / total_games) if total_games > 0 else 0.500
             luck_diff: float = abs(actual_pct - pyth_pct)
-            consistency: float = round(1.0 + max(-0.08, min(0.08, 0.04 - luck_diff * 0.8)), 3)
+            consistency_adj: float = max(-0.08, min(0.08, 0.04 - luck_diff * 0.8))
+            consistency: float = round(1.0 + consistency_adj, 3)
 
-            records_map[code] = LiveTeamRecord(
+            live_record: LiveTeamRecord = LiveTeamRecord(
                 code=code,
                 wins=wins,
                 losses=losses,
@@ -98,18 +170,22 @@ def fetch_live_standings(season_year: int) -> Dict[str, LiveTeamRecord]:
                 last10_losses=l10_l,
                 consistency_score=consistency
             )
+            records_map[code] = live_record
 
     return records_map
 
 
 def update_sabermetric_data_service(kt_file_path: str, live_data: Mapping[str, LiveTeamRecord]) -> bool:
     """Updates Kotlin source code in SabermetricDataService.kt with freshly fetched live stats while preserving analytical parameters."""
-    if not os.path.exists(kt_file_path):
+    file_exists: bool = os.path.exists(kt_file_path)
+    if not file_exists:
         print(f"❌ Error: File not found: {kt_file_path}")
         return False
 
-    with open(kt_file_path, "r") as f:
-        content: str = f.read()
+    content: str
+    f: TextIO
+    with open(kt_file_path, "r", encoding="utf-8") as f:
+        content = f.read()
 
     def replace_team_entry(match: Match[str]) -> str:
         code: str = match.group(1)
@@ -132,16 +208,19 @@ def update_sabermetric_data_service(kt_file_path: str, live_data: Mapping[str, L
                     + [str(ld.last10_wins), str(ld.last10_losses), f"{ld.consistency_score:.3f}"]
                     + trailing_params
                 )
-                return f"MlbTeam(MlbTeamId.{code}, {', '.join(reconstructed_parts)})"
+                joined_params: str = ", ".join(reconstructed_parts)
+                return f"MlbTeam(MlbTeamId.{code}, {joined_params})"
             elif len(parts) >= 4:
-                middle_params = parts[4:]
-                return f"MlbTeam(MlbTeamId.{code}, {ld.wins}, {ld.losses}, {ld.runs_scored:.1f}, {ld.runs_allowed:.1f}, {', '.join(middle_params)})"
-        return match.group(0)
+                middle_params_fallback: List[str] = parts[4:]
+                joined_fallback: str = ", ".join(middle_params_fallback)
+                return f"MlbTeam(MlbTeamId.{code}, {ld.wins}, {ld.losses}, {ld.runs_scored:.1f}, {ld.runs_allowed:.1f}, {joined_fallback})"
+        original_matched: str = match.group(0)
+        return original_matched
 
     pattern: re.Pattern[str] = re.compile(r'MlbTeam\(MlbTeamId\.([A-Z]+),\s*(.*?)\)')
     new_content: str = pattern.sub(replace_team_entry, content)
 
-    with open(kt_file_path, "w") as f:
+    with open(kt_file_path, "w", encoding="utf-8") as f:
         f.write(new_content)
 
     return True
@@ -149,13 +228,26 @@ def update_sabermetric_data_service(kt_file_path: str, live_data: Mapping[str, L
 
 def main() -> None:
     """Main execution function for fetching and updating live MLB standings data."""
-    current_year: int = datetime.datetime.now(datetime.timezone.utc).year
-    proj_dir: str = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    kt_file: str = os.path.join(proj_dir, "src", "commonMain", "kotlin", "com", "sabermetrics", "worldseries", "data", "SabermetricDataService.kt")
+    now_utc: datetime.datetime = datetime.datetime.now(datetime.timezone.utc)
+    current_year: int = now_utc.year
+    script_dir: str = os.path.dirname(__file__)
+    proj_dir: str = os.path.abspath(os.path.join(script_dir, ".."))
+    kt_file: str = os.path.join(
+        proj_dir,
+        "src",
+        "commonMain",
+        "kotlin",
+        "com",
+        "sabermetrics",
+        "worldseries",
+        "data",
+        "SabermetricDataService.kt"
+    )
 
     live_data: Dict[str, LiveTeamRecord] = fetch_live_standings(current_year)
-    if live_data:
-        print(f"✅ Fetched live data (with last 10 games recency & season consistency) for {len(live_data)} teams from MLB Stats API.")
+    team_count: int = len(live_data)
+    if team_count > 0:
+        print(f"✅ Fetched live data (with last 10 games recency & season consistency) for {team_count} teams from MLB Stats API.")
         success: bool = update_sabermetric_data_service(kt_file, live_data)
         if success:
             print(f"✅ Successfully updated {kt_file} with live {current_year} standings, last 10 games recency, and season consistency scores!")
@@ -165,4 +257,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
