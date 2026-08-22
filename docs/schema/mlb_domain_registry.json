@@ -1,0 +1,443 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MLB Sabermetric World Series Domain Registry",
+  "description": "Canonical cross-language schema and registry for MLB teams, leagues, divisions, sabermetric statistical pillars, playoff series structures, and database collection models.",
+  "version": "2026.1.0",
+  "leagues": [
+    {
+      "code": "AL",
+      "name": "American League",
+      "foundedYear": 1901
+    },
+    {
+      "code": "NL",
+      "name": "National League",
+      "foundedYear": 1876
+    }
+  ],
+  "divisions": [
+    {
+      "code": "EAST",
+      "name": "East Division"
+    },
+    {
+      "code": "CENTRAL",
+      "name": "Central Division"
+    },
+    {
+      "code": "WEST",
+      "name": "West Division"
+    }
+  ],
+  "stat_pillars": [
+    {
+      "code": "OFFENSE",
+      "name": "Offensive Run Creation",
+      "weight": 0.25,
+      "primaryMetric": "wRC+",
+      "secondaryMetric": "wOBA",
+      "description": "Evaluates Park-Adjusted Weighted Runs Created Plus and on-base weighted outcomes."
+    },
+    {
+      "code": "DEFENSE",
+      "name": "Defensive Efficiency & Run Prevention",
+      "weight": 0.15,
+      "primaryMetric": "Defensive_Efficiency",
+      "secondaryMetric": "OAA_DRS",
+      "description": "Evaluates run conversion suppression, Outs Above Average (OAA), and Defensive Runs Saved (DRS)."
+    },
+    {
+      "code": "STARTING_PITCHING",
+      "name": "Top-3 Starting Rotation Ace Quality",
+      "weight": 0.35,
+      "primaryMetric": "Top3_Ace_ERA",
+      "secondaryMetric": "FIP",
+      "description": "Postseason compressed rotation effectiveness of top 3 starting pitchers."
+    },
+    {
+      "code": "BULLPEN_LEVERAGE",
+      "name": "Bullpen High-Leverage Reliability",
+      "weight": 0.25,
+      "primaryMetric": "Bullpen_WPA",
+      "secondaryMetric": "xFIP",
+      "description": "Evaluates late-inning Win Probability Added (WPA) and high-leverage strikeout sustainability."
+    }
+  ],
+  "postseason_rounds": [
+    {
+      "code": "WILD_CARD",
+      "name": "Wild Card Series",
+      "bestOf": 3,
+      "winsToAdvance": 2,
+      "homeFieldFormat": "2-1"
+    },
+    {
+      "code": "DIVISION_SERIES",
+      "name": "Division Series (LDS)",
+      "bestOf": 5,
+      "winsToAdvance": 3,
+      "homeFieldFormat": "2-2-1"
+    },
+    {
+      "code": "LEAGUE_CHAMPIONSHIP",
+      "name": "League Championship Series (LCS)",
+      "bestOf": 7,
+      "winsToAdvance": 4,
+      "homeFieldFormat": "2-3-2"
+    },
+    {
+      "code": "WORLD_SERIES",
+      "name": "World Series (Fall Classic)",
+      "bestOf": 7,
+      "winsToAdvance": 4,
+      "homeFieldFormat": "2-3-2"
+    }
+  ],
+  "hungarian_prefixes": [
+    {
+      "prefix": "i_",
+      "category": "INPUT",
+      "description": "Immutable, raw time-series inputs ingested from external APIs, market sportsbooks, and consensus models."
+    },
+    {
+      "prefix": "m_",
+      "category": "MODEL",
+      "description": "Intermediate latent metrics, 2SLS causal estimates, Bayesian adjusted indices, and four-pillar composites."
+    },
+    {
+      "prefix": "s_",
+      "category": "SUMMARY",
+      "description": "Materialized aggregations for divisional standings, league-wide quality benchmarks, and cross-division parity."
+    },
+    {
+      "prefix": "o_",
+      "category": "OUTPUT",
+      "description": "Deterministic and stochastic simulation outputs, matchup matrix permutations, and rank velocity deltas."
+    },
+    {
+      "prefix": "f_",
+      "category": "FINAL",
+      "description": "Final customer-facing World Series championship probabilities, sensitivity scenarios, and high-res chart endpoints."
+    }
+  ],
+  "record_status_codes": [
+    {
+      "code": "ACTIVE",
+      "description": "Currently authoritative active record for model selection and visual rendering."
+    },
+    {
+      "code": "INACTIVE",
+      "description": "Temporarily disabled or non-authoritative record."
+    },
+    {
+      "code": "SUPERSEDED",
+      "description": "Historical record replaced by a newer update in time series."
+    },
+    {
+      "code": "ARCHIVED",
+      "description": "Cold-storage historical snapshot preserved for multi-year panel analysis."
+    }
+  ],
+  "teams": [
+    {
+      "code": "NYY",
+      "fullName": "New York Yankees",
+      "league": "AL",
+      "division": "EAST",
+      "city": "New York",
+      "ballpark": "Yankee Stadium",
+      "foundedYear": 1901,
+      "mlbApiId": 147
+    },
+    {
+      "code": "BAL",
+      "fullName": "Baltimore Orioles",
+      "league": "AL",
+      "division": "EAST",
+      "city": "Baltimore",
+      "ballpark": "Oriole Park at Camden Yards",
+      "foundedYear": 1901,
+      "mlbApiId": 110
+    },
+    {
+      "code": "BOS",
+      "fullName": "Boston Red Sox",
+      "league": "AL",
+      "division": "EAST",
+      "city": "Boston",
+      "ballpark": "Fenway Park",
+      "foundedYear": 1901,
+      "mlbApiId": 111
+    },
+    {
+      "code": "TBD",
+      "fullName": "Tampa Bay Rays",
+      "league": "AL",
+      "division": "EAST",
+      "city": "St. Petersburg",
+      "ballpark": "Tropicana Field",
+      "foundedYear": 1998,
+      "mlbApiId": 139
+    },
+    {
+      "code": "TOR",
+      "fullName": "Toronto Blue Jays",
+      "league": "AL",
+      "division": "EAST",
+      "city": "Toronto",
+      "ballpark": "Rogers Centre",
+      "foundedYear": 1977,
+      "mlbApiId": 141
+    },
+    {
+      "code": "CLE",
+      "fullName": "Cleveland Guardians",
+      "league": "AL",
+      "division": "CENTRAL",
+      "city": "Cleveland",
+      "ballpark": "Progressive Field",
+      "foundedYear": 1901,
+      "mlbApiId": 114
+    },
+    {
+      "code": "KC",
+      "fullName": "Kansas City Royals",
+      "league": "AL",
+      "division": "CENTRAL",
+      "city": "Kansas City",
+      "ballpark": "Kauffman Stadium",
+      "foundedYear": 1969,
+      "mlbApiId": 118
+    },
+    {
+      "code": "DET",
+      "fullName": "Detroit Tigers",
+      "league": "AL",
+      "division": "CENTRAL",
+      "city": "Detroit",
+      "ballpark": "Comerica Park",
+      "foundedYear": 1901,
+      "mlbApiId": 116
+    },
+    {
+      "code": "MIN",
+      "fullName": "Minnesota Twins",
+      "league": "AL",
+      "division": "CENTRAL",
+      "city": "Minneapolis",
+      "ballpark": "Target Field",
+      "foundedYear": 1901,
+      "mlbApiId": 142
+    },
+    {
+      "code": "CWS",
+      "fullName": "Chicago White Sox",
+      "league": "AL",
+      "division": "CENTRAL",
+      "city": "Chicago",
+      "ballpark": "Guaranteed Rate Field",
+      "foundedYear": 1901,
+      "mlbApiId": 145
+    },
+    {
+      "code": "HOU",
+      "fullName": "Houston Astros",
+      "league": "AL",
+      "division": "WEST",
+      "city": "Houston",
+      "ballpark": "Daikin Park",
+      "foundedYear": 1962,
+      "mlbApiId": 117
+    },
+    {
+      "code": "SEA",
+      "fullName": "Seattle Mariners",
+      "league": "AL",
+      "division": "WEST",
+      "city": "Seattle",
+      "ballpark": "T-Mobile Park",
+      "foundedYear": 1977,
+      "mlbApiId": 136
+    },
+    {
+      "code": "TEX",
+      "fullName": "Texas Rangers",
+      "league": "AL",
+      "division": "WEST",
+      "city": "Arlington",
+      "ballpark": "Globe Life Field",
+      "foundedYear": 1961,
+      "mlbApiId": 140
+    },
+    {
+      "code": "OAK",
+      "fullName": "Oakland Athletics",
+      "league": "AL",
+      "division": "WEST",
+      "city": "Sacramento",
+      "ballpark": "Sutter Health Park",
+      "foundedYear": 1901,
+      "mlbApiId": 133
+    },
+    {
+      "code": "LAA",
+      "fullName": "Los Angeles Angels",
+      "league": "AL",
+      "division": "WEST",
+      "city": "Anaheim",
+      "ballpark": "Angel Stadium",
+      "foundedYear": 1961,
+      "mlbApiId": 108
+    },
+    {
+      "code": "PHI",
+      "fullName": "Philadelphia Phillies",
+      "league": "NL",
+      "division": "EAST",
+      "city": "Philadelphia",
+      "ballpark": "Citizens Bank Park",
+      "foundedYear": 1883,
+      "mlbApiId": 143
+    },
+    {
+      "code": "ATL",
+      "fullName": "Atlanta Braves",
+      "league": "NL",
+      "division": "EAST",
+      "city": "Atlanta",
+      "ballpark": "Truist Park",
+      "foundedYear": 1871,
+      "mlbApiId": 144
+    },
+    {
+      "code": "NYM",
+      "fullName": "New York Mets",
+      "league": "NL",
+      "division": "EAST",
+      "city": "New York",
+      "ballpark": "Citi Field",
+      "foundedYear": 1962,
+      "mlbApiId": 121
+    },
+    {
+      "code": "WSH",
+      "fullName": "Washington Nationals",
+      "league": "NL",
+      "division": "EAST",
+      "city": "Washington D.C.",
+      "ballpark": "Nationals Park",
+      "foundedYear": 1969,
+      "mlbApiId": 120
+    },
+    {
+      "code": "MIA",
+      "fullName": "Miami Marlins",
+      "league": "NL",
+      "division": "EAST",
+      "city": "Miami",
+      "ballpark": "loanDepot park",
+      "foundedYear": 1993,
+      "mlbApiId": 146
+    },
+    {
+      "code": "MIL",
+      "fullName": "Milwaukee Brewers",
+      "league": "NL",
+      "division": "CENTRAL",
+      "city": "Milwaukee",
+      "ballpark": "American Family Field",
+      "foundedYear": 1969,
+      "mlbApiId": 158
+    },
+    {
+      "code": "CHC",
+      "fullName": "Chicago Cubs",
+      "league": "NL",
+      "division": "CENTRAL",
+      "city": "Chicago",
+      "ballpark": "Wrigley Field",
+      "foundedYear": 1876,
+      "mlbApiId": 112
+    },
+    {
+      "code": "STL",
+      "fullName": "St. Louis Cardinals",
+      "league": "NL",
+      "division": "CENTRAL",
+      "city": "St. Louis",
+      "ballpark": "Busch Stadium",
+      "foundedYear": 1882,
+      "mlbApiId": 138
+    },
+    {
+      "code": "CIN",
+      "fullName": "Cincinnati Reds",
+      "league": "NL",
+      "division": "CENTRAL",
+      "city": "Cincinnati",
+      "ballpark": "Great American Ball Park",
+      "foundedYear": 1881,
+      "mlbApiId": 113
+    },
+    {
+      "code": "PIT",
+      "fullName": "Pittsburgh Pirates",
+      "league": "NL",
+      "division": "CENTRAL",
+      "city": "Pittsburgh",
+      "ballpark": "PNC Park",
+      "foundedYear": 1882,
+      "mlbApiId": 134
+    },
+    {
+      "code": "LAD",
+      "fullName": "Los Angeles Dodgers",
+      "league": "NL",
+      "division": "WEST",
+      "city": "Los Angeles",
+      "ballpark": "Dodger Stadium",
+      "foundedYear": 1883,
+      "mlbApiId": 119
+    },
+    {
+      "code": "SD",
+      "fullName": "San Diego Padres",
+      "league": "NL",
+      "division": "WEST",
+      "city": "San Diego",
+      "ballpark": "Petco Park",
+      "foundedYear": 1969,
+      "mlbApiId": 135
+    },
+    {
+      "code": "ARI",
+      "fullName": "Arizona Diamondbacks",
+      "league": "NL",
+      "division": "WEST",
+      "city": "Phoenix",
+      "ballpark": "Chase Field",
+      "foundedYear": 1998,
+      "mlbApiId": 109
+    },
+    {
+      "code": "SF",
+      "fullName": "San Francisco Giants",
+      "league": "NL",
+      "division": "WEST",
+      "city": "San Francisco",
+      "ballpark": "Oracle Park",
+      "foundedYear": 1883,
+      "mlbApiId": 137
+    },
+    {
+      "code": "COL",
+      "fullName": "Colorado Rockies",
+      "league": "NL",
+      "division": "WEST",
+      "city": "Denver",
+      "ballpark": "Coors Field",
+      "foundedYear": 1993,
+      "mlbApiId": 115
+    }
+  ]
+}

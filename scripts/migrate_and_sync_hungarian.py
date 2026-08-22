@@ -32,6 +32,18 @@ from typing import (
     cast
 )
 
+from domain_registry import (
+    MLB_REGISTRY,
+    League,
+    Division,
+    MlbTeamCode,
+    StatPillarType,
+    PostseasonRound,
+    HungarianCollectionPrefix,
+    RecordStatusCode,
+    TeamFranchiseMetadata
+)
+
 
 POCKETHOST_URL: Final[str] = "https://mlb-sabermetric-worldseries.pockethost.io"
 ADMIN_EMAIL: Optional[str] = os.getenv("POCKETHOST_ADMIN_EMAIL")
@@ -387,42 +399,19 @@ def deploy_hungarian_schema(token: str) -> None:
 
 
 def get_all_teams_metadata() -> Sequence[TeamMetadata]:
-    """Returns the immutable master metadata records for all 30 MLB franchises."""
-    raw_data: Sequence[Tuple[str, str, str, str, str, str, int]] = [
-        ("NYY", "New York Yankees", "AL", "East", "New York", "Yankee Stadium", 1901),
-        ("BAL", "Baltimore Orioles", "AL", "East", "Baltimore", "Oriole Park at Camden Yards", 1901),
-        ("BOS", "Boston Red Sox", "AL", "East", "Boston", "Fenway Park", 1901),
-        ("TBD", "Tampa Bay Rays", "AL", "East", "St. Petersburg", "Tropicana Field", 1998),
-        ("TOR", "Toronto Blue Jays", "AL", "East", "Toronto", "Rogers Centre", 1977),
-        ("CLE", "Cleveland Guardians", "AL", "Central", "Cleveland", "Progressive Field", 1901),
-        ("KC",  "Kansas City Royals", "AL", "Central", "Kansas City", "Kauffman Stadium", 1969),
-        ("MIN", "Minnesota Twins", "AL", "Central", "Minneapolis", "Target Field", 1901),
-        ("DET", "Detroit Tigers", "AL", "Central", "Detroit", "Comerica Park", 1901),
-        ("CWS", "Chicago White Sox", "AL", "Central", "Chicago", "Guaranteed Rate Field", 1901),
-        ("HOU", "Houston Astros", "AL", "West", "Houston", "Daikin Park", 1962),
-        ("SEA", "Seattle Mariners", "AL", "West", "Seattle", "T-Mobile Park", 1977),
-        ("TEX", "Texas Rangers", "AL", "West", "Arlington", "Globe Life Field", 1961),
-        ("OAK", "Oakland Athletics", "AL", "West", "Sacramento", "Sutter Health Park", 1901),
-        ("LAA", "Los Angeles Angels", "AL", "West", "Anaheim", "Angel Stadium", 1961),
-        ("PHI", "Philadelphia Phillies", "NL", "East", "Philadelphia", "Citizens Bank Park", 1883),
-        ("ATL", "Atlanta Braves", "NL", "East", "Atlanta", "Truist Park", 1871),
-        ("NYM", "New York Mets", "NL", "East", "New York", "Citi Field", 1962),
-        ("WSH", "Washington Nationals", "NL", "East", "Washington D.C.", "Nationals Park", 1969),
-        ("MIA", "Miami Marlins", "NL", "East", "Miami", "loanDepot park", 1993),
-        ("MIL", "Milwaukee Brewers", "NL", "Central", "Milwaukee", "American Family Field", 1969),
-        ("CHC", "Chicago Cubs", "NL", "Central", "Chicago", "Wrigley Field", 1876),
-        ("STL", "St. Louis Cardinals", "NL", "Central", "St. Louis", "Busch Stadium", 1882),
-        ("CIN", "Cincinnati Reds", "NL", "Central", "Cincinnati", "Great American Ball Park", 1881),
-        ("PIT", "Pittsburgh Pirates", "NL", "Central", "Pittsburgh", "PNC Park", 1882),
-        ("LAD", "Los Angeles Dodgers", "NL", "West", "Los Angeles", "Dodger Stadium", 1883),
-        ("SD",  "San Diego Padres", "NL", "West", "San Diego", "Petco Park", 1969),
-        ("ARI", "Arizona Diamondbacks", "NL", "West", "Phoenix", "Chase Field", 1998),
-        ("SF",  "San Francisco Giants", "NL", "West", "San Francisco", "Oracle Park", 1883),
-        ("COL", "Colorado Rockies", "NL", "West", "Denver", "Coors Field", 1993)
-    ]
+    """Returns the immutable master metadata records for all 30 MLB franchises from MLB_REGISTRY."""
+    t: TeamFranchiseMetadata
     return [
-        TeamMetadata(code=c, name=n, league=l, division=d, city=ct, ballpark=bp, founded_year=fy)
-        for (c, n, l, d, ct, bp, fy) in raw_data
+        TeamMetadata(
+            code=t.code.value,
+            name=t.full_name,
+            league=t.league.value,
+            division=t.division.value,
+            city=t.city,
+            ballpark=t.ballpark,
+            founded_year=t.founded_year
+        )
+        for t in MLB_REGISTRY.get_all_teams()
     ]
 
 

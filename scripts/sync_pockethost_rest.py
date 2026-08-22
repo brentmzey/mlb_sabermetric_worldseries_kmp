@@ -24,9 +24,20 @@ from typing import (
     Optional,
     Sequence,
     TextIO,
+    Tuple,
     TypedDict,
     Union,
     cast
+)
+
+from domain_registry import (
+    MLB_REGISTRY,
+    League,
+    Division,
+    MlbTeamCode,
+    StatPillarType,
+    PostseasonRound,
+    TeamFranchiseMetadata
 )
 
 

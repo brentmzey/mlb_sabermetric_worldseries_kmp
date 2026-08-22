@@ -29,6 +29,9 @@ from typing import (
 )
 
 
+from domain_registry import MLB_REGISTRY, TeamFranchiseMetadata
+
+
 # ==============================================================================
 # TypedDict Definitions for MLB Stats API Schema
 # ==============================================================================
@@ -101,15 +104,6 @@ class LiveTeamRecord:
         return rs_exp / denom if denom > 0 else 0.500
 
 
-TEAM_ID_TO_CODE: Final[Mapping[int, str]] = {
-    108: "LAA", 109: "ARI", 110: "BAL", 111: "BOS", 112: "CHC", 113: "CIN",
-    114: "CLE", 115: "COL", 116: "DET", 117: "HOU", 118: "KC", 119: "LAD",
-    120: "WSH", 121: "NYM", 133: "OAK", 134: "PIT", 135: "SD", 136: "SEA",
-    137: "SF", 138: "STL", 139: "TBD", 140: "TEX", 141: "TOR", 142: "MIN",
-    143: "PHI", 144: "ATL", 145: "CWS", 146: "MIA", 147: "NYY", 158: "MIL"
-}
-
-
 def _calculate_season_consistency(wins: int, losses: int, runs_scored: float, runs_allowed: float) -> float:
     """Computes a team's season consistency score based on actual vs Pythagorean win percentage variance."""
     pyth_denom: float = (runs_scored ** 1.83) + (runs_allowed ** 1.83)
@@ -134,9 +128,10 @@ def _parse_single_team_record(tr: MlbTeamRecordEntryJson) -> Optional[LiveTeamRe
     """Parses an individual team record entry from the MLB Stats API JSON."""
     team_ref: Optional[MlbTeamReferenceJson] = tr.get("team")
     t_id: int = int(team_ref.get("id", 0)) if team_ref else 0
-    code: Optional[str] = TEAM_ID_TO_CODE.get(t_id)
-    if not code:
+    franchise: Optional[TeamFranchiseMetadata] = MLB_REGISTRY.get_team_by_mlb_id(t_id)
+    if not franchise:
         return None
+    code: str = franchise.code.value
 
     wins: int = int(tr.get("wins", 0))
     losses: int = int(tr.get("losses", 0))

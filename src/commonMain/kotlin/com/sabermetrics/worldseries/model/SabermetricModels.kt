@@ -6,60 +6,159 @@ enum class League { AL, NL }
 enum class Division { EAST, CENTRAL, WEST }
 
 /**
+ * The 4 Core Empirical Dimensions of October Postseason Quality.
+ */
+enum class StatPillarType(
+    val code: String,
+    val displayName: String,
+    val weight: Double,
+    val primaryMetric: String,
+    val secondaryMetric: String,
+    val description: String
+) {
+    OFFENSE(
+        code = "OFFENSE",
+        displayName = "Offensive Run Creation",
+        weight = 0.25,
+        primaryMetric = "wRC+",
+        secondaryMetric = "wOBA",
+        description = "Evaluates Park-Adjusted Weighted Runs Created Plus and on-base weighted outcomes."
+    ),
+    DEFENSE(
+        code = "DEFENSE",
+        displayName = "Defensive Efficiency & Run Prevention",
+        weight = 0.15,
+        primaryMetric = "Defensive_Efficiency",
+        secondaryMetric = "OAA_DRS",
+        description = "Evaluates run conversion suppression, Outs Above Average (OAA), and Defensive Runs Saved (DRS)."
+    ),
+    STARTING_PITCHING(
+        code = "STARTING_PITCHING",
+        displayName = "Top-3 Starting Rotation Ace Quality",
+        weight = 0.35,
+        primaryMetric = "Top3_Ace_ERA",
+        secondaryMetric = "FIP",
+        description = "Postseason compressed rotation effectiveness of top 3 starting pitchers."
+    ),
+    BULLPEN_LEVERAGE(
+        code = "BULLPEN_LEVERAGE",
+        displayName = "Bullpen High-Leverage Reliability",
+        weight = 0.25,
+        primaryMetric = "Bullpen_WPA",
+        secondaryMetric = "xFIP",
+        description = "Evaluates late-inning Win Probability Added (WPA) and high-leverage strikeout sustainability."
+    );
+
+    companion object {
+        private val map by lazy { entries.associateBy { it.code } }
+        fun fromCode(code: String): StatPillarType =
+            map[code.trim().uppercase()] ?: throw IllegalArgumentException("Unknown StatPillarType: '$code'")
+    }
+}
+
+/**
+ * Postseason playoff series rounds in Major League Baseball.
+ */
+enum class PostseasonRound(
+    val code: String,
+    val displayName: String,
+    val bestOf: Int,
+    val winsToAdvance: Int,
+    val homeFieldFormat: String
+) {
+    WILD_CARD("WILD_CARD", "Wild Card Series", 3, 2, "2-1"),
+    DIVISION_SERIES("DIVISION_SERIES", "Division Series (LDS)", 5, 3, "2-2-1"),
+    LEAGUE_CHAMPIONSHIP("LEAGUE_CHAMPIONSHIP", "League Championship Series (LCS)", 7, 4, "2-3-2"),
+    WORLD_SERIES("WORLD_SERIES", "World Series (Fall Classic)", 7, 4, "2-3-2");
+
+    companion object {
+        private val map by lazy { entries.associateBy { it.code } }
+        fun fromCode(code: String): PostseasonRound =
+            map[code.trim().uppercase()] ?: throw IllegalArgumentException("Unknown PostseasonRound: '$code'")
+    }
+}
+
+/**
+ * Hungarian database relational collection tier prefixes.
+ */
+enum class HungarianCollectionPrefix(
+    val prefix: String,
+    val category: String,
+    val description: String
+) {
+    INPUT("i_", "INPUT", "Immutable, raw time-series inputs ingested from external APIs, market sportsbooks, and consensus models."),
+    MODEL("m_", "MODEL", "Intermediate latent metrics, 2SLS causal estimates, Bayesian adjusted indices, and four-pillar composites."),
+    SUMMARY("s_", "SUMMARY", "Materialized aggregations for divisional standings, league-wide quality benchmarks, and cross-division parity."),
+    OUTPUT("o_", "OUTPUT", "Deterministic and stochastic simulation outputs, matchup matrix permutations, and rank velocity deltas."),
+    FINAL("f_", "FINAL", "Final customer-facing World Series championship probabilities, sensitivity scenarios, and high-res chart endpoints.");
+
+    companion object {
+        private val map by lazy { entries.associateBy { it.prefix } }
+        fun fromPrefix(prefix: String): HungarianCollectionPrefix =
+            map[prefix.lowercase()] ?: throw IllegalArgumentException("Unknown HungarianCollectionPrefix: '$prefix'")
+    }
+}
+
+/**
  * Strongly-typed enumeration of all 30 Major League Baseball teams.
- * Provides central, immutable mapping for team codes (IDs), full names, league, and division.
+ * Provides central, immutable mapping for team codes (IDs), full names, league, division, ballpark, and MLB API ID.
  */
 enum class MlbTeamId(
     val code: String,
     val fullName: String,
     val league: League,
-    val division: Division
+    val division: Division,
+    val city: String,
+    val ballpark: String,
+    val foundedYear: Int,
+    val mlbApiId: Int
 ) {
     // --- AL EAST ---
-    NYY("NYY", "New York Yankees", League.AL, Division.EAST),
-    BAL("BAL", "Baltimore Orioles", League.AL, Division.EAST),
-    BOS("BOS", "Boston Red Sox", League.AL, Division.EAST),
-    TBD("TBD", "Tampa Bay Rays", League.AL, Division.EAST),
-    TOR("TOR", "Toronto Blue Jays", League.AL, Division.EAST),
+    NYY("NYY", "New York Yankees", League.AL, Division.EAST, "New York", "Yankee Stadium", 1901, 147),
+    BAL("BAL", "Baltimore Orioles", League.AL, Division.EAST, "Baltimore", "Oriole Park at Camden Yards", 1901, 110),
+    BOS("BOS", "Boston Red Sox", League.AL, Division.EAST, "Boston", "Fenway Park", 1901, 111),
+    TBD("TBD", "Tampa Bay Rays", League.AL, Division.EAST, "St. Petersburg", "Tropicana Field", 1998, 139),
+    TOR("TOR", "Toronto Blue Jays", League.AL, Division.EAST, "Toronto", "Rogers Centre", 1977, 141),
 
     // --- AL CENTRAL ---
-    CLE("CLE", "Cleveland Guardians", League.AL, Division.CENTRAL),
-    KC("KC",  "Kansas City Royals", League.AL, Division.CENTRAL),
-    DET("DET", "Detroit Tigers", League.AL, Division.CENTRAL),
-    MIN("MIN", "Minnesota Twins", League.AL, Division.CENTRAL),
-    CWS("CWS", "Chicago White Sox", League.AL, Division.CENTRAL),
+    CLE("CLE", "Cleveland Guardians", League.AL, Division.CENTRAL, "Cleveland", "Progressive Field", 1901, 114),
+    KC("KC",  "Kansas City Royals", League.AL, Division.CENTRAL, "Kansas City", "Kauffman Stadium", 1969, 118),
+    DET("DET", "Detroit Tigers", League.AL, Division.CENTRAL, "Detroit", "Comerica Park", 1901, 116),
+    MIN("MIN", "Minnesota Twins", League.AL, Division.CENTRAL, "Minneapolis", "Target Field", 1901, 142),
+    CWS("CWS", "Chicago White Sox", League.AL, Division.CENTRAL, "Chicago", "Guaranteed Rate Field", 1901, 145),
 
     // --- AL WEST ---
-    HOU("HOU", "Houston Astros", League.AL, Division.WEST),
-    SEA("SEA", "Seattle Mariners", League.AL, Division.WEST),
-    TEX("TEX", "Texas Rangers", League.AL, Division.WEST),
-    OAK("OAK", "Oakland Athletics", League.AL, Division.WEST),
-    LAA("LAA", "Los Angeles Angels", League.AL, Division.WEST),
+    HOU("HOU", "Houston Astros", League.AL, Division.WEST, "Houston", "Daikin Park", 1962, 117),
+    SEA("SEA", "Seattle Mariners", League.AL, Division.WEST, "Seattle", "T-Mobile Park", 1977, 136),
+    TEX("TEX", "Texas Rangers", League.AL, Division.WEST, "Arlington", "Globe Life Field", 1961, 140),
+    OAK("OAK", "Oakland Athletics", League.AL, Division.WEST, "Sacramento", "Sutter Health Park", 1901, 133),
+    LAA("LAA", "Los Angeles Angels", League.AL, Division.WEST, "Anaheim", "Angel Stadium", 1961, 108),
 
     // --- NL EAST ---
-    PHI("PHI", "Philadelphia Phillies", League.NL, Division.EAST),
-    ATL("ATL", "Atlanta Braves", League.NL, Division.EAST),
-    NYM("NYM", "New York Mets", League.NL, Division.EAST),
-    WSH("WSH", "Washington Nationals", League.NL, Division.EAST),
-    MIA("MIA", "Miami Marlins", League.NL, Division.EAST),
+    PHI("PHI", "Philadelphia Phillies", League.NL, Division.EAST, "Philadelphia", "Citizens Bank Park", 1883, 143),
+    ATL("ATL", "Atlanta Braves", League.NL, Division.EAST, "Atlanta", "Truist Park", 1871, 144),
+    NYM("NYM", "New York Mets", League.NL, Division.EAST, "New York", "Citi Field", 1962, 121),
+    WSH("WSH", "Washington Nationals", League.NL, Division.EAST, "Washington D.C.", "Nationals Park", 1969, 120),
+    MIA("MIA", "Miami Marlins", League.NL, Division.EAST, "Miami", "loanDepot park", 1993, 146),
 
     // --- NL CENTRAL ---
-    MIL("MIL", "Milwaukee Brewers", League.NL, Division.CENTRAL),
-    CHC("CHC", "Chicago Cubs", League.NL, Division.CENTRAL),
-    STL("STL", "St. Louis Cardinals", League.NL, Division.CENTRAL),
-    CIN("CIN", "Cincinnati Reds", League.NL, Division.CENTRAL),
-    PIT("PIT", "Pittsburgh Pirates", League.NL, Division.CENTRAL),
+    MIL("MIL", "Milwaukee Brewers", League.NL, Division.CENTRAL, "Milwaukee", "American Family Field", 1969, 158),
+    CHC("CHC", "Chicago Cubs", League.NL, Division.CENTRAL, "Chicago", "Wrigley Field", 1876, 112),
+    STL("STL", "St. Louis Cardinals", League.NL, Division.CENTRAL, "St. Louis", "Busch Stadium", 1882, 138),
+    CIN("CIN", "Cincinnati Reds", League.NL, Division.CENTRAL, "Cincinnati", "Great American Ball Park", 1881, 113),
+    PIT("PIT", "Pittsburgh Pirates", League.NL, Division.CENTRAL, "Pittsburgh", "PNC Park", 1882, 134),
 
     // --- NL WEST ---
-    LAD("LAD", "Los Angeles Dodgers", League.NL, Division.WEST),
-    SD("SD",  "San Diego Padres", League.NL, Division.WEST),
-    ARI("ARI", "Arizona Diamondbacks", League.NL, Division.WEST),
-    SF("SF",  "San Francisco Giants", League.NL, Division.WEST),
-    COL("COL", "Colorado Rockies", League.NL, Division.WEST);
+    LAD("LAD", "Los Angeles Dodgers", League.NL, Division.WEST, "Los Angeles", "Dodger Stadium", 1883, 119),
+    SD("SD",  "San Diego Padres", League.NL, Division.WEST, "San Diego", "Petco Park", 1969, 135),
+    ARI("ARI", "Arizona Diamondbacks", League.NL, Division.WEST, "Phoenix", "Chase Field", 1998, 109),
+    SF("SF",  "San Francisco Giants", League.NL, Division.WEST, "San Francisco", "Oracle Park", 1883, 137),
+    COL("COL", "Colorado Rockies", League.NL, Division.WEST, "Denver", "Coors Field", 1993, 115);
 
     companion object {
         private val codeMap: Map<String, MlbTeamId> by lazy { entries.associateBy { it.code } }
         private val nameMap: Map<String, MlbTeamId> by lazy { entries.associateBy { it.fullName.lowercase() } }
+        private val mlbIdMap: Map<Int, MlbTeamId> by lazy { entries.associateBy { it.mlbApiId } }
 
         /**
          * Safely parse team by 2 or 3-letter abbreviation code (case-insensitive).
@@ -78,6 +177,11 @@ enum class MlbTeamId(
         fun parseName(name: String): MlbTeamId? = nameMap[name.trim().lowercase()]
 
         /**
+         * Safely parse team by MLB Stats API ID.
+         */
+        fun fromMlbApiId(id: Int): MlbTeamId? = mlbIdMap[id]
+
+        /**
          * Retrieve all teams belonging to a specific League.
          */
         fun byLeague(league: League): List<MlbTeamId> = entries.filter { it.league == league }
@@ -89,6 +193,7 @@ enum class MlbTeamId(
             entries.filter { it.league == league && it.division == division }
     }
 }
+
 
 /**
  * Clean Open-Source Sabermetric Team Record & Advanced Analytical Metrics.

@@ -4,9 +4,12 @@ import com.sabermetrics.worldseries.data.PocketHostDataTracker
 import com.sabermetrics.worldseries.data.SabermetricDataService
 import com.sabermetrics.worldseries.engine.WorldSeriesSimulator
 import com.sabermetrics.worldseries.model.Division
+import com.sabermetrics.worldseries.model.HungarianCollectionPrefix
 import com.sabermetrics.worldseries.model.League
 import com.sabermetrics.worldseries.model.MlbTeam
 import com.sabermetrics.worldseries.model.MlbTeamId
+import com.sabermetrics.worldseries.model.PostseasonRound
+import com.sabermetrics.worldseries.model.StatPillarType
 import com.sabermetrics.worldseries.model.TeamProbability
 import com.sabermetrics.worldseries.repository.FWorldSeriesLeaderboardRecord
 import com.sabermetrics.worldseries.repository.HungarianQueryBuilder
@@ -29,7 +32,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class SabermetricTest {
 
@@ -55,6 +57,12 @@ class SabermetricTest {
         assertEquals(MlbTeamId.CHC, MlbTeamId.parseName("Chicago Cubs"))
         assertNull(MlbTeamId.parseName("Atlantis Whales"))
 
+        // Parse by MLB API ID
+        assertEquals(MlbTeamId.NYY, MlbTeamId.fromMlbApiId(147))
+        assertEquals(MlbTeamId.CHC, MlbTeamId.fromMlbApiId(112))
+        assertEquals(MlbTeamId.LAD, MlbTeamId.fromMlbApiId(119))
+        assertNull(MlbTeamId.fromMlbApiId(99999))
+
         // Filter by League and Division
         val alEast = MlbTeamId.byLeagueAndDivision(League.AL, Division.EAST)
         assertEquals(5, alEast.size)
@@ -65,6 +73,39 @@ class SabermetricTest {
 
         val alTeams = MlbTeamId.byLeague(League.AL)
         assertEquals(15, alTeams.size)
+    }
+
+    @Test
+    fun testCrossLanguageDomainRegistryEnums() {
+        // 1. StatPillarType Weights Conservation
+        assertEquals(4, StatPillarType.entries.size)
+        val totalPillarWeight = StatPillarType.entries.sumOf { it.weight }
+        assertEquals(1.00, totalPillarWeight, 0.0001)
+
+        assertEquals(StatPillarType.OFFENSE, StatPillarType.fromCode("OFFENSE"))
+        assertEquals(StatPillarType.DEFENSE, StatPillarType.fromCode("defense"))
+        assertEquals(StatPillarType.STARTING_PITCHING, StatPillarType.fromCode("STARTING_PITCHING"))
+        assertEquals(StatPillarType.BULLPEN_LEVERAGE, StatPillarType.fromCode("bullpen_leverage"))
+        assertFailsWith<IllegalArgumentException> { StatPillarType.fromCode("UNKNOWN_PILLAR") }
+
+        // 2. PostseasonRound Structural Integrity
+        assertEquals(4, PostseasonRound.entries.size)
+        assertEquals(PostseasonRound.WILD_CARD, PostseasonRound.fromCode("WILD_CARD"))
+        assertEquals(PostseasonRound.DIVISION_SERIES, PostseasonRound.fromCode("division_series"))
+        assertEquals(PostseasonRound.LEAGUE_CHAMPIONSHIP, PostseasonRound.fromCode("LEAGUE_CHAMPIONSHIP"))
+        assertEquals(PostseasonRound.WORLD_SERIES, PostseasonRound.fromCode("WORLD_SERIES"))
+        assertEquals(7, PostseasonRound.WORLD_SERIES.bestOf)
+        assertEquals(4, PostseasonRound.WORLD_SERIES.winsToAdvance)
+        assertEquals("2-3-2", PostseasonRound.WORLD_SERIES.homeFieldFormat)
+
+        // 3. HungarianCollectionPrefix Relational Tiers
+        assertEquals(5, HungarianCollectionPrefix.entries.size)
+        assertEquals(HungarianCollectionPrefix.INPUT, HungarianCollectionPrefix.fromPrefix("i_"))
+        assertEquals(HungarianCollectionPrefix.MODEL, HungarianCollectionPrefix.fromPrefix("m_"))
+        assertEquals(HungarianCollectionPrefix.SUMMARY, HungarianCollectionPrefix.fromPrefix("s_"))
+        assertEquals(HungarianCollectionPrefix.OUTPUT, HungarianCollectionPrefix.fromPrefix("o_"))
+        assertEquals(HungarianCollectionPrefix.FINAL, HungarianCollectionPrefix.fromPrefix("f_"))
+        assertFailsWith<IllegalArgumentException> { HungarianCollectionPrefix.fromPrefix("x_") }
     }
 
     @Test

@@ -4,6 +4,7 @@
 [![Targets](https://img.shields.io/badge/Targets-iOS_|_Android_|_Web_|_Desktop_|_Server-blue.svg)]()
 [![Test Coverage](https://img.shields.io/badge/Coverage-99.56%25_Line_(914%2F918)-brightgreen.svg)]()
 [![Unit Tests](https://img.shields.io/badge/Tests-100%25_Passing-success.svg)]()
+[![Domain Registry](https://img.shields.io/badge/Domain_Registry-Cross--Language_Enums-teal.svg)](docs/CROSS_LANGUAGE_DOMAIN_REGISTRY.md)
 [![PocketHost DB](https://img.shields.io/badge/PocketHost-PocketBase_Schema-blue.svg)](docs/POCKETHOST_DATABASE_SCHEMA_AND_SYNC_ARCHITECTURE.md)
 [![JVM](https://img.shields.io/badge/JVM-17%2B-red.svg)](https://www.oracle.com/java/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -520,6 +521,29 @@ cd mlb_sabermetric_worldseries_kmp
 ./gradlew fatJar
 java -jar build/libs/mlb_sabermetric_worldseries_kmp-1.0.0-all.jar
 ```
+
+---
+
+## 🌐 Cross-Language Domain Registry & Strong Typing Contract
+
+To maintain structural parity and type safety across both the **Kotlin Multiplatform (KMP)** core and **Python 3.10+** automation pipelines, the architecture establishes a canonical single-source-of-truth JSON registry:
+
+* 📄 **Canonical Domain Registry**: [`docs/schema/mlb_domain_registry.json`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/schema/mlb_domain_registry.json)
+* 📖 **Full Architectural Specification**: [`docs/CROSS_LANGUAGE_DOMAIN_REGISTRY.md`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/docs/CROSS_LANGUAGE_DOMAIN_REGISTRY.md)
+* 🅺 **Kotlin Domain Models**: [`SabermetricModels.kt`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/src/commonMain/kotlin/com/sabermetrics/worldseries/model/SabermetricModels.kt) (`League`, `Division`, `MlbTeamId`, `StatPillarType`, `PostseasonRound`, `HungarianCollectionPrefix`, `RecordStatusCode`)
+* 🐍 **Python Domain Registry Module**: [`scripts/domain_registry.py`](file:///Users/brentzey/personal/mlb_sabermetric_worldseries_kmp/scripts/domain_registry.py) (`MLB_REGISTRY`, `MlbTeamCode`, `League`, `Division`, `StatPillarType`, `PostseasonRound`, `HungarianCollectionPrefix`)
+
+### 📋 Cross-Language Type Parity Summary
+
+| Component | Kotlin Multiplatform Enum / Model | Python 3.10+ Enum / Registry Class | Canonical JSON Schema | Elements / Range |
+| :--- | :--- | :--- | :--- | :---: |
+| **MLB Franchises** | `MlbTeamId` | `MlbTeamCode`, `TeamFranchiseMetadata` | `"teams"` | 30 Teams (15 AL, 15 NL, 5/div) |
+| **Leagues** | `League` | `League` | `"leagues"` | `AL`, `NL` |
+| **Divisions** | `Division` | `Division` | `"divisions"` | `EAST`, `CENTRAL`, `WEST` |
+| **Stat Pillars** | `StatPillarType` | `StatPillarType`, `StatPillarDefinition` | `"stat_pillars"` | 4 Dimensions ($\sum w = 1.00$) |
+| **Playoff Rounds** | `PostseasonRound` | `PostseasonRound`, `PostseasonRoundDefinition` | `"postseason_rounds"` | `WILD_CARD` $\dots$ `WORLD_SERIES` |
+| **Hungarian DB** | `HungarianCollectionPrefix` | `HungarianCollectionPrefix` | `"hungarian_prefixes"` | `i_`, `m_`, `s_`, `o_`, `f_` |
+| **Record Status** | `RecordStatusCode` | `RecordStatusCode` | `"record_status_codes"` | `ACTIVE`, `INACTIVE`, `SUPERSEDED`, `ARCHIVED` |
 
 ---
 
