@@ -316,6 +316,27 @@ object LocalSqliteDatabaseService {
         // Write SQL dump script
         sqlDumpFile.writeText(sqlBuilder.toString())
 
+        // Automatically sync artifacts to ~/personal/local-db-stack/sqlite and ~/.local-db-stack/data/sqlite if present
+        val userHome = System.getProperty("user.home") ?: ""
+        val localStackTargets = listOf(
+            File("$userHome/personal/local-db-stack/sqlite"),
+            File("$userHome/.local-db-stack/data/sqlite")
+        )
+
+        for (targetDir in localStackTargets) {
+            try {
+                if (!targetDir.exists()) targetDir.mkdirs()
+                sqliteFile.copyTo(File(targetDir, sqliteFile.name), overwrite = true)
+                sqlDumpFile.copyTo(File(targetDir, sqlDumpFile.name), overwrite = true)
+                val payloadFile = File(outputDir, "pockethost_sync_payload.json")
+                if (payloadFile.exists()) {
+                    payloadFile.copyTo(File(targetDir, payloadFile.name), overwrite = true)
+                }
+            } catch (e: Exception) {
+                // Log and continue gracefully
+            }
+        }
+
         val duration = System.currentTimeMillis() - startTime
         return LocalDatabaseReport(
             sqliteFile = sqliteFile,
