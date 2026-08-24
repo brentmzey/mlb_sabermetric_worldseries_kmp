@@ -35,18 +35,23 @@ echo "🧪 [2/3] Running Unit Test Suite & JaCoCo Coverage Report..."
 # 3. Populate Local DB Stack (SQLite, PostgreSQL, MySQL)
 if [ -d "$LOCAL_STACK_DIR" ] && [ -f "$LOCAL_STACK_DIR/load_mlb_sabermetrics.sh" ]; then
     echo ""
-    echo "🗄️  [3/3] Populating Local DB Stack (SQLite, PostgreSQL, MySQL)..."
+    echo "🗄️  [3/4] Populating Local DB Stack (SQLite, PostgreSQL, MySQL)..."
     "$LOCAL_STACK_DIR/load_mlb_sabermetrics.sh" --all
 else
     echo "ℹ️  Local DB Stack directory not found at $LOCAL_STACK_DIR, skipping docker populator."
 fi
 
+# 4. Extract all 17 collections from PocketHost into PostgreSQL
+echo ""
+echo "📥 [4/4] Extracting all 17 Hungarian collections from PocketHost -> PostgreSQL..."
+python3 "$PROJECT_DIR/scripts/pockethost_to_postgres_replicator.py"
+
 echo ""
 echo "=============================================================================="
 echo " ✅ Full Refresh, Simulation Run & Multi-DB Synchronization Complete!"
-echo " • PocketHost Cloud: https://mlb-sabermetrics.pockethost.io"
+echo " • PocketHost Cloud: https://mlb-sabermetric-worldseries.pockethost.io"
 echo " • Local SQLite DB:  $PROJECT_DIR/output_datasets/mlb_sabermetrics_local.sqlite"
-echo " • Local PostgreSQL: localhost:15432 (local_database)"
+echo " • Local PostgreSQL: localhost:15432 (local_database) - 17 Tables Replicated"
 echo " • Local MySQL:      localhost:13306 (local_database)"
 echo " • Generated Charts: $PROJECT_DIR/docs/charts/"
 echo "=============================================================================="
