@@ -86,6 +86,10 @@ ALL_17_HUNGARIAN_COLLECTIONS: Final[Tuple[str, ...]] = (
 )
 
 
+from semantic_logger import SemanticLogger, LogLevel
+
+logger: Final[SemanticLogger] = SemanticLogger("PocketHost->PostgreSQL")
+
 # -----------------------------------------------------------------------------
 # Strongly-Typed Domain Data Models
 # -----------------------------------------------------------------------------
@@ -145,6 +149,7 @@ class PocketHostExtractor:
 
     def authenticate(self) -> Optional[str]:
         if not self.credentials:
+            logger.warn("No PocketHost admin credentials found in environment. Proceeding with public access.")
             return None
         
         endpoints: List[str] = [
@@ -163,13 +168,14 @@ class PocketHostExtractor:
                         headers={"Content-Type": "application/json", "User-Agent": "MLB-Sabermetric-Extractor/3.0"},
                         method="POST"
                     )
-                    with urllib.request.urlopen(req, timeout=10) as resp:
+                    with urllib.request.urlopen(req, timeout=5) as resp:
                         res = json.loads(resp.read().decode("utf-8"))
                         if isinstance(res, dict) and "token" in res:
                             self.auth_token = str(res["token"])
+                            logger.success(f"Authenticated with PocketHost endpoint: {ep}")
                             return self.auth_token
                 except Exception:
-                    time.sleep(1.0 * (attempt + 1))
+                    time.sleep(0.5 * (attempt + 1))
         return None
 
     def fetch_collection_records(self, collection_name: str) -> List[Dict[str, Any]]:
@@ -201,24 +207,26 @@ class PocketHostExtractor:
         return all_records
 
     def extract_all_17_collections(self) -> Dict[str, List[Dict[str, Any]]]:
-        print("📥 1. Authenticating & Extracting all 17 Hungarian collections from PocketHost...", flush=True)
+        logger.stage(1, 2, "Authenticating & Extracting Hungarian Collections from PocketHost")
         self.authenticate()
         
         extracted_data: Dict[str, List[Dict[str, Any]]] = {}
         for col_name in ALL_17_HUNGARIAN_COLLECTIONS:
+            t0 = time.time()
             records = self.fetch_collection_records(col_name)
+            latency_ms = (time.time() - t0) * 1000
             if records:
                 extracted_data[col_name] = records
-                print(f"   ✓ Extracted {len(records):>4} records from `{col_name}`", flush=True)
+                logger.info(f"Extracted {len(records):>4} records from `{col_name}`", count=len(records), latency_ms=f"{latency_ms:.1f}")
             else:
                 extracted_data[col_name] = []
-                print(f"   ℹ️  Collection `{col_name}` is currently empty or initialized", flush=True)
+                logger.info(f"Collection `{col_name}` initialized / empty", count=0, latency_ms=f"{latency_ms:.1f}")
         
         # Fallback to canonical dataset if remote instance is cold
         if not extracted_data.get("i_mlb_teams"):
             latest_json = os.path.join(OUTPUT_DIR, "pockethost_backup_latest.json")
             if os.path.exists(latest_json):
-                print("   ℹ️  Augmenting with latest canonical snapshot backup records...", flush=True)
+                logger.info("Augmenting with latest canonical snapshot backup records...")
                 with open(latest_json, "r", encoding="utf-8") as f:
                     cached = json.load(f).get("collections", {})
                     for k, v in cached.items():
@@ -860,25 +868,27 @@ class PostgresReplicator:
 
     @classmethod
     def replicate_to_postgres(cls, sql_content: str) -> bool:
-        print("\n🐘 2. Replicating all 17 collections to canonical PostgreSQL (localhost:15432)...")
+        logger.stage(2, 2, "Replicating all 17 Collections to Canonical PostgreSQL (localhost:15432)")
         dump_path = os.path.join(OUTPUT_DIR, "canonical_postgres_17_tables_dump.sql")
         with open(dump_path, "w", encoding="utf-8") as f:
             f.write(sql_content)
-        print(f"   ✓ Generated PostgreSQL SQL dump: `{dump_path}`")
+        logger.info(f"Generated PostgreSQL SQL dump: `{dump_path}`", bytes_written=len(sql_content))
 
         # Execute via docker exec or psql
         cmd = ["docker", "exec", "-i", "local_postgres", "psql", "-U", POSTGRES_USER, "-d", POSTGRES_DB]
         try:
+            t0 = time.time()
             p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = p.communicate(input=sql_content, timeout=30)
+            exec_time_ms = (time.time() - t0) * 1000
             if p.returncode == 0:
-                print("   ✅ Successfully executed PostgreSQL replication against `local_postgres`!")
+                logger.success("PostgreSQL replication executed successfully against `local_postgres`", latency_ms=f"{exec_time_ms:.1f}")
                 return True
             else:
-                print(f"   ⚠️  PostgreSQL execution notice: {stderr[:200]}")
+                logger.warn(f"PostgreSQL notice: {stderr[:150]}")
                 return True
         except Exception as e:
-            print(f"   ⚠️  PostgreSQL docker connection error: {e}")
+            logger.error(f"PostgreSQL docker execution failed: {e}")
             return False
 
 
@@ -887,31 +897,38 @@ class PostgresReplicator:
 # -----------------------------------------------------------------------------
 def main() -> None:
     start_time = time.time()
-    print("================================================================================")
-    print(" 🚀 POCKETHOST TO CANONICAL POSTGRESQL & SQLITE REPLICATOR (17 COLLECTIONS)")
-    print(f"    Source URL:    {POCKETHOST_BASE_URL}")
-    print(f"    PostgreSQL:    localhost:{POSTGRES_PORT} (DB: {POSTGRES_DB})")
-    print("================================================================================")
+    logger.banner(
+        "POCKETHOST -> CANONICAL POSTGRESQL UNIVERSAL REPLICATOR",
+        f"Source: {POCKETHOST_BASE_URL} | Target: PostgreSQL localhost:{POSTGRES_PORT}"
+    )
 
     extractor = PocketHostExtractor()
     collections_data = extractor.extract_all_17_collections()
 
     total_records = sum(len(v) for v in collections_data.values())
-    print(f"\n📊 Extraction Totals: {len(collections_data)} collections, {total_records} total records")
+    logger.metric("Total Collections Extracted", len(collections_data))
+    logger.metric("Total Records Ingested", total_records)
 
     # Generate PostgreSQL DDL & DML
     sql_script = PostgresReplicator.generate_full_postgres_seed_sql(collections_data)
     pg_success = PostgresReplicator.replicate_to_postgres(sql_script)
 
     duration = (time.time() - start_time) * 1000
-    print("\n================================================================================")
-    print(" 🎉 EXTRACTION & REPLICATION COMPLETE!")
-    print(f"    • Total Collections Replicated: {len(collections_data)}")
-    print(f"    • Total Records Ingested:       {total_records}")
-    print(f"    • Execution Time:               {duration:.1f}ms")
-    print("    • Verify in PostgreSQL:")
-    print(f"        docker exec -it local_postgres psql -U {POSTGRES_USER} -d {POSTGRES_DB} -c 'SELECT * FROM vw_latest_active_world_series_leaderboard LIMIT 10;'")
-    print("================================================================================\n")
+    
+    # Print semantic summary table
+    summary_rows = [
+        [col, f"{len(records):,}", "Ingested & Indexed"]
+        for col, records in collections_data.items()
+        if records
+    ]
+    logger.summary_table("PostgreSQL 17-Collection Ingestion Breakdown", ["Collection / Table", "Records", "Status"], summary_rows)
+
+    logger.success(
+        "PocketHost -> PostgreSQL Replication Complete!",
+        total_records=total_records,
+        duration_ms=f"{duration:.1f}",
+        pg_target=f"localhost:{POSTGRES_PORT}/{POSTGRES_DB}"
+    )
 
 
 if __name__ == "__main__":
