@@ -323,6 +323,21 @@ object LocalSqliteDatabaseService {
             -- Auto-generated Idempotent PostgreSQL Seed Script for ~/personal/local-db-stack
             -- Target: local_postgres (port 15432, user: local_user, db: local_database)
             
+            CREATE TABLE IF NOT EXISTS m_simulation_runs (
+                id VARCHAR(60) PRIMARY KEY,
+                run_id VARCHAR(60) NOT NULL UNIQUE,
+                season_year INTEGER NOT NULL,
+                iterations_count INTEGER NOT NULL,
+                simulation_seed INTEGER NOT NULL,
+                champion_team_id VARCHAR(10) NOT NULL,
+                champion_team_name VARCHAR(60) NOT NULL,
+                champion_win_probability DOUBLE PRECISION NOT NULL,
+                engine_version VARCHAR(30) NOT NULL,
+                schema_version VARCHAR(30) NOT NULL,
+                created_at_utc VARCHAR(30) NOT NULL,
+                created_at_epoch_ms BIGINT NOT NULL
+            );
+
             CREATE TABLE IF NOT EXISTS i_mlb_teams (
                 id VARCHAR(36) PRIMARY KEY,
                 str_team_code VARCHAR(3) NOT NULL UNIQUE,
@@ -337,6 +352,39 @@ object LocalSqliteDatabaseService {
                 str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
                 int_created_epoch_ms_utc BIGINT NOT NULL,
                 int_updated_epoch_ms_utc BIGINT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS i_team_season_inputs (
+                id VARCHAR(60) PRIMARY KEY,
+                team_id VARCHAR(3) NOT NULL REFERENCES i_mlb_teams(str_team_code),
+                run_id VARCHAR(60) NOT NULL,
+                wins_count INTEGER NOT NULL,
+                losses_count INTEGER NOT NULL,
+                runs_scored DOUBLE PRECISION NOT NULL,
+                runs_allowed DOUBLE PRECISION NOT NULL,
+                pythagorean_win_pct DOUBLE PRECISION NOT NULL,
+                baseruns_estimate DOUBLE PRECISION NOT NULL,
+                woba_offense DOUBLE PRECISION NOT NULL,
+                wrc_plus_offense DOUBLE PRECISION NOT NULL,
+                fip_pitching DOUBLE PRECISION NOT NULL,
+                top3_ace_era DOUBLE PRECISION NOT NULL,
+                bullpen_wpa DOUBLE PRECISION NOT NULL,
+                polymarket_consensus_pct DOUBLE PRECISION NOT NULL,
+                last10_win_pct DOUBLE PRECISION NOT NULL,
+                season_consistency_index DOUBLE PRECISION NOT NULL,
+                created_at_epoch_ms BIGINT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS m_latent_quality_estimates (
+                id VARCHAR(60) PRIMARY KEY,
+                team_id VARCHAR(3) NOT NULL REFERENCES i_mlb_teams(str_team_code),
+                run_id VARCHAR(60) NOT NULL,
+                latent_quality_score DOUBLE PRECISION NOT NULL,
+                bayesian_adjusted_win_pct DOUBLE PRECISION NOT NULL,
+                recency_weighted_win_pct DOUBLE PRECISION NOT NULL,
+                war_normalized_pace DOUBLE PRECISION NOT NULL,
+                clubhouse_momentum_multiplier DOUBLE PRECISION NOT NULL,
+                created_at_epoch_ms BIGINT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS f_world_series_leaderboard (
@@ -358,13 +406,32 @@ object LocalSqliteDatabaseService {
                 int_updated_epoch_ms_utc BIGINT NOT NULL
             );
 
-            ALTER TABLE f_world_series_leaderboard ALTER COLUMN id TYPE VARCHAR(80);
             TRUNCATE TABLE f_world_series_leaderboard CASCADE;
+            TRUNCATE TABLE m_latent_quality_estimates CASCADE;
+            TRUNCATE TABLE i_team_season_inputs CASCADE;
 
         """.trimIndent()).append("\n\n")
 
+        val topTeam = result.leaderboard.first()
+        pgBuilder.append("INSERT INTO m_simulation_runs VALUES ('sim_$runId', '$runId', ${TimeUtils.getSeasonYear(epochTimestampMs)}, ${result.totalSimulations}, 42, '${topTeam.team.teamId.name}', '${topTeam.team.name.replace("'", "''")}', ${topTeam.worldSeriesWinProb}, '2.4.0-KMP-2SLS', '1.0.0-hungarian', '${TimeUtils.formatIsoTimestampUtc(epochTimestampMs)}', $epochTimestampMs) ON CONFLICT (run_id) DO UPDATE SET champion_win_probability = EXCLUDED.champion_win_probability;\n\n")
+
         for (t in teams) {
             pgBuilder.append("INSERT INTO i_mlb_teams (id, str_team_code, str_team_name, str_league, str_division, str_city, str_ballpark, int_founded_year, int_mlb_api_id, bool_is_active, str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc) VALUES ('${t.teamId.name}', '${t.teamId.name}', '${t.name.replace("'", "''")}', '${t.league.name}', '${t.division.name}', '${t.teamId.city.replace("'", "''")}', '${t.teamId.ballpark.replace("'", "''")}', ${t.teamId.foundedYear}, ${t.teamId.mlbApiId}, TRUE, 'ACTIVE', $epochTimestampMs, $epochTimestampMs) ON CONFLICT (str_team_code) DO UPDATE SET str_team_name = EXCLUDED.str_team_name, int_updated_epoch_ms_utc = EXCLUDED.int_updated_epoch_ms_utc;\n")
+        }
+        pgBuilder.append("\n")
+
+        for (t in teams) {
+            val inputId = "inp_${runId}_${t.teamId.name.lowercase()}"
+            pgBuilder.append("INSERT INTO i_team_season_inputs VALUES ('$inputId', '${t.teamId.name}', '$runId', ${t.wins}, ${t.losses}, ${t.runsScored}, ${t.runsAllowed}, ${t.pythagoreanWinPct}, ${t.baseRunsEstimate}, ${t.wOBA}, ${t.wRCPlus}, ${t.fip}, ${t.top3AceEra}, ${t.bullpenWpa}, ${t.marketImpliedWsProb}, ${t.last10WinPct}, ${t.seasonConsistencyIndex}, $epochTimestampMs) ON CONFLICT (id) DO NOTHING;\n")
+        }
+        pgBuilder.append("\n")
+
+        for (t in teams) {
+            val qId = "qual_${runId}_${t.teamId.name.lowercase()}"
+            val qScore = WorldSeriesSimulator.computeLatentTeamQuality(t, momentumMap)
+            val warNorm = if (t.gamesPlayed > 0) (t.teamWar / t.gamesPlayed * 162.0) / 45.0 else 0.50
+            val mom = momentumMap[t.teamId] ?: 1.0
+            pgBuilder.append("INSERT INTO m_latent_quality_estimates VALUES ('$qId', '${t.teamId.name}', '$runId', $qScore, ${t.bayesianAdjustedWinPct}, ${t.recencyWeightedWinPct}, $warNorm, $mom, $epochTimestampMs) ON CONFLICT (id) DO NOTHING;\n")
         }
         pgBuilder.append("\n")
 
@@ -406,6 +473,21 @@ object LocalSqliteDatabaseService {
             
             USE local_database;
 
+            CREATE TABLE IF NOT EXISTS m_simulation_runs (
+                id VARCHAR(60) PRIMARY KEY,
+                run_id VARCHAR(60) NOT NULL UNIQUE,
+                season_year INT NOT NULL,
+                iterations_count INT NOT NULL,
+                simulation_seed INT NOT NULL,
+                champion_team_id VARCHAR(10) NOT NULL,
+                champion_team_name VARCHAR(60) NOT NULL,
+                champion_win_probability DOUBLE NOT NULL,
+                engine_version VARCHAR(30) NOT NULL,
+                schema_version VARCHAR(30) NOT NULL,
+                created_at_utc VARCHAR(30) NOT NULL,
+                created_at_epoch_ms BIGINT NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
             CREATE TABLE IF NOT EXISTS i_mlb_teams (
                 id VARCHAR(36) PRIMARY KEY,
                 str_team_code VARCHAR(3) NOT NULL UNIQUE,
@@ -420,6 +502,41 @@ object LocalSqliteDatabaseService {
                 str_status_code VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
                 int_created_epoch_ms_utc BIGINT NOT NULL,
                 int_updated_epoch_ms_utc BIGINT NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS i_team_season_inputs (
+                id VARCHAR(60) PRIMARY KEY,
+                team_id VARCHAR(3) NOT NULL,
+                run_id VARCHAR(60) NOT NULL,
+                wins_count INT NOT NULL,
+                losses_count INT NOT NULL,
+                runs_scored DOUBLE NOT NULL,
+                runs_allowed DOUBLE NOT NULL,
+                pythagorean_win_pct DOUBLE NOT NULL,
+                baseruns_estimate DOUBLE NOT NULL,
+                woba_offense DOUBLE NOT NULL,
+                wrc_plus_offense DOUBLE NOT NULL,
+                fip_pitching DOUBLE NOT NULL,
+                top3_ace_era DOUBLE NOT NULL,
+                bullpen_wpa DOUBLE NOT NULL,
+                polymarket_consensus_pct DOUBLE NOT NULL,
+                last10_win_pct DOUBLE NOT NULL,
+                season_consistency_index DOUBLE NOT NULL,
+                created_at_epoch_ms BIGINT NOT NULL,
+                FOREIGN KEY (team_id) REFERENCES i_mlb_teams(str_team_code)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+            CREATE TABLE IF NOT EXISTS m_latent_quality_estimates (
+                id VARCHAR(60) PRIMARY KEY,
+                team_id VARCHAR(3) NOT NULL,
+                run_id VARCHAR(60) NOT NULL,
+                latent_quality_score DOUBLE NOT NULL,
+                bayesian_adjusted_win_pct DOUBLE NOT NULL,
+                recency_weighted_win_pct DOUBLE NOT NULL,
+                war_normalized_pace DOUBLE NOT NULL,
+                clubhouse_momentum_multiplier DOUBLE NOT NULL,
+                created_at_epoch_ms BIGINT NOT NULL,
+                FOREIGN KEY (team_id) REFERENCES i_mlb_teams(str_team_code)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
             CREATE TABLE IF NOT EXISTS f_world_series_leaderboard (
@@ -442,13 +559,31 @@ object LocalSqliteDatabaseService {
                 FOREIGN KEY (str_team_code) REFERENCES i_mlb_teams(str_team_code)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-            ALTER TABLE f_world_series_leaderboard MODIFY id VARCHAR(80);
             DELETE FROM f_world_series_leaderboard;
+            DELETE FROM m_latent_quality_estimates;
+            DELETE FROM i_team_season_inputs;
 
         """.trimIndent()).append("\n\n")
 
+        mysqlBuilder.append("INSERT INTO m_simulation_runs VALUES ('sim_$runId', '$runId', ${TimeUtils.getSeasonYear(epochTimestampMs)}, ${result.totalSimulations}, 42, '${topTeam.team.teamId.name}', '${topTeam.team.name.replace("'", "''")}', ${topTeam.worldSeriesWinProb}, '2.4.0-KMP-2SLS', '1.0.0-hungarian', '${TimeUtils.formatIsoTimestampUtc(epochTimestampMs)}', $epochTimestampMs) ON DUPLICATE KEY UPDATE champion_win_probability = VALUES(champion_win_probability);\n\n")
+
         for (t in teams) {
             mysqlBuilder.append("INSERT INTO i_mlb_teams (id, str_team_code, str_team_name, str_league, str_division, str_city, str_ballpark, int_founded_year, int_mlb_api_id, bool_is_active, str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc) VALUES ('${t.teamId.name}', '${t.teamId.name}', '${t.name.replace("'", "''")}', '${t.league.name}', '${t.division.name}', '${t.teamId.city.replace("'", "''")}', '${t.teamId.ballpark.replace("'", "''")}', ${t.teamId.foundedYear}, ${t.teamId.mlbApiId}, TRUE, 'ACTIVE', $epochTimestampMs, $epochTimestampMs) ON DUPLICATE KEY UPDATE str_team_name = VALUES(str_team_name), int_updated_epoch_ms_utc = VALUES(int_updated_epoch_ms_utc);\n")
+        }
+        mysqlBuilder.append("\n")
+
+        for (t in teams) {
+            val inputId = "inp_${runId}_${t.teamId.name.lowercase()}"
+            mysqlBuilder.append("INSERT INTO i_team_season_inputs VALUES ('$inputId', '${t.teamId.name}', '$runId', ${t.wins}, ${t.losses}, ${t.runsScored}, ${t.runsAllowed}, ${t.pythagoreanWinPct}, ${t.baseRunsEstimate}, ${t.wOBA}, ${t.wRCPlus}, ${t.fip}, ${t.top3AceEra}, ${t.bullpenWpa}, ${t.marketImpliedWsProb}, ${t.last10WinPct}, ${t.seasonConsistencyIndex}, $epochTimestampMs) ON DUPLICATE KEY UPDATE wrc_plus_offense = VALUES(wrc_plus_offense);\n")
+        }
+        mysqlBuilder.append("\n")
+
+        for (t in teams) {
+            val qId = "qual_${runId}_${t.teamId.name.lowercase()}"
+            val qScore = WorldSeriesSimulator.computeLatentTeamQuality(t, momentumMap)
+            val warNorm = if (t.gamesPlayed > 0) (t.teamWar / t.gamesPlayed * 162.0) / 45.0 else 0.50
+            val mom = momentumMap[t.teamId] ?: 1.0
+            mysqlBuilder.append("INSERT INTO m_latent_quality_estimates VALUES ('$qId', '${t.teamId.name}', '$runId', $qScore, ${t.bayesianAdjustedWinPct}, ${t.recencyWeightedWinPct}, $warNorm, $mom, $epochTimestampMs) ON DUPLICATE KEY UPDATE latent_quality_score = VALUES(latent_quality_score);\n")
         }
         mysqlBuilder.append("\n")
 
