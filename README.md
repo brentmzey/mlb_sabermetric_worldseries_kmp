@@ -349,6 +349,7 @@ To rigorously select our architecture over naive alternatives, we benchmarked 4 
 | **Model 4: Selected Model (Ours)** | **Active Roster 2SLS IV + Additive Quality + Log5 ($\gamma=1.20$)** | **48.6** | **94.2** | **102.8** | **0.1604** | ✅ **Optimal AIC/BIC, Zero-Mean Unbiased, Parity Calibrated** |
 
 For complete mathematical proofs, diagnostic matrices, and residual luck tables across all 30 teams, read the detailed documentation:
+- 📐 **[docs/2SLS_IV_LUCK_PURGING_MATRIX_ALGEBRA.md](docs/2SLS_IV_LUCK_PURGING_MATRIX_ALGEBRA.md)**: Two-Stage Least Squares (2SLS / IV) Complete Matrix Algebra, Asymptotic Proofs & Specification Tests
 - 🎲 **[docs/DAILY_SIMULATION_PIPELINE_AND_OUTCOME_SAMPLING.md](docs/DAILY_SIMULATION_PIPELINE_AND_OUTCOME_SAMPLING.md)**: Daily Stochastic Sampling, Outcome Propensity Distribution & Automated Pipeline Execution
 - 🧠 **[docs/CAUSAL_SURVIVAL_THEORY_AND_OCTOBER_PREDICTIONS.md](docs/CAUSAL_SURVIVAL_THEORY_AND_OCTOBER_PREDICTIONS.md)**: Causal Survival Theory, First-Round Bye Hazard Arbitrage, Rotation Compression & October Prediction Tables
 - 🧠 **[docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md](docs/MODEL_STRUCTURES_STATISTICAL_SIGNIFICANCE_AND_COMPARATIVE_PERFORMANCE.md)**: Deep Explainer on Model Structures, 2SLS IV Asymptotic Consistency, White $HC_1/HC_3$ Robustness, Heuristic Reasoning & Comparative Performance
