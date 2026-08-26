@@ -2,7 +2,7 @@
 
 [![Kotlin Multiplatform](https://img.shields.io/badge/Kotlin-Multiplatform-purple.svg)](https://kotlinlang.org/docs/multiplatform.html)
 [![Econometric Theory](https://img.shields.io/badge/Econometrics-Davidson_%26_MacKinnon_ETM-blue.svg)](https://global.oup.com/academic/product/econometric-theory-and-methods-9780195123722)
-[![2SLS Causal IV](https://img.shields.io/badge/Causal_Inference-2SLS_IV-green.svg)](docs/CAUSAL_SURVIVAL_FRAMEWORK.md)
+[![2SLS Causal IV](https://img.shields.io/badge/Causal_Inference-2SLS_IV-green.svg)](2SLS_IV_LUCK_PURGING_MATRIX_ALGEBRA.md)
 [![Monte Carlo](https://img.shields.io/badge/Monte_Carlo-10%2C000_Iterations-orange.svg)]()
 
 > *"Econometric models are abstractions designed to help us understand economic phenomena and to predict the consequences of policies or exogenous shocks."*  
