@@ -158,6 +158,43 @@ def export_full_database_json(token: str) -> Tuple[str, Dict[str, List[Dict[str,
     return latest_file_path, backup_payload["collections"]
 
 
+# --- Helper utilities to reduce duplication ---
+
+def _get_str(r: Mapping[str, Any], key: str, default: str = "", upper: bool = False) -> str:
+    v = r.get(key, default) or default
+    s = str(v)
+    return s.strip().upper() if upper else s.strip()
+
+
+def _get_int(r: Mapping[str, Any], key: str, default: int = 0) -> int:
+    try:
+        return int(r.get(key, default))
+    except Exception:
+        return int(default)
+
+
+def _get_float(r: Mapping[str, Any], key: str, default: float = 0.0) -> float:
+    try:
+        return float(r.get(key, default))
+    except Exception:
+        return float(default)
+
+
+def _get_bool_int(r: Mapping[str, Any], key: str, default: bool = True) -> int:
+    v = r.get(key, default)
+    try:
+        return 1 if bool(v) else 0
+    except Exception:
+        return 1 if default else 0
+
+
+def _insert(cursor: sqlite3.Cursor, table: str, columns: Sequence[str], values: Sequence[Any]) -> None:
+    placeholders = ", ".join(["?"] * len(columns))
+    cols = ", ".join(columns)
+    sql = f"INSERT OR REPLACE INTO {table} ({cols}) VALUES ({placeholders})"
+    cursor.execute(sql, values)
+
+
 def replicate_to_local_sqlite(collections: Mapping[str, Sequence[Mapping[str, Any]]]) -> str:
     """Builds and populates a standalone local SQLite database from exported PocketHost data."""
     print(f"\n🗄️  Replicating exported data to local SQLite database: `{LOCAL_DB_FILE}`...")
@@ -176,80 +213,73 @@ def replicate_to_local_sqlite(collections: Mapping[str, Sequence[Mapping[str, An
     # Ingest i_mlb_teams
     teams_recs = collections.get("i_mlb_teams", [])
     for r in teams_recs:
-        code: str = str(r.get("str_team_code", "")).strip().upper()
+        code = _get_str(r, "str_team_code", "", upper=True)
         if not code:
             continue
         try:
             meta = MLB_REGISTRY.get_team(code)
-            mlb_id: int = int(r.get("int_mlb_api_id") or meta.mlb_api_id)
-            city: str = str(r.get("str_city") or meta.city)
-            ballpark: str = str(r.get("str_ballpark") or meta.ballpark)
-            founded: int = int(r.get("int_founded_year") or meta.founded_year)
-            lg: str = str(r.get("str_league") or meta.league.value).strip().upper()
-            div: str = str(r.get("str_division") or meta.division.value).strip().upper()
-            name: str = str(r.get("str_team_name") or meta.full_name)
+            mlb_id = _get_int(r, "int_mlb_api_id", meta.mlb_api_id)
+            city = _get_str(r, "str_city", meta.city)
+            ballpark = _get_str(r, "str_ballpark", meta.ballpark)
+            founded = _get_int(r, "int_founded_year", meta.founded_year)
+            lg = _get_str(r, "str_league", meta.league.value, upper=True)
+            div = _get_str(r, "str_division", meta.division.value, upper=True)
+            name = _get_str(r, "str_team_name", meta.full_name)
         except Exception:
-            mlb_id = int(r.get("int_mlb_api_id", 0))
-            city = str(r.get("str_city", ""))
-            ballpark = str(r.get("str_ballpark", ""))
-            founded = int(r.get("int_founded_year", 1901))
-            lg = str(r.get("str_league", "AL")).strip().upper()
-            div = str(r.get("str_division", "EAST")).strip().upper()
-            name = str(r.get("str_team_name", ""))
+            mlb_id = _get_int(r, "int_mlb_api_id", 0)
+            city = _get_str(r, "str_city", "")
+            ballpark = _get_str(r, "str_ballpark", "")
+            founded = _get_int(r, "int_founded_year", 1901)
+            lg = _get_str(r, "str_league", "AL", upper=True)
+            div = _get_str(r, "str_division", "EAST", upper=True)
+            name = _get_str(r, "str_team_name", "")
 
-        cursor.execute("""
-            INSERT OR REPLACE INTO i_mlb_teams (
-                id, str_team_code, str_team_name, str_league, str_division, str_city,
-                str_ballpark, int_founded_year, int_mlb_api_id, bool_is_active,
-                str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            str(r.get("id", "")), code, name, lg, div, city, ballpark, founded, mlb_id,
-            1 if r.get("bool_is_active", True) else 0,
-            str(r.get("str_status_code", "ACTIVE")).strip().upper(),
-            int(r.get("int_created_epoch_ms_utc", 0)), int(r.get("int_updated_epoch_ms_utc", 0))
-        ))
+        _insert(cursor, "i_mlb_teams", [
+            "id", "str_team_code", "str_team_name", "str_league", "str_division", "str_city",
+            "str_ballpark", "int_founded_year", "int_mlb_api_id", "bool_is_active",
+            "str_status_code", "int_created_epoch_ms_utc", "int_updated_epoch_ms_utc"
+        ], [
+            _get_str(r, "id", ""), code, name, lg, div, city, ballpark, founded, mlb_id,
+            _get_bool_int(r, "bool_is_active", True), _get_str(r, "str_status_code", "ACTIVE", upper=True),
+            _get_int(r, "int_created_epoch_ms_utc", 0), _get_int(r, "int_updated_epoch_ms_utc", 0)
+        ])
 
     # Ingest m_simulation_runs
     sim_recs = collections.get("m_simulation_runs", [])
     for r in sim_recs:
-        cursor.execute("""
-            INSERT OR REPLACE INTO m_simulation_runs (
-                id, str_run_id, dt_run_timestamp, int_season_year, int_total_iterations,
-                int_random_seed, str_engine_version, str_top_favorite_code,
-                dbl_top_favorite_prob, str_causal_iv_status, bool_is_active,
-                str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            str(r.get("id", "")), str(r.get("str_run_id", "")), str(r.get("dt_run_timestamp", "")),
-            int(r.get("int_season_year", 2026)), int(r.get("int_total_iterations", 10000)),
-            int(r.get("int_random_seed", 0)), str(r.get("str_engine_version", "")),
-            str(r.get("str_top_favorite_code", "LAD")).strip().upper(), float(r.get("dbl_top_favorite_prob", 0.0)),
-            str(r.get("str_causal_iv_status", "ACTIVE")), 1 if r.get("bool_is_active", True) else 0,
-            str(r.get("str_status_code", "ACTIVE")).strip().upper(),
-            int(r.get("int_created_epoch_ms_utc", 0)), int(r.get("int_updated_epoch_ms_utc", 0))
-        ))
+        _insert(cursor, "m_simulation_runs", [
+            "id", "str_run_id", "dt_run_timestamp", "int_season_year", "int_total_iterations",
+            "int_random_seed", "str_engine_version", "str_top_favorite_code",
+            "dbl_top_favorite_prob", "str_causal_iv_status", "bool_is_active",
+            "str_status_code", "int_created_epoch_ms_utc", "int_updated_epoch_ms_utc"
+        ], [
+            _get_str(r, "id", ""), _get_str(r, "str_run_id", ""), _get_str(r, "dt_run_timestamp", ""),
+            _get_int(r, "int_season_year", 2026), _get_int(r, "int_total_iterations", 10000),
+            _get_int(r, "int_random_seed", 0), _get_str(r, "str_engine_version", ""),
+            _get_str(r, "str_top_favorite_code", "LAD", upper=True), _get_float(r, "dbl_top_favorite_prob", 0.0),
+            _get_str(r, "str_causal_iv_status", "ACTIVE"), _get_bool_int(r, "bool_is_active", True),
+            _get_str(r, "str_status_code", "ACTIVE", upper=True), _get_int(r, "int_created_epoch_ms_utc", 0),
+            _get_int(r, "int_updated_epoch_ms_utc", 0)
+        ])
 
     # Ingest f_world_series_leaderboard
     lb_recs = collections.get("f_world_series_leaderboard", [])
     for r in lb_recs:
-        cursor.execute("""
-            INSERT OR REPLACE INTO f_world_series_leaderboard (
-                id, str_run_id, str_team_code, str_team_name, str_league, str_division,
-                int_sim_rank, dbl_expected_season_wins, dbl_playoff_prob,
-                dbl_pennant_prob, dbl_world_series_win_prob, str_visual_bar,
-                bool_is_active, str_status_code, int_created_epoch_ms_utc, int_updated_epoch_ms_utc
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            str(r.get("id", "")), str(r.get("str_run_id", "")), str(r.get("str_team_code", "")).strip().upper(),
-            str(r.get("str_team_name", "")), str(r.get("str_league", "AL")).strip().upper(),
-            str(r.get("str_division", "EAST")).strip().upper(), int(r.get("int_sim_rank", 1)),
-            float(r.get("dbl_expected_season_wins", 0.0)), float(r.get("dbl_playoff_prob", 0.0)),
-            float(r.get("dbl_pennant_prob", 0.0)), float(r.get("dbl_world_series_win_prob", 0.0)),
-            str(r.get("str_visual_bar", "")), 1 if r.get("bool_is_active", True) else 0,
-            str(r.get("str_status_code", "ACTIVE")).strip().upper(),
-            int(r.get("int_created_epoch_ms_utc", 0)), int(r.get("int_updated_epoch_ms_utc", 0))
-        ))
+        _insert(cursor, "f_world_series_leaderboard", [
+            "id", "str_run_id", "str_team_code", "str_team_name", "str_league", "str_division",
+            "int_sim_rank", "dbl_expected_season_wins", "dbl_playoff_prob",
+            "dbl_pennant_prob", "dbl_world_series_win_prob", "str_visual_bar",
+            "bool_is_active", "str_status_code", "int_created_epoch_ms_utc", "int_updated_epoch_ms_utc"
+        ], [
+            _get_str(r, "id", ""), _get_str(r, "str_run_id", ""), _get_str(r, "str_team_code", "", upper=True),
+            _get_str(r, "str_team_name", ""), _get_str(r, "str_league", "AL", upper=True),
+            _get_str(r, "str_division", "EAST", upper=True), _get_int(r, "int_sim_rank", 1),
+            _get_float(r, "dbl_expected_season_wins", 0.0), _get_float(r, "dbl_playoff_prob", 0.0),
+            _get_float(r, "dbl_pennant_prob", 0.0), _get_float(r, "dbl_world_series_win_prob", 0.0),
+            _get_str(r, "str_visual_bar", ""), _get_bool_int(r, "bool_is_active", True),
+            _get_str(r, "str_status_code", "ACTIVE", upper=True), _get_int(r, "int_created_epoch_ms_utc", 0),
+            _get_int(r, "int_updated_epoch_ms_utc", 0)
+        ])
 
     conn.commit()
 
@@ -267,7 +297,7 @@ def main() -> None:
     print(" 💾 POCKETHOST DATABASE BACKUP, EXPORT & LOCAL SQLITE REPLICATOR")
     print(f"    Target Source: {POCKETHOST_URL}")
     print("================================================================================")
-    
+
     token: str = authenticate_admin()
     json_path, collections = export_full_database_json(token)
     db_path = replicate_to_local_sqlite(collections)
