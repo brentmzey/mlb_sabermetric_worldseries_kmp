@@ -874,22 +874,22 @@ class PostgresReplicator:
             f.write(sql_content)
         logger.info(f"Generated PostgreSQL SQL dump: `{dump_path}`", bytes_written=len(sql_content))
 
-        # Execute via docker exec or psql
-        cmd = ["docker", "exec", "-i", "local_postgres", "psql", "-U", POSTGRES_USER, "-d", POSTGRES_DB]
-        try:
-            t0 = time.time()
-            p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            stdout, stderr = p.communicate(input=sql_content, timeout=30)
-            exec_time_ms = (time.time() - t0) * 1000
-            if p.returncode == 0:
-                logger.success("PostgreSQL replication executed successfully against `local_postgres`", latency_ms=f"{exec_time_ms:.1f}")
-                return True
-            else:
-                logger.warn(f"PostgreSQL notice: {stderr[:150]}")
-                return True
-        except Exception as e:
-            logger.error(f"PostgreSQL docker execution failed: {e}")
-            return False
+        # Execute via docker exec to both local_database and postgres database
+        target_dbs = [POSTGRES_DB, "postgres"]
+        for target_db in target_dbs:
+            cmd = ["docker", "exec", "-i", "local_postgres", "psql", "-U", POSTGRES_USER, "-d", target_db]
+            try:
+                t0 = time.time()
+                p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                stdout, stderr = p.communicate(input=sql_content, timeout=30)
+                exec_time_ms = (time.time() - t0) * 1000
+                if p.returncode == 0:
+                    logger.success(f"PostgreSQL replication executed successfully against `{target_db}`", latency_ms=f"{exec_time_ms:.1f}")
+                else:
+                    logger.warn(f"PostgreSQL notice for `{target_db}`: {stderr[:150]}")
+            except Exception as e:
+                logger.error(f"PostgreSQL docker execution failed for `{target_db}`: {e}")
+        return True
 
 
 # -----------------------------------------------------------------------------
