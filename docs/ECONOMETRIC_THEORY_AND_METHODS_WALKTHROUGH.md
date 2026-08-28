@@ -114,7 +114,7 @@ In [`WorldSeriesSimulator.kt`](file:///Users/brentzey/personal/mlb_sabermetric_w
 $$\begin{aligned}
 q_i &= 0.22 \cdot \text{BayesWinPct}_i \\
     &+ 0.20 \cdot \left( \frac{\text{WAR}_i / G_i \cdot 162}{45.0} \right) \\
-    &+ 0.20 \cdot \underbrace{\left( \frac{3.80}{\text{Top3\_Ace\_ERA}_i} \right)}_{\text{Ace Compression Instrument}} \\
+    &+ 0.20 \cdot \underbrace{\left( \frac{3.80}{\text{Top3 Ace ERA}_i} \right)}_{\text{Ace Compression Instrument}} \\
     &+ 0.15 \cdot \underbrace{\left( \frac{\text{wRC+}_i}{100.0} \right)}_{\text{Park-Neutral Run Instrument}} \\
     &+ 0.10 \cdot \underbrace{\text{DefensiveEfficiency}_i}_{\text{DRS / OAA Instrument}} \\
     &+ 0.13 \cdot \text{RecencyWeightedWinPct}_i \\
@@ -123,7 +123,7 @@ q_i &= 0.22 \cdot \text{BayesWinPct}_i \\
 
 > [!IMPORTANT]
 > **Why Top-3 Ace ERA is an Instrumental Variable (Brian Kenny Rotation Compression)**:
-> In the 162-game regular season, 4th and 5th starters pitch $\approx 40\%$ of games. In a 7-game postseason series, built-in travel days allow the **top-3 starting aces to pitch $80\%$ of all starting innings**. The regular-season full-staff ERA is therefore an endogenous and biased estimator of postseason pitching capacity; our instrumental transformation $\frac{3.80}{\text{Top3\_Ace\_ERA}_i}$ isolates the true playoff causal effect.
+> In the 162-game regular season, 4th and 5th starters pitch $\approx 40\%$ of games. In a 7-game postseason series, built-in travel days allow the **top-3 starting aces to pitch $80\%$ of all starting innings**. The regular-season full-staff ERA is therefore an endogenous and biased estimator of postseason pitching capacity; our instrumental transformation $\frac{3.80}{\text{Top3 Ace ERA}_i}$ isolates the true playoff causal effect.
 
 ---
 
@@ -170,7 +170,7 @@ By the Central Limit Theorem for Monte Carlo simulations (Davidson & MacKinnon, 
 $$\sqrt{N} (\hat{p}_{i, N} - p_i^*) \xrightarrow{d} \mathcal{N}\left( 0, p_i^* (1 - p_i^*) \right)$$
 
 For $N = 10,000$ iterations and maximum variance at $p = 0.50$:
-$$\text{SE}(\hat{p}_{10,000}) = \sqrt{\frac{p(1-p)}{10,000}} \le \sqrt{\frac{0.25}{10,000}} = \mathbf{0.005 \quad (0.50\%)}$$
+$$\text{SE}(\hat{p}_{10,000}) = \sqrt{\frac{p(1-p)}{10,000}} \le \sqrt{\frac{0.25}{10,000}} = \mathbf{0.005 \quad (0.50\% \text{ Standard Error})}$$
 
 **Statistical Confidence**: With 10,000 iterations, the $95\%$ Monte Carlo confidence bound is narrower than $\pm 0.98\%$, ensuring that decimal differences in championship probability reflect true econometric differences rather than simulation noise.
 
