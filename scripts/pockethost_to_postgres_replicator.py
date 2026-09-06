@@ -114,38 +114,39 @@ class ExtractionSummary:
 # -----------------------------------------------------------------------------
 # PocketHost Extraction Engine
 # -----------------------------------------------------------------------------
+def _load_credentials() -> Optional[PocketHostCredentials]:
+    email: Optional[str] = os.getenv("POCKETHOST_ADMIN_EMAIL")
+    pwd: Optional[str] = os.getenv("POCKETHOST_ADMIN_PASSWORD")
+
+    env_files = [
+        os.path.join(PROJECT_ROOT, ".env"),
+        os.path.expanduser("~/.env")
+    ]
+    for env_path in env_files:
+        if os.path.exists(env_path):
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip('"').strip("'")
+                        if k == "POCKETHOST_ADMIN_EMAIL" and not email:
+                            email = v
+                        elif k == "POCKETHOST_ADMIN_PASSWORD" and not pwd:
+                            pwd = v
+    if email and pwd:
+        return PocketHostCredentials(email=email, password=pwd)
+    return None
+
+
 class PocketHostExtractor:
     """Handles authentication and pagination extraction across all PocketHost collections."""
     
     def __init__(self, base_url: str = POCKETHOST_BASE_URL) -> None:
         self.base_url: str = base_url.rstrip("/")
-        self.credentials: Optional[PocketHostCredentials] = self._load_credentials()
+        self.credentials: Optional[PocketHostCredentials] = _load_credentials()
         self.auth_token: Optional[str] = None
-
-    def _load_credentials(self) -> Optional[PocketHostCredentials]:
-        email: Optional[str] = os.getenv("POCKETHOST_ADMIN_EMAIL")
-        pwd: Optional[str] = os.getenv("POCKETHOST_ADMIN_PASSWORD")
-        
-        env_files = [
-            os.path.join(PROJECT_ROOT, ".env"),
-            os.path.expanduser("~/.env")
-        ]
-        for env_path in env_files:
-            if os.path.exists(env_path):
-                with open(env_path, "r", encoding="utf-8") as f:
-                    for line in f:
-                        line = line.strip()
-                        if line and not line.startswith("#") and "=" in line:
-                            k, v = line.split("=", 1)
-                            k = k.strip()
-                            v = v.strip().strip('"').strip("'")
-                            if k == "POCKETHOST_ADMIN_EMAIL" and not email:
-                                email = v
-                            elif k == "POCKETHOST_ADMIN_PASSWORD" and not pwd:
-                                pwd = v
-        if email and pwd:
-            return PocketHostCredentials(email=email, password=pwd)
-        return None
 
     def authenticate(self) -> Optional[str]:
         if not self.credentials:
