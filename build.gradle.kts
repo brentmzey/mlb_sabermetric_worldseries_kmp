@@ -13,7 +13,7 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 
     // 1. JVM Target (Desktop CLI, Data Pipeline, & Server)
     jvm {
