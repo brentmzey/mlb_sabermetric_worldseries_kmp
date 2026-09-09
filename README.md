@@ -442,6 +442,56 @@ We provide free, ready-to-use CSV datasets for researchers, sports analysts, and
 
 * 📥 **[Download Clean MLB Sabermetric CSV Dataset (`mlb_sabermetric_clean_dataset.csv`)](output_datasets/mlb_sabermetric_clean_dataset.csv)** (Includes `Wins`, `Losses`, `Win_Pct`, `Pythagorean_Win_Pct`, `Recency_Win_Pct`, `Season_Consistency_Index`, `Team_WAR`, `wOBA`, `wRC_Plus`, `FIP`, `xFIP`, `Bullpen_WPA`, `Top3_Ace_ERA`, `Trade_Deadline_WAR`, `Clubhouse_Hype_Index`, `Regular_Season_Rank`, `Sim_Rank`, `Rank_Movement`).
 
+---
+
+## 🧪 Interactive Validation, Replication & Citations
+
+Transparency and reproducibility are core to this project. We want you to challenge, verify, and validate our findings. 
+
+### 📚 Academic & Sabermetric Citations
+1. **Two-Stage Least Squares (2SLS) / IV Econometrics:** Davidson, R., & MacKinnon, J. G. (2004). *Econometric Theory and Methods*. Oxford University Press. (Validates our luck-purging causal matrices).
+2. **Pythagorean Expectation & Log5 Matchups:** James, Bill. (1980+). *Baseball Abstracts*. (Validates our run-differential expectations and matchup probabilities).
+3. **BaseRuns (BSR):** Smyth, David. (1990s). Developed to provide a context-neutral measure of a team's offensive capability independent of hit clustering.
+4. **Data Verification Sources:** All raw inputs can be manually cross-referenced against [FanGraphs Team Leaderboards](https://www.fangraphs.com/leaders/teams) and [Baseball Savant / Statcast](https://baseballsavant.mlb.com/).
+
+### 🔬 Verify the Math in Your Browser (No Install Required!)
+Want to run the 2SLS regressions yourself or tweak the weights? You don't need to install Python or Kotlin. 
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/) 
+*(Note: You can open a new Google Colab notebook and run the Python/Pandas regression script below to live-validate our `output_datasets`!)*
+
+<details>
+<summary><b>💻 Click here to view the Interactive Python Replication Script</b></summary>
+
+```python
+# Run this in Google Colab or Jupyter!
+import pandas as pd
+!pip install linearmodels
+from linearmodels.iv import IV2SLS
+
+# 1. Load the live open-source dataset directly from this repo
+url = "https://raw.githubusercontent.com/brentmzey/mlb_sabermetric_worldseries_kmp/main/output_datasets/mlb_sabermetric_clean_dataset.csv"
+df = pd.read_csv(url)
+
+# 2. Add an intercept
+df['Intercept'] = 1
+
+# 3. Verify the Causal 2SLS Model (Purging Luck via Pythagorean Expectation)
+# Endogenous (Noisy): Actual Wins
+# Instrument: Pythagorean Expectation
+iv_model = IV2SLS(
+    dependent=df['Team_WAR'], 
+    exog=df['Intercept'],
+    endog=df['Wins'],
+    instruments=df['Pythagorean_Win_Pct']
+).fit()
+
+print("=== 2SLS CAUSAL REGRESSION RESULTS ===")
+print(iv_model.summary)
+```
+</details>
+
+
 ## 💻 Universal Guide: How to Run Models & Simulations on ANY Device
 
 This project is built using **Kotlin Multiplatform (KMP)**. You can run the models, regressions, sabermetrics, and simulations on **any device or operating system**:
