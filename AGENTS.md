@@ -48,10 +48,23 @@ If you need to run steps individually for debugging, here is the sequence:
 ---
 
 ## 📊 2. Documentation & Markdown Updates
-After a successful model run, the underlying data and charts will change.
+After a successful model run, the underlying data and charts will change. The records, standings, and win probabilities embedded across all documentation files MUST be synchronized with the latest output data.
+
+### 📝 The Documentation Sync Command
+To ensure all tables and inline statistics are consistent, complete, and correct across every single deep-dive document, you MUST run the Python automation script:
+```bash
+python3 scripts/update_docs_data.py
+```
+*What this script does:*
+- Reads the latest simulation data from `output_datasets/pockethost_sync_payload.json` and actual team wins/losses from `output_datasets/mlb_sabermetric_clean_dataset.csv`.
+- Systematically injects the updated 30-team leaderboard into `README.md` and all 9 markdown files in `docs/`.
+- Dynamically updates specific inline team records (e.g., `90 - 58` or `90–58`) and World Series probabilities (e.g., `28.12%`) across all deep-dive texts, replacing the outdated snapshots.
+
+### 🔍 Manual Review
 - Review the generated charts in `docs/charts/`.
 - If new trends emerge (e.g., a massive upset in the simulated World Series odds), you may be asked to rewrite portions of `README.md` or the deep-dive documents in `docs/` to reflect the new causal archetypes.
 - **Always preserve mathematical LaTeX equations** when updating markdown files.
+- Finally, stage, commit, and push all modifications to the remote repository (`git add . && git commit -m "..." && git push`).
 
 ---
 
