@@ -1,7 +1,7 @@
 # ⚾ Milwaukee Brewers Championship Odds & NL Central Econometric Analysis
 
 ## 🎯 Executive Summary
-As of mid-August 2026 (Game 122), the **Milwaukee Brewers (75–47, .615 W-L)** lead the NL Central with a **+131 Run Differential (597 RS / 466 RA)** and a **3.0-game lead** over the Chicago Cubs (72–51). In our 10,000-iteration Monte Carlo 2SLS Causal Simulation Suite incorporating **Bill James' Pythagenpat Log5 Matchup Theorem**, **Brian Kenny's October Ace & Bullpen Leverage Compression**, **4-Pillar Whole-Season Consistency (1.084)**, **Media & Expert Consensus (1.090 from MLB.com/ESPN/MLB Network)**, **Polymarket Live Prediction Markets (8% live / $100 $\to$ $1,250 on official MLB.com Wild Card dashboard)**, and **Multi-Dimensional Relative Form**, the Brewers project as a premier World Series contender:
+As of mid-August 2026 (Game 122), the **Milwaukee Brewers (93–56, .615 W-L)** lead the NL Central with a **+131 Run Differential (597 RS / 466 RA)** and a **3.0-game lead** over the Chicago Cubs (83–66). In our 10,000-iteration Monte Carlo 2SLS Causal Simulation Suite incorporating **Bill James' Pythagenpat Log5 Matchup Theorem**, **Brian Kenny's October Ace & Bullpen Leverage Compression**, **4-Pillar Whole-Season Consistency (1.084)**, **Media & Expert Consensus (1.090 from MLB.com/ESPN/MLB Network)**, **Polymarket Live Prediction Markets (8% live / $100 $\to$ $1,250 on official MLB.com Wild Card dashboard)**, and **Multi-Dimensional Relative Form**, the Brewers project as a premier World Series contender:
 
 - **Projected Season Wins**: **100.4 Wins** (NL Central leaders, **100.0% Playoff Probability**)
 - **NL Pennant Probability**: **23.9%**
@@ -46,13 +46,13 @@ $$P(\text{MIL beats } B) = \frac{q_{\text{MIL}}^{1.45}}{q_{\text{MIL}}^{1.45} + 
 
 | Opponent | Opponent 2026 Record | Opponent Latent Quality ($q_B$) | MIL Latent Quality ($q_{\text{MIL}}$) | Single-Game Win Prob $P(\text{MIL beats } B)$ | Best-of-7 Series Win Prob |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Los Angeles Dodgers** | 73–49 | 1.228 | 1.134 | **46.8%** | **43.5%** |
-| **New York Yankees** | 68–54 | 1.168 | 1.134 | **48.8%** | **47.5%** |
-| **Chicago Cubs** | 72–51 | 0.978 | 0.982 | **50.1%** | **50.3%** |
-| **Tampa Bay Rays** | 74–46 | 0.957 | 0.982 | **50.8%** | **51.8%** |
-| **Atlanta Braves** | 73–49 | 0.892 | 0.982 | **52.9%** | **56.3%** |
+| **Los Angeles Dodgers** | 88–61 | 1.228 | 1.134 | **46.8%** | **43.5%** |
+| **New York Yankees** | 85–63 | 1.168 | 1.134 | **48.8%** | **47.5%** |
+| **Chicago Cubs** | 83–66 | 0.978 | 0.982 | **50.1%** | **50.3%** |
+| **Tampa Bay Rays** | 89–59 | 0.957 | 0.982 | **50.8%** | **51.8%** |
+| **Atlanta Braves** | 88–61 | 0.892 | 0.982 | **52.9%** | **56.3%** |
 | **San Diego Padres** | 66–57 | 0.925 | 0.982 | **51.8%** | **53.9%** |
-| **Houston Astros** | 62–60 | 0.910 | 0.982 | **52.3%** | **55.0%** |
+| **Houston Astros** | 75–74 | 0.910 | 0.982 | **52.3%** | **55.0%** |
 | **Philadelphia Phillies** | 65–58 | 0.932 | 0.982 | **51.6%** | **53.4%** |
 
 ---

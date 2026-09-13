@@ -268,7 +268,7 @@ $$\begin{array}{rlll}
 \text{\#5} & \text{Chicago Cubs} & \mathbf{10.21\%} & (\text{Polymarket Live: } 7.5\%)
 \end{array}$$
 
-Notice how our causal model's **10.63%** calibration for the Yankees matches the **11% Polymarket** real-money market consensus almost to the exact decimal point!
+Notice how our causal model's **14.51%** calibration for the Yankees matches the **11% Polymarket** real-money market consensus almost to the exact decimal point!
 
 ---
 
@@ -277,8 +277,8 @@ Notice how our causal model's **10.63%** calibration for the Yankees matches the
 #### Reality 1: The 40% Wild Card Trapdoor (The First-Round Bye Penalty)
 The fundamental misunderstanding in public baseball discourse is treating the postseason as a single 162-game simulation. In reality, the modern MLB 12-team playoff structure is a **multi-stage elimination gauntlet** where the **First-Round Bye is the single most valuable asset in sports analytics**:
 
-* **Milwaukee (75–47, NL Seed 1/2)** and **Tampa Bay (74–46, AL Seed 1)** sit at home during Wild Card week with a **0% mortality risk**. They need to win only **3 consecutive series** to raise the Commissioner's Trophy.
-* **New York (68–54, AL Seed 4)** sits behind Tampa Bay in the AL East. They must enter the dreaded **Best-of-3 Wild Card round** against the Boston Red Sox.
+* **Milwaukee (93–56, NL Seed 1/2)** and **Tampa Bay (89–59, AL Seed 1)** sit at home during Wild Card week with a **0% mortality risk**. They need to win only **3 consecutive series** to raise the Commissioner's Trophy.
+* **New York (85–63, AL Seed 4)** sits behind Tampa Bay in the AL East. They must enter the dreaded **Best-of-3 Wild Card round** against the Boston Red Sox.
 
 In a 3-game series, baseball variance is brutal. Even if Gerrit Cole and the Yankees hold a dominant 60% single-game win probability, their probability of surviving the 3-game set is only:
 $$P(\text{Survive WC}) = 0.60^2 + 2(0.60)^2(0.40) = 0.648 \quad \implies \quad \mathbf{35.2\%\text{ Hazard Mortality Rate}}$$
@@ -288,7 +288,7 @@ Before the Yankees even reach the Division Series, there is an automatic **~35%�
 ---
 
 #### Reality 2: Spotting the Field 6 to 7 Completed Wins
-At Game 121, empirical standings are locked. The Brewers (75–47) and Rays (74–46) have banked **74–75 wins**, while the Cubs (72–51) have banked **72 wins** with a commanding **+111 run differential**. 
+At Game 121, empirical standings are locked. The Brewers (93–56) and Rays (89–59) have banked **74–75 wins**, while the Cubs (83–66) have banked **72 wins** with a commanding **+111 run differential**. 
 
 The Yankees have won **68 games**. In causal econometrics, spotting your competitors a 4-to-7 game lead with only ~40 games remaining creates a steep mathematical ceiling on 162-game projected totals (**90.6 wins for NYY vs 103.2 for TBD, 100.4 for MIL, 97.8 for CHC**).
 
@@ -308,7 +308,7 @@ $$\begin{array}{lcc}
 Notice that the Yankees hold strong odds of winning the AL Pennant (**21.5%**).
 
 *Why does their World Series winning percentage drop?*
-Because if the Yankees win the AL Pennant, their reward is facing the **73–49 Los Angeles Dodgers (16.63% WS, 36% Polymarket)** in the World Series, where the Dodgers hold home-field advantage and a 53.0% Best-of-7 edge.
+Because if the Yankees win the AL Pennant, their reward is facing the **88–61 Los Angeles Dodgers (16.93% WS, 36% Polymarket)** in the World Series, where the Dodgers hold home-field advantage and a 53.0% Best-of-7 edge.
 Conversely, if the Brewers or Cubs navigate the NL bracket and slay or bypass the Dodgers, their World Series opponent from the American League represents a much more manageable 50/50 matchup.
 
 ---

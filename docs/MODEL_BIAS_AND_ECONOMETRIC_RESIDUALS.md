@@ -3,7 +3,7 @@
 ## 🎯 Overview & Problem Statement
 Statistical modeling of professional baseball standings and postseason championship probabilities inherently suffers from **data modeling drift**, **endogeneity**, and **residual luck noise**. Standard unanchored simulations and naive Pythagorean models produce severe systematic distortions when applied blindly to mid-season standings:
 
-1. **Unanchored Simulation Drift**: Simulating a full 162-game season from scratch mid-season (around Game 121) completely ignores empirical facts—specifically, the ~121 games that are already locked into the standings. This severely penalizes high-win teams (like the 71–50 Chicago Cubs or 74–46 Tampa Bay Rays) while over-rewarding underperforming teams with high run differentials (like the 59–61 Detroit Tigers).
+1. **Unanchored Simulation Drift**: Simulating a full 162-game season from scratch mid-season (around Game 121) completely ignores empirical facts—specifically, the ~121 games that are already locked into the standings. This severely penalizes high-win teams (like the 71–50 Chicago Cubs or 89–59 Tampa Bay Rays) while over-rewarding underperforming teams with high run differentials (like the 59–61 Detroit Tigers).
 2. **Pythagorean Luck Surplus vs Deficit Residuals**: Run differential exponentiation ($R^{x} / (R^{x} + RA^{x})$) fails to account for 1-run game variance, blown bullpen sequencing, and hit clustering noise.
 3. **Single-Metric Blind Spots**: Relying solely on regular-season win percentage ignores short-series postseason dynamics, such as Top-3 Ace rotation ERAs, high-leverage bullpen WPA, betting market futures consensus, and expert projection ratings (PECOTA, ZiPS, FanGraphs).
 
@@ -187,13 +187,13 @@ Below is the complete 30-team diagnostic matrix cross-referencing actual standin
 
 | Team ID | Team Name | Record | Act W% | 4-Pillar Cons | Def Eff | Media/Exp Rank | Market/Poly % | Latent Quality Score | WS Win Prob % | Sim Rank |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **LAD** | Los Angeles Dodgers | 73 - 49 | .598 | **1.200** | 1.06 | **1.235** (#1) | **36.0%** | **1.042** | **16.63%** | 1 |
-| **MIL** | Milwaukee Brewers | 75 - 47 | .615 | **1.084** | 1.06 | **1.090** (#3) | **8.0%** | **0.982** | **14.18%** | 2 |
-| **TBD** | Tampa Bay Rays | 74 - 46 | .617 | 1.016 | 1.04 | 1.055 | **9.0%** | **0.957** | **14.16%** | 3 |
-| **NYY** | New York Yankees | 68 - 54 | .557 | **1.090** | 1.04 | **1.145** (#2) | **11.0%** | **0.985** | **10.63%** | 4 |
-| **CHC** | Chicago Cubs | 72 - 51 | .585 | **1.075** | 1.07 | **1.110** (#4) | **7.5%** | **0.978** | **10.21%** | 5 |
-| **ATL** | Atlanta Braves | 73 - 49 | .598 | 1.010 | 1.02 | 1.015 | **5.5%** | **0.892** | **8.55%** | 6 |
-| **HOU** | Houston Astros | 62 - 60 | .508 | 1.066 | 1.04 | 1.080 | **5.5%** | **0.910** | **6.38%** | 7 |
+| **LAD** | Los Angeles Dodgers | 88 - 61 | .598 | **1.200** | 1.06 | **1.235** (#1) | **36.0%** | **1.042** | **16.93%** | 1 |
+| **MIL** | Milwaukee Brewers | 93 - 56 | .615 | **1.084** | 1.06 | **1.090** (#3) | **8.0%** | **0.982** | **15.21%** | 2 |
+| **TBD** | Tampa Bay Rays | 89 - 59 | .617 | 1.016 | 1.04 | 1.055 | **9.0%** | **0.957** | **7.86%** | 3 |
+| **NYY** | New York Yankees | 85 - 63 | .557 | **1.090** | 1.04 | **1.145** (#2) | **11.0%** | **0.985** | **14.51%** | 4 |
+| **CHC** | Chicago Cubs | 83 - 66 | .585 | **1.075** | 1.07 | **1.110** (#4) | **7.5%** | **0.978** | **10.21%** | 5 |
+| **ATL** | Atlanta Braves | 88 - 61 | .598 | 1.010 | 1.02 | 1.015 | **5.5%** | **0.892** | **4.23%** | 6 |
+| **HOU** | Houston Astros | 75 - 74 | .508 | 1.066 | 1.04 | 1.080 | **5.5%** | **0.910** | **6.93%** | 7 |
 | **SD** | San Diego Padres | 66 - 57 | .537 | 1.073 | 1.03 | 1.080 | **5.0%** | **0.925** | **5.00%** | 8 |
 | **DET** | Detroit Tigers | 60 - 62 | .492 | 1.011 | 1.02 | 0.980 | **3.0%** | **0.842** | **4.02%** | 9 |
 | **BOS** | Boston Red Sox | 65 - 57 | .533 | 1.007 | 0.97 | 1.025 | **3.5%** | **0.867** | **2.79%** | 10 |

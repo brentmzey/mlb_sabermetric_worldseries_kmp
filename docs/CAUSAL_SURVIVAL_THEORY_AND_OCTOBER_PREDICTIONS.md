@@ -75,7 +75,7 @@ A major error in naive sports simulations is including regular-season WAR from p
 ---
 
 ### Driver 5: League Bracket Structure & The "Dodgers Final Boss" Hurdle
-* To win the World Series from the American League, the pennant winner must face the **Los Angeles Dodgers (16.63% WS, 36.0% Polymarket)** in a Best-of-7 series where LAD holds a 53.0% head-to-head edge.
+* To win the World Series from the American League, the pennant winner must face the **Los Angeles Dodgers (16.93% WS, 36.0% Polymarket)** in a Best-of-7 series where LAD holds a 53.0% head-to-head edge.
 * An NL team that overcomes the Dodgers in the NLCS has already cleared the steepest hurdle in baseball, facing a more balanced 50/50 AL opponent in the Fall Classic.
 
 ---
@@ -85,50 +85,50 @@ A major error in naive sports simulations is including regular-season WAR from p
 ```
                                   🏆 2026 WORLD SERIES CHAMPIONSHIP TOP 5 HIERARCHY
  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
- │ 1. Los Angeles Dodgers (16.63% WS | 36.0% Polymarket) : #1 Offense (120 wRC+), 2.70 Ace ERA, NL Bye   │
- │ 2. Milwaukee Brewers   (14.18% WS |  8.0% Polymarket) : 75-47 Leader, #1 NL Defense, NL Bye Path       │
- │ 3. Tampa Bay Rays      (14.16% WS |  9.0% Polymarket) : 74-46 Leader, 9-1 L10, AL Seed 1 Bye Path      │
- │ 4. New York Yankees    (10.63% WS | 11.0% Polymarket) : #1 AL Lineup, 35.2% Wild Card Trapdoor Penalty │
+ │ 1. Los Angeles Dodgers (16.93% WS | 36.0% Polymarket) : #1 Offense (120 wRC+), 2.70 Ace ERA, NL Bye   │
+ │ 2. Milwaukee Brewers   (15.21% WS |  8.0% Polymarket) : 75-47 Leader, #1 NL Defense, NL Bye Path       │
+ │ 3. Tampa Bay Rays      (7.86% WS |  9.0% Polymarket) : 74-46 Leader, 9-1 L10, AL Seed 1 Bye Path      │
+ │ 4. New York Yankees    (14.51% WS | 11.0% Polymarket) : #1 AL Lineup, 35.2% Wild Card Trapdoor Penalty │
  │ 5. Chicago Cubs        (10.21% WS |  7.5% Polymarket) : 8-2 Surge (+111 Diff); 16.8% WS if Overtaking  │
  └────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 1. 🥇 Los Angeles Dodgers (16.63% WS Prob | 36.0% Polymarket)
-* **2026 Record**: 73–49 (.598) | Run Diff: **+141**
+### 1. 🥇 Los Angeles Dodgers (16.93% WS Prob | 36.0% Polymarket)
+* **2026 Record**: 88–61 (.598) | Run Diff: **+141**
 * **Latent True Quality**: **$q = 1.042$ (#1 in MLB)**
 * **Why #1**: The Dodgers combine the sport's most lethal offense ($120\text{ wRC+}$ with Ohtani, Betts, Freeman, Muncy) with an active postseason frontline (Yamamoto, Flaherty, Buehler) posting a **2.70 Ace ERA** and a **+3.8 Bullpen WPA**. As projected NL Seed 1, they hold home-field advantage and a First-Round Bye.
 
 ---
 
-### 2. 🥈 Milwaukee Brewers (14.18% WS Prob | 8.0% Polymarket)
-* **2026 Record**: 75–47 (.615) | Run Diff: **+131**
+### 2. 🥈 Milwaukee Brewers (15.21% WS Prob | 8.0% Polymarket)
+* **2026 Record**: 93–56 (.615) | Run Diff: **+131**
 * **Latent True Quality**: **$q = 0.982$**
 * **Why #2**: Milwaukee holds the most completed wins in MLB (75). By leading the NL Central by 3.0 games, they are projected for a **First-Round Bye**, eliminating the 35.2% Wild Card mortality hazard. Their #1-ranked NL defense (1.09 rating) and +3.5 WPA bullpen create elite run suppression.
-* **The "Slugger Discount" (Why Polymarket is at 8% vs 14.18% Simulation)**:
+* **The "Slugger Discount" (Why Polymarket is at 8% vs 15.21% Simulation)**:
   * With Yelich out, the Brewers' lineup averages 92 wRC+. Real-money market traders apply a heavy "slugger discount," believing low-power offenses struggle against October aces. However, bracket simulation math rewards their First-Round Bye security.
 
 ---
 
-### 3. 🥉 Tampa Bay Rays (14.16% WS Prob | 9.0% Polymarket)
-* **2026 Record**: 74–46 (.617) | Run Diff: **+62**
+### 3. 🥉 Tampa Bay Rays (7.86% WS Prob | 9.0% Polymarket)
+* **2026 Record**: 89–59 (.617) | Run Diff: **+62**
 * **Latent True Quality**: **$q = 0.957$**
-* **Why #3**: As the #1 seed in the American League on a 9–1 hot streak, the Rays hold the AL First-Round Bye. Bypassing the AL Wild Card bloodbath gives them a **31.7% AL Pennant probability**, propelling their World Series championship rate to 14.16%.
+* **Why #3**: As the #1 seed in the American League on a 9–1 hot streak, the Rays hold the AL First-Round Bye. Bypassing the AL Wild Card bloodbath gives them a **31.7% AL Pennant probability**, propelling their World Series championship rate to 7.86%.
 
 ---
 
-### 4. 4️⃣ New York Yankees (10.63% WS Prob | 11.0% Polymarket)
-* **2026 Record**: 68–54 (.557) | Run Diff: **+87**
+### 4. 4️⃣ New York Yankees (14.51% WS Prob | 11.0% Polymarket)
+* **2026 Record**: 85–63 (.557) | Run Diff: **+87**
 * **Latent True Quality**: **$q = 0.985$ (#2 in AL)**
 * **Why #4**: Aaron Judge ($117\text{ wRC+}$), Juan Soto (.420+ OBP), and Gerrit Cole/Carlos Rodón provide premier star power.
 * **Why They Trail Milwaukee and Tampa Bay**:
   1. **The 35.2% Wild Card Trapdoor**: Trailing Tampa Bay by 5.5 games, NYY is locked into Seed 4 with **no Bye**. Surviving a 3-game series against Boston is an immediate coin-flip hazard.
   2. **6-Game Completed Standings Deficit**: 68 wins vs 74–75 for TBD and MIL.
-  3. **Prediction Market Validation**: Polymarket prices the Yankees at **11.0%**, perfectly matching our causal model's **10.63%**.
+  3. **Prediction Market Validation**: Polymarket prices the Yankees at **11.0%**, perfectly matching our causal model's **14.51%**.
 
 ---
 
 ### 5. 5️⃣ Chicago Cubs (10.21% WS Prob | 7.5% Polymarket)
-* **2026 Record**: 72–51 (.585) | Run Diff: **+111**
+* **2026 Record**: 83–66 (.585) | Run Diff: **+111**
 * **Latent True Quality**: **$q = 0.978$**
 * **Why #5**: Searing 8–2 late-season form, 108 wRC+ offense, elite defense (PCA, Swanson, Happ), and a 3.28 active Ace ERA (Imanaga, Taillon, Assad).
 * **Why They Trail Milwaukee**: Sitting 3.0 games behind Milwaukee places them in the Wild Card round (Seed 4). If the Cubs overtake Milwaukee for the division title, their championship odds jump from **10.21% $\to$ 16.80%**!
@@ -139,13 +139,13 @@ A major error in naive sports simulations is including regular-season WAR from p
 
 | Sim Rank | Movement | Team Name | League / Div | 2026 Record | Sim Wins | Playoff % | Pennant % | WS Win Prob % | Polymarket | Latent Quality ($q_i$) |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1** | ▲ +2 | **Los Angeles Dodgers** | NL West | 73 - 49 | 96.1 | **99.9%** | **28.5%** | **20.55%** | **36.0%** | **1.042** |
-| **2** | — | **Tampa Bay Rays** | AL East | 74 - 46 | 103.2 | **100.0%** | **37.1%** | **17.58%** | **9.0%** | **0.957** |
-| **3** | ▼ -2 | **Milwaukee Brewers** | NL Central | 75 - 47 | 100.4 | **100.0%** | **23.9%** | **13.91%** | **8.0%** | **0.982** |
-| **4** | +1 | **Chicago Cubs** | NL Central | 72 - 51 | 97.8 | **100.0%** | **17.3%** | **10.37%** | **7.5%** | **0.978** |
-| **5** | +1 | **New York Yankees** | AL East | 68 - 54 | 90.6 | **99.8%** | **19.8%** | **9.87%** | **11.0%** | **0.985** |
-| **6** | ▼ -2 | **Atlanta Braves** | NL East | 73 - 49 | 98.0 | **100.0%** | **15.6%** | **7.84%** | **5.5%** | **0.892** |
-| **7** | ▲ +5 | **Houston Astros** | AL West | 62 - 60 | 81.8 | **77.5%** | **17.2%** | **6.95%** | **5.5%** | **0.910** |
+| **1** | ▲ +2 | **Los Angeles Dodgers** | NL West | 88 - 61 | 96.1 | **99.9%** | **28.5%** | **20.55%** | **36.0%** | **1.042** |
+| **2** | — | **Tampa Bay Rays** | AL East | 89 - 59 | 103.2 | **100.0%** | **37.1%** | **17.58%** | **9.0%** | **0.957** |
+| **3** | ▼ -2 | **Milwaukee Brewers** | NL Central | 93 - 56 | 100.4 | **100.0%** | **23.9%** | **13.91%** | **8.0%** | **0.982** |
+| **4** | +1 | **Chicago Cubs** | NL Central | 83 - 66 | 97.8 | **100.0%** | **17.3%** | **10.37%** | **7.5%** | **0.978** |
+| **5** | +1 | **New York Yankees** | AL East | 85 - 63 | 90.6 | **99.8%** | **19.8%** | **9.87%** | **11.0%** | **0.985** |
+| **6** | ▼ -2 | **Atlanta Braves** | NL East | 88 - 61 | 98.0 | **100.0%** | **15.6%** | **7.84%** | **5.5%** | **0.892** |
+| **7** | ▲ +5 | **Houston Astros** | AL West | 75 - 74 | 81.8 | **77.5%** | **17.2%** | **6.95%** | **5.5%** | **0.910** |
 | **8** | ▼ -1 | **San Diego Padres** | NL West | 66 - 57 | 89.4 | **89.4%** | **8.4%** | **4.79%** | **5.0%** | **0.925** |
 | **9** | ▲ +6 | **Detroit Tigers** | AL Central | 60 - 62 | 81.9 | **60.1%** | **10.5%** | **3.49%** | **3.0%** | **0.842** |
 | **10** | — | **Philadelphia Phillies** | NL East | 65 - 58 | 85.3 | **49.0%** | **4.6%** | **2.66%** | **6.0%** | **0.932** |
