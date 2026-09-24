@@ -1,9 +1,9 @@
 name: Weekly MLB Sabermetric Predictions Update
 
 on:
-  schedule:
+  # schedule:
     # Runs every Monday at 00:00 UTC (Sunday night 7-8pm EST / 4-5pm PST)
-    - cron: '0 0 * * 1'
+    # - cron: '0 0 * * 1'
   workflow_dispatch: # Allows manual trigger anytime from GitHub UI
 
 jobs:

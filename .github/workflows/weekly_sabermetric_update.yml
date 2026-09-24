@@ -1,9 +1,9 @@
 name: Weekly Sabermetric Update & PocketHost Sync
 
 on:
-  schedule:
+  # schedule:
     # Run every Monday at 06:00 UTC during the MLB Season
-    - cron: '0 6 * * 1'
+    # - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:
